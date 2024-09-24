@@ -7,6 +7,7 @@
 #include "core.hpp"
 #include "RenderUtils.hpp"
 #include "callbacks.hpp"
+#include "Vector3D.h"
 
 #include <iostream>
 
@@ -30,7 +31,9 @@ PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
 
-
+//Definicion de variables globales
+RenderItem *xRenderItem = NULL, *yRenderItem = NULL, *zRenderItem = NULL, *originRenderItem = NULL;
+PxTransform x, y, z, origin;
 // Initialize physics engine
 void initPhysics(bool interactive)
 {
@@ -54,6 +57,18 @@ void initPhysics(bool interactive)
 	sceneDesc.filterShader = contactReportFilterShader;
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
+
+	//Mostrar el sistema de coordenadas
+	Vector3D ejeX(10.0f, 0.0f, 0.0f), ejeY(0.0f, 10.0f, 0.0f), ejeZ(0.0f, 0.0f, 10.0f);
+	x = PxTransform(ejeX.getX(), ejeX.getY(), ejeX.getZ());
+	y = PxTransform(ejeY.getX(), ejeY.getY(), ejeY.getZ());
+	z = PxTransform(ejeZ.getX(), ejeZ.getY(), ejeZ.getZ());
+	origin = PxTransform(0.0f, 0.0f, 0.0f);
+
+	xRenderItem = new RenderItem(CreateShape(PxSphereGeometry(1)), &x, { 1.0,0.0,0.0,1.0 });
+	yRenderItem = new RenderItem(CreateShape(PxSphereGeometry(1)), &y, { 0.0,1.0,0.0,1.0 });
+	zRenderItem = new RenderItem(CreateShape(PxSphereGeometry(1)), &z, { 0.0,0.0,1.0,1.0 });
+	originRenderItem = new RenderItem(CreateShape(PxSphereGeometry(1)), &origin, { 1.0,1.0,1.0,1.0 });
 	}
 
 
@@ -74,6 +89,12 @@ void cleanupPhysics(bool interactive)
 {
 	PX_UNUSED(interactive);
 
+	//liberar render items
+	DeregisterRenderItem(xRenderItem);
+	DeregisterRenderItem(yRenderItem);
+	DeregisterRenderItem(zRenderItem);
+	DeregisterRenderItem(originRenderItem);
+	
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
 	gScene->release();
 	gDispatcher->release();
