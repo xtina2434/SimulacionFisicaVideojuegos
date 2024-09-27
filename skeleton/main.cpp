@@ -31,12 +31,12 @@ PxPvd*                  gPvd        = NULL;
 PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
-Particle* myParticle = NULL;
+//Particle* myParticle = NULL;
 //Definicion de variables globales
 std::vector<RenderItem*> items;
 RenderItem *xRenderItem = NULL, *yRenderItem = NULL, *zRenderItem = NULL, *originRenderItem = NULL;
 PxTransform x, y, z, origin;
-
+std::vector<Particle*> particles;
 // Initialize physics engine
 void initPhysics(bool interactive)
 {
@@ -78,7 +78,7 @@ void initPhysics(bool interactive)
 	//items.push_back(originRenderItem);
 
 	//Particula practica 1
-	myParticle = new Particle(Vector3(0.0f, 50.0f, 0.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, -9.8f, 0.0f));
+	//myParticle = new Particle(Vector3(-30.0f, 50.0f, 0.0f), Vector3(3.0f, 0.0f, 0.0f), Vector3(5.0f, 0.0f, 0.0f));
 
 	}
 
@@ -92,7 +92,10 @@ void stepPhysics(bool interactive, double t)
 
 	gScene->simulate(t);
 	gScene->fetchResults(true);
-	myParticle->integrate(t);
+	//myParticle->integrate(t);
+	for (int i = 0; i < particles.size(); i++) {
+		particles[i]->integrate(t);
+	}
 }
 
 // Function to clean data
@@ -109,7 +112,10 @@ void cleanupPhysics(bool interactive)
 	for (int i = 0; i < items.size();i++) {
 		DeregisterRenderItem(items[i]);
 	}
-	delete myParticle;
+	for (int i = 0; i < particles.size();i++) {
+		delete particles[i];
+	}
+	/*delete myParticle;*/
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
 	gScene->release();
 	gDispatcher->release();
@@ -122,6 +128,7 @@ void cleanupPhysics(bool interactive)
 	gFoundation->release();
 	}
 
+
 // Function called when a key is pressed
 void keyPress(unsigned char key, const PxTransform& camera)
 {
@@ -131,8 +138,10 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	{
 	//case 'B': break;
 	//case ' ':	break;
-	case ' ':
+	case 'P':
 	{
+		Particle* newParticle = new Particle(Vector3(0.0f, 50.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, -9.8f, 0.0f));
+		particles.push_back(newParticle);
 		break;
 	}
 	default:
