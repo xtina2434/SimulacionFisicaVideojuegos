@@ -8,8 +8,9 @@
 #include "RenderUtils.hpp"
 #include "callbacks.hpp"
 #include "Vector3D.h"
-
+#include "Particle.h"
 #include <iostream>
+
 
 std::string display_text = "This is a test";
 
@@ -30,10 +31,12 @@ PxPvd*                  gPvd        = NULL;
 PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
-
+Particle* myParticle = NULL;
 //Definicion de variables globales
+std::vector<RenderItem*> items;
 RenderItem *xRenderItem = NULL, *yRenderItem = NULL, *zRenderItem = NULL, *originRenderItem = NULL;
 PxTransform x, y, z, origin;
+
 // Initialize physics engine
 void initPhysics(bool interactive)
 {
@@ -58,17 +61,25 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
-	//Mostrar el sistema de coordenadas
-	Vector3D ejeX(10.0f, 0.0f, 0.0f), ejeY(0.0f, 10.0f, 0.0f), ejeZ(0.0f, 0.0f, 10.0f);
-	x = PxTransform(ejeX.getX(), ejeX.getY(), ejeX.getZ());
-	y = PxTransform(ejeY.getX(), ejeY.getY(), ejeY.getZ());
-	z = PxTransform(ejeZ.getX(), ejeZ.getY(), ejeZ.getZ());
-	origin = PxTransform(0.0f, 0.0f, 0.0f);
+	////Mostrar el sistema de coordenadas
+	//Vector3D ejeX(10.0f, 0.0f, 0.0f), ejeY(0.0f, 10.0f, 0.0f), ejeZ(0.0f, 0.0f, 10.0f);
+	//x = PxTransform(ejeX.getX(), ejeX.getY(), ejeX.getZ());
+	//y = PxTransform(ejeY.getX(), ejeY.getY(), ejeY.getZ());
+	//z = PxTransform(ejeZ.getX(), ejeZ.getY(), ejeZ.getZ());
+	//origin = PxTransform(0.0f, 0.0f, 0.0f);
 
-	xRenderItem = new RenderItem(CreateShape(PxSphereGeometry(1)), &x, { 1.0,0.0,0.0,1.0 });
-	yRenderItem = new RenderItem(CreateShape(PxSphereGeometry(1)), &y, { 0.0,1.0,0.0,1.0 });
-	zRenderItem = new RenderItem(CreateShape(PxSphereGeometry(1)), &z, { 0.0,0.0,1.0,1.0 });
-	originRenderItem = new RenderItem(CreateShape(PxSphereGeometry(1)), &origin, { 1.0,1.0,1.0,1.0 });
+	//xRenderItem = new RenderItem(CreateShape(PxSphereGeometry(1)), &x, { 1.0,0.0,0.0,1.0 });
+	//yRenderItem = new RenderItem(CreateShape(PxSphereGeometry(1)), &y, { 0.0,1.0,0.0,1.0 });
+	//zRenderItem = new RenderItem(CreateShape(PxSphereGeometry(1)), &z, { 0.0,0.0,1.0,1.0 });
+	//originRenderItem = new RenderItem(CreateShape(PxSphereGeometry(1)), &origin, { 1.0,1.0,1.0,1.0 });
+	//items.push_back(xRenderItem);
+	//items.push_back(yRenderItem);
+	//items.push_back(zRenderItem);
+	//items.push_back(originRenderItem);
+
+	//Particula practica 1
+	myParticle = new Particle(Vector3(0.0f, 50.0f, 0.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, -9.8f, 0.0f));
+
 	}
 
 
@@ -81,6 +92,7 @@ void stepPhysics(bool interactive, double t)
 
 	gScene->simulate(t);
 	gScene->fetchResults(true);
+	myParticle->integrate(t);
 }
 
 // Function to clean data
@@ -90,11 +102,14 @@ void cleanupPhysics(bool interactive)
 	PX_UNUSED(interactive);
 
 	//liberar render items
-	DeregisterRenderItem(xRenderItem);
+	/*DeregisterRenderItem(xRenderItem);
 	DeregisterRenderItem(yRenderItem);
 	DeregisterRenderItem(zRenderItem);
-	DeregisterRenderItem(originRenderItem);
-	
+	DeregisterRenderItem(originRenderItem);*/
+	for (int i = 0; i < items.size();i++) {
+		DeregisterRenderItem(items[i]);
+	}
+	delete myParticle;
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
 	gScene->release();
 	gDispatcher->release();
