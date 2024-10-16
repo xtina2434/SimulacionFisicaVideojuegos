@@ -11,7 +11,7 @@ using namespace physx;
 extern void initPhysics(bool interactive);
 extern void stepPhysics(bool interactive, double t);	
 extern void cleanupPhysics(bool interactive);
-extern void keyPress(unsigned char key, Camera* camera);
+extern void keyPress(unsigned char key, const PxTransform& camera);
 extern PxPhysics* gPhysics;
 extern PxMaterial* gMaterial;
 
@@ -58,7 +58,7 @@ void keyboardCallback(unsigned char key, int x, int y)
 		exit(0);
 
 	if(!sCamera->handleKey(key, x, y))
-		keyPress(key, sCamera);
+		keyPress(key, sCamera->getTransform());
 }
 
 void mouseCallback(int button, int state, int x, int y)

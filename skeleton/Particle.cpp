@@ -1,7 +1,7 @@
 #include "Particle.h"
 #include <cmath>
-Particle::Particle(Vector3 Pos, Vector3 Vel, Vector3 Acel) : pose(Pos), vel(Vel), acel(Acel){
-	renderItem = new RenderItem(CreateShape(physx::PxSphereGeometry(1)), &pose, { 0.0,0.0,0.0,1.0 });
+Particle::Particle(Vector3 Pos, Vector3 Vel, Vector3 Acel, int Size, Vector4 Color, int LifeTime) : pose(Pos), vel(Vel), acel(Acel), size(Size),color(Color), lifeTime(LifeTime){
+	renderItem = new RenderItem(CreateShape(physx::PxSphereGeometry(size)), &pose, color);
 }
 Particle::~Particle() {
 	DeregisterRenderItem(renderItem);

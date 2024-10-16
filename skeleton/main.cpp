@@ -11,7 +11,7 @@
 #include "Particle.h"
 #include "Proyectil.h"
 #include <iostream>
-
+#include <list>
 
 
 std::string display_text = "This is a test";
@@ -36,10 +36,11 @@ PxScene*				gScene2		 = NULL;
 PxScene*				currentScene = NULL;
 ContactReportCallback gContactReportCallback;
 //Definicion de variables globales
-std::vector<RenderItem*> items;
+std::list<RenderItem*> items;
+
 RenderItem *xRenderItem = NULL, *yRenderItem = NULL, *zRenderItem = NULL, *originRenderItem = NULL;
 PxTransform x, y, z, origin;
-std::vector<Particle*> particles;
+std::list<Particle*> particles;
 
 PxScene* createScene() {
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
@@ -53,12 +54,12 @@ PxScene* createScene() {
 	return newScene;
 }
 void cleanScreen() {
-	for (int i = 0; i < items.size();i++) {
-		DeregisterRenderItem(items[i]);
+	for (auto it = items.begin(); it != items.end(); ++it) {
+		DeregisterRenderItem(*it);
 	}
 	items.clear();
-	for (int i = 0; i < particles.size();i++) {
-		delete particles[i];
+	for (auto it = particles.begin(); it != particles.end(); ++it) {
+		delete *it;
 	}
 	particles.clear();
 }
@@ -134,9 +135,10 @@ void stepPhysics(bool interactive, double t)
 	}
 	//myParticle->integrate(t);
 	if (currentScene == gScene2) {
-
-		for (int i = 0; i < particles.size(); i++) {
-			particles[i]->integrate(t);
+		
+		for (auto it = particles.begin(); it != particles.end(); ++it) {
+			(*it)->integrate(t);
+			physx::PxTransform pos = (*it)->getPos();
 		}
 	}
 }
@@ -147,12 +149,12 @@ void cleanupPhysics(bool interactive)
 {
 	PX_UNUSED(interactive);
 
-	for (int i = 0; i < items.size();i++) {
-		DeregisterRenderItem(items[i]);
+	for (auto it = items.begin(); it != items.end(); ++it) {
+		DeregisterRenderItem(*it);
 	}
 	items.clear();
-	for (int i = 0; i < particles.size();i++) {
-		delete particles[i];
+	for (auto it = particles.begin(); it != particles.end(); ++it) {
+		delete* it;
 	}
 	particles.clear();
 	/*delete myParticle;*/
@@ -168,7 +170,7 @@ void cleanupPhysics(bool interactive)
 	gFoundation->release();
 }
 // Function called when a key is pressed
-void keyPress(unsigned char key, /*const PxTransform& camera*/ Camera* camera)
+void keyPress(unsigned char key, const PxTransform& camera)
 {
 	PX_UNUSED(camera);
 
@@ -179,35 +181,39 @@ void keyPress(unsigned char key, /*const PxTransform& camera*/ Camera* camera)
 	case 'P':
 	{
 		if (currentScene == gScene2) {
-			physx::PxVec3 cameraPos = camera->getEye();
-			physx::PxVec3 cameraDir = camera->getDir();
+			Camera* cam = GetCamera();
+			Vector3 pos = cam->getEye();
+			Vector3 dir = cam->getDir();
 			/*Particle* newParticle = new Particle(Vector3(0.0f, 50.0f, 0.0f), Vector3(500.0f, 0.0f, 0.0f), Vector3(9.8f, 0.0f, 0.0f), 0.005);
-			particles.push_back(newParticle);*/
+		*/
 			float speed = 25.0f;
 
-			physx::PxVec3 vel = cameraDir * speed;
+			physx::PxVec3 vel = dir * speed;
 			Proyectil* newProyectil = new Proyectil
-			(cameraPos, vel, Vector3(0.0f, -0.1f, 0.0f), 2);
+			(pos,vel, Vector3(0.0f, -1.0f, 0.0f),1,Vector4(0.0f,0.0f,0.0f,1.0f),0, 2);
 			particles.push_back(newProyectil);
 		}
 		break;
 	}
-	case 'L':
-	{
-		if (currentScene == gScene2) {
-			physx::PxVec3 cameraPos = camera->getEye();
-			physx::PxVec3 cameraDir = camera->getDir();
-			/*Particle* newParticle = new Particle(Vector3(0.0f, 50.0f, 0.0f), Vector3(500.0f, 0.0f, 0.0f), Vector3(9.8f, 0.0f, 0.0f), 0.005);
-			particles.push_back(newParticle);*/
-			float speed = 150.0f;
+	//case 'L':
+	//{
+	//	if (currentScene == gScene2) {
+	//		Camera* cam = GetCamera();
+	//		Vector3 pos = cam->getEye();
+	//		pos = cam->getDir();
+	//	/*	physx::PxVec3 cameraPos = camera->getEye();
+	//		physx::PxVec3 cameraDir = camera->getDir();*/
+	//		/*Particle* newParticle = new Particle(Vector3(0.0f, 50.0f, 0.0f), Vector3(500.0f, 0.0f, 0.0f), Vector3(9.8f, 0.0f, 0.0f), 0.005);
+	//		particles.push_back(newParticle);*/
+	//		float speed = 150.0f;
 
-			physx::PxVec3 vel = cameraDir * speed;
-			Proyectil* newProyectil = new Proyectil
-			(cameraPos, vel, Vector3(0.0f, -0.1f, 0.0f), 2);
-			particles.push_back(newProyectil);
-		}
-		break;
-	}
+	//		//physx::PxVec3 vel = cameraDir * speed;
+	//		Proyectil* newProyectil = new Proyectil
+	//		(pos, speed * pos, Vector3(0.0f, -0.1f, 0.0f), 2);
+	//		particles.push_back(newProyectil);
+	//	}
+	//	break;
+	//}
 	case '1':
 	{
 		initScene1();
