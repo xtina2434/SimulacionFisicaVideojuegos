@@ -195,25 +195,22 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		}
 		break;
 	}
-	//case 'L':
-	//{
-	//	if (currentScene == gScene2) {
-	//		Camera* cam = GetCamera();
-	//		Vector3 pos = cam->getEye();
-	//		pos = cam->getDir();
-	//	/*	physx::PxVec3 cameraPos = camera->getEye();
-	//		physx::PxVec3 cameraDir = camera->getDir();*/
-	//		/*Particle* newParticle = new Particle(Vector3(0.0f, 50.0f, 0.0f), Vector3(500.0f, 0.0f, 0.0f), Vector3(9.8f, 0.0f, 0.0f), 0.005);
-	//		particles.push_back(newParticle);*/
-	//		float speed = 150.0f;
+	case 'L':
+	{
+		if (currentScene == gScene2) {
+			Camera* cam = GetCamera();
+			Vector3 pos = cam->getEye();
+			Vector3 dir = cam->getDir();
+		
+			float speed = 150.0f;
 
-	//		//physx::PxVec3 vel = cameraDir * speed;
-	//		Proyectil* newProyectil = new Proyectil
-	//		(pos, speed * pos, Vector3(0.0f, -0.1f, 0.0f), 2);
-	//		particles.push_back(newProyectil);
-	//	}
-	//	break;
-	//}
+			physx::PxVec3 vel = dir * speed;
+			Proyectil* newProyectil = new Proyectil
+			(pos, vel, Vector3(0.0f, -1.0f, 0.0f), 1, Vector4(0.0f, 0.0f, 0.0f, 1.0f), 0, 2);
+			particles.push_back(newProyectil);
+		}
+		break;
+	}
 	case '1':
 	{
 		initScene1();
