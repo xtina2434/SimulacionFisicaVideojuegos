@@ -12,6 +12,7 @@
 #include "Proyectil.h"
 #include <iostream>
 #include <list>
+#include "ParticlesSystem.h"
 
 
 std::string display_text = "This is a test";
@@ -41,6 +42,7 @@ std::list<RenderItem*> items;
 RenderItem *xRenderItem = NULL, *yRenderItem = NULL, *zRenderItem = NULL, *originRenderItem = NULL;
 PxTransform x, y, z, origin;
 std::list<Particle*> particles;
+ParticlesSystem* fog_system;
 
 PxScene* createScene() {
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
@@ -138,7 +140,9 @@ void stepPhysics(bool interactive, double t)
 		
 		for (auto it = particles.begin(); it != particles.end(); ++it) {
 			(*it)->integrate(t);
-			physx::PxTransform pos = (*it)->getPos();
+		}
+		if (fog_system) {
+			fog_system->update(t);
 		}
 	}
 }
@@ -157,6 +161,9 @@ void cleanupPhysics(bool interactive)
 		delete* it;
 	}
 	particles.clear();
+	if (fog_system) {
+		delete fog_system;
+	}
 	/*delete myParticle;*/
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
 	currentScene->release();
@@ -208,6 +215,18 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			Proyectil* newProyectil = new Proyectil
 			(pos, vel, Vector3(0.0f, -1.0f, 0.0f), 1, Vector4(0.0f, 0.0f, 0.0f, 1.0f), 0, 2);
 			particles.push_back(newProyectil);
+		}
+		break;
+	}
+	case 'N':
+	{
+		if (currentScene == gScene2) {
+			fog_system = new ParticlesSystem(Vector4(1.0, 1.0, 1.0, 0.1), Vector3(0, 30.0, 0), Vector3(0.1, 0.2, 0.1),150, 0.05f, 0.9f, 0.0f);
+			fog_system->set_u_Distribution(false);
+
+			fog_system->setNormalDistribPos(1.0, 1.5);
+			fog_system->setNormalDistribVel(0.0, 0.1);
+			fog_system->setNormalDistribLifeTime(5.0, 5.0);
 		}
 		break;
 	}

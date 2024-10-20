@@ -12,7 +12,7 @@
     <ClCompile Include="callbacks.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Proyectil.cpp" />
-    <ClCompile Include="ParticlesSystem.cpp" />
+    <ClCompile Include="PartyclesSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />

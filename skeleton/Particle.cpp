@@ -1,6 +1,6 @@
 #include "Particle.h"
 #include <cmath>
-Particle::Particle(Vector3 Pos, Vector3 Vel, Vector3 Acel, int Size, Vector4 Color, int LifeTime) : pose(Pos), vel(Vel), acel(Acel), size(Size),color(Color), lifeTime(LifeTime){
+Particle::Particle(Vector3 Pos, Vector3 Vel, Vector3 Acel, float Size, Vector4 Color, double LifeTime) : pose(Pos), vel(Vel), acel(Acel), size(Size),color(Color), life_time(LifeTime){
 	renderItem = new RenderItem(CreateShape(physx::PxSphereGeometry(size)), &pose, color);
 }
 Particle::~Particle() {
@@ -13,8 +13,11 @@ void Particle::integrate(double t) {
 	vel = vel + t * acel;
 	vel = vel * pow(doumping, t);*/
 
+	
 	//Euler sempli-implicito
-	vel = vel + t * acel;
-	pose.p = pose.p + vel * t;
+	vel = vel +( t * acel);
+	pose.p = pose.p + (vel * t);
 	vel = vel * pow(doumping, t);
+
+	life_time -= t;
 }
