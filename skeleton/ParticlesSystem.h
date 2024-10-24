@@ -14,7 +14,10 @@ public:
 	ParticlesSystem(Vector4 color, Vector3 ini_pos, Vector3 mean_vel,int num, float size, float prob, float gravity);
 	~ParticlesSystem();
 
-	void set_u_Distribution(bool dist) noexcept { use_uni_distrib = dist; }
+	//si dist es true se usara la distribucion uniforme para la posicion y velocidad
+	//si es false se usara la distribucion normal
+	void set_u_Distribution(bool dist) noexcept { use_uni_distrib = dist; } 
+
 	void setNormalDistribVel(double mean, double desv) noexcept {
 		mean_v = mean;
 		desv_v = desv;
@@ -24,6 +27,8 @@ public:
 		desv_pos = desv;
 	}
 	void setNormalDistribLifeTime(double mean, double desv) noexcept {
+
+		if (desv < 0) desv = 0;
 		mean_life_time = mean;
 		desv_life_time = desv;
 	}
@@ -40,6 +45,8 @@ public:
 
 protected:
 	list<Particle*> particles;				//coleccion de particulas
+
+	//propiedades de cada particula
 	Vector4 color;
 	float size;
 	float gravity;
@@ -50,7 +57,7 @@ protected:
 	std::random_device rd;
 	std::mt19937 mt;						//genera numeros aleatorios
 	bool use_uni_distrib;					//saber si usar distribucion uniforme 
-	double mean_v, desv_v,
+	double mean_v, desv_v,					//medias, desviaciones, minimos o maximos para las distribuciones uniforme o normal
 		mean_pos, desv_pos,
 		mean_life_time, desv_life_time,
 		random_pos_max, random_pos_min,

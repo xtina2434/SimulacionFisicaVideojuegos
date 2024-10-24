@@ -43,6 +43,9 @@ RenderItem *xRenderItem = NULL, *yRenderItem = NULL, *zRenderItem = NULL, *origi
 PxTransform x, y, z, origin;
 std::list<Particle*> particles;
 ParticlesSystem* fog_system;
+ParticlesSystem* fire_system;
+ParticlesSystem* rain_system;
+ParticlesSystem* smoke_system;
 
 PxScene* createScene() {
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
@@ -144,6 +147,15 @@ void stepPhysics(bool interactive, double t)
 		if (fog_system) {
 			fog_system->update(t);
 		}
+		if (fire_system) {
+			fire_system->update(t);
+		}
+		if (rain_system) {
+			rain_system->update(t);
+		}
+		if (smoke_system) {
+			smoke_system->update(t);
+		}
 	}
 }
 
@@ -163,6 +175,15 @@ void cleanupPhysics(bool interactive)
 	particles.clear();
 	if (fog_system) {
 		delete fog_system;
+	}
+	if (fire_system) {
+		delete fire_system;
+	}
+	if (rain_system) {
+		delete rain_system;
+	}
+	if (smoke_system) {
+		delete smoke_system;
 	}
 	/*delete myParticle;*/
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
@@ -189,16 +210,20 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	{
 		if (currentScene == gScene2) {
 			Camera* cam = GetCamera();
-			Vector3 pos = cam->getEye();
-			Vector3 dir = cam->getDir();
-			/*Particle* newParticle = new Particle(Vector3(0.0f, 50.0f, 0.0f), Vector3(500.0f, 0.0f, 0.0f), Vector3(9.8f, 0.0f, 0.0f), 0.005);
-		*/
-			float speed = 25.0f;
+			if (cam != nullptr) {
+				Vector3 pos = cam->getEye();
+				Vector3 dir = cam->getDir();
+				/*Particle* newParticle = new Particle(Vector3(0.0f, 50.0f, 0.0f), Vector3(500.0f, 0.0f, 0.0f), Vector3(9.8f, 0.0f, 0.0f), 0.005);
+			*/
+				float speed = 25.0f;
 
-			physx::PxVec3 vel = dir * speed;
-			Proyectil* newProyectil = new Proyectil
-			(pos,vel, Vector3(0.0f, -1.0f, 0.0f),1,Vector4(0.0f,0.0f,0.0f,1.0f),0, 2);
-			particles.push_back(newProyectil);
+				physx::PxVec3 vel = dir * speed;
+				Proyectil* newProyectil = new Proyectil
+				(pos, vel, Vector3(0.0f, -1.0f, 0.0f), 1, Vector4(0.0f, 0.0f, 0.0f, 1.0f), 0, 2);
+				particles.push_back(newProyectil);
+
+			}
+			
 		}
 		break;
 	}
@@ -206,15 +231,19 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	{
 		if (currentScene == gScene2) {
 			Camera* cam = GetCamera();
-			Vector3 pos = cam->getEye();
-			Vector3 dir = cam->getDir();
-		
-			float speed = 150.0f;
+			if (cam != nullptr) {
+				Vector3 pos = cam->getEye();
+				Vector3 dir = cam->getDir();
 
-			physx::PxVec3 vel = dir * speed;
-			Proyectil* newProyectil = new Proyectil
-			(pos, vel, Vector3(0.0f, -1.0f, 0.0f), 1, Vector4(0.0f, 0.0f, 0.0f, 1.0f), 0, 2);
-			particles.push_back(newProyectil);
+				float speed = 150.0f;
+
+				physx::PxVec3 vel = dir * speed;
+				Proyectil* newProyectil = new Proyectil
+				(pos, vel, Vector3(0.0f, -1.0f, 0.0f), 1, Vector4(0.0f, 0.0f, 0.0f, 1.0f), 0, 2);
+				particles.push_back(newProyectil);
+
+			}
+			
 		}
 		break;
 	}
@@ -227,6 +256,42 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			fog_system->setNormalDistribPos(1.0, 1.5);
 			fog_system->setNormalDistribVel(0.0, 0.1);
 			fog_system->setNormalDistribLifeTime(5.0, 5.0);
+		}
+		break;
+	}
+	case 'F':
+	{
+		if (currentScene == gScene2) {
+			fire_system = new ParticlesSystem(Vector4(1.0, 0.5, 0.0, 1.0), Vector3(-15.0, 50.0, 0), Vector3(0, 0, 0), 20, 1.5f, 0.8f, 0.0f);
+			fire_system->set_u_Distribution(false);
+
+			fire_system->setNormalDistribPos(1.0, 0.5);
+			fire_system->setNormalDistribVel(1.0, 0.5);
+			fire_system->setNormalDistribLifeTime(1.0, 0.5);
+		}
+		break;
+	}
+	case 'R':
+	{
+		if (currentScene == gScene2) {
+			rain_system = new ParticlesSystem(Vector4(0.0, 0.0, 1.0, 0.5), Vector3(15.0, 50.0, 0), Vector3(0.0, 1.0, 0.0), 100, 0.05f, 0.9f, -10.0f);
+			rain_system->set_u_Distribution(true);
+
+			rain_system->setUniformDistribPos(1.0, 10.0);
+			rain_system->setUniformDistribVel(1.0, 3.0);
+			rain_system->setNormalDistribLifeTime(1.0,5.0);
+		}
+		break;
+	}
+	case 'H':
+	{
+		if (currentScene == gScene2) {
+			smoke_system = new ParticlesSystem(Vector4(0.6, 0.6, 0.6, 0.5), Vector3(0, 0, 0), Vector3(0.0, 5.0, 0.0), 1, 1.0f, 0.1f, 10.0f);
+			smoke_system->set_u_Distribution(false);
+
+			smoke_system->setNormalDistribPos(1.0, 0.5);
+			smoke_system->setNormalDistribVel(5.0, 2.0);
+			smoke_system->setNormalDistribLifeTime(1.0, 0.5);
 		}
 		break;
 	}
