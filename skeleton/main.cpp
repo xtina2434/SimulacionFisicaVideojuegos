@@ -141,8 +141,16 @@ void stepPhysics(bool interactive, double t)
 	//myParticle->integrate(t);
 	if (currentScene == gScene2) {
 		
-		for (auto it = particles.begin(); it != particles.end(); ++it) {
+		for (auto it = particles.begin(); it != particles.end();) {
 			(*it)->integrate(t);
+			////comprobar si siguen vivas, si no es asi se elimina
+			if (!(*it)->isAlive()) {
+				delete (*it);
+				it = particles.erase(it);
+			}
+			else {
+				++it;
+			}
 		}
 		if (fog_system) {
 			fog_system->update(t);
@@ -219,7 +227,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 				physx::PxVec3 vel = dir * speed;
 				Proyectil* newProyectil = new Proyectil
-				(pos, vel, Vector3(0.0f, -1.0f, 0.0f), 1, Vector4(0.0f, 0.0f, 0.0f, 1.0f), 0, 2);
+				(pos, vel, Vector3(0.0f, -1.0f, 0.0f), 1, Vector4(0.0f, 0.0f, 0.0f, 1.0f), 60, 2);
 				particles.push_back(newProyectil);
 
 			}
@@ -239,7 +247,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 				physx::PxVec3 vel = dir * speed;
 				Proyectil* newProyectil = new Proyectil
-				(pos, vel, Vector3(0.0f, -1.0f, 0.0f), 1, Vector4(0.0f, 0.0f, 0.0f, 1.0f), 0, 2);
+				(pos, vel, Vector3(0.0f, -1.0f, 0.0f), 1, Vector4(0.0f, 0.0f, 0.0f, 1.0f), 60, 2);
 				particles.push_back(newProyectil);
 
 			}
