@@ -7,7 +7,8 @@ GravityForceGenerator::~GravityForceGenerator(){
 }
 void GravityForceGenerator::updateForce(Particle* p, double t) {
 
-	if (p != nullptr) {
+	//evitar division entre 0
+	if (p != nullptr && p->getMass() > 0.0f) {
 		p->addForce(gravity * p->getMass());
 	}
 }

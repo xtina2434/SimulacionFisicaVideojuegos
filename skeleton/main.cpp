@@ -13,7 +13,7 @@
 #include <iostream>
 #include <list>
 #include "ParticlesSystem.h"
-#include "GravityForceGenerator.h"
+
 
 std::string display_text = "This is a test";
 
@@ -48,6 +48,7 @@ ParticlesSystem* rain_system;
 ParticlesSystem* smoke_system;
 
 ParticlesSystem* rain_gravity_system;
+ParticlesSystem* wind_system;
 
 PxScene* createScene() {
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
@@ -169,6 +170,9 @@ void stepPhysics(bool interactive, double t)
 		if (rain_gravity_system) {
 			rain_gravity_system->update(t);
 		}
+		if (wind_system) {
+			wind_system->update(t);
+		}
 	}
 }
 
@@ -200,6 +204,9 @@ void cleanupPhysics(bool interactive)
 	}
 	if (rain_gravity_system) {
 		delete rain_gravity_system;
+	}
+	if (wind_system) {
+		delete wind_system;
 	}
 	
 	/*delete myParticle;*/
@@ -324,6 +331,22 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			rain_gravity_system->setUniformDistribPos(1.0, 10.0);
 			rain_gravity_system->setUniformDistribVel(0.0, 0.0);
 			rain_gravity_system->setNormalDistribLifeTime(1.0, 5.0);
+		}
+		break;
+	}
+	case 'V':
+	{
+		if (currentScene == gScene2) {
+
+			wind_system = new ParticlesSystem(Vector4(1.0, 0.0, 1.0, 1.0), Vector3(0.0, 50.0, 0), Vector3(10.0, 0.0, 0.0), 10, 1.0f, 0.5f, 0.0f, 0.5f);
+
+			wind_system->set_u_Distribution(false);
+			wind_system->setGravityForce();
+			wind_system->setWindForce(Vector3(10.0f, 0.0f, 0.0f), 0.5f);
+
+			wind_system->setNormalDistribPos(5.0, 2.0);
+			wind_system->setNormalDistribVel(3.0, 1.0);
+			wind_system->setNormalDistribLifeTime(10.0, 2.0);
 		}
 		break;
 	}

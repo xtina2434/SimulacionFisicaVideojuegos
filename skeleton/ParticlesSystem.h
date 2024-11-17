@@ -7,6 +7,7 @@
 #include <list>
 #include <random>
 #include "GravityForceGenerator.h"
+#include "WindForceGenerator.h"
 using namespace std;
 class ParticlesSystem {
 
@@ -46,6 +47,9 @@ public:
 
 	void setGravityForce() noexcept 
 	{ has_gravityForce = true; }
+
+	void setWindForce(const Vector3& vel, float k1) ;
+
 protected:
 	list<Particle*> particles;				//coleccion de particulas
 
@@ -71,6 +75,9 @@ protected:
 
 	GravityForceGenerator* gravity_generator;
 	bool has_gravityForce = false;
+
+	WindForceGenerator* wind_generator;
+	bool has_windForce = false;
 
 	void addParticles(int num); //metodo para agregar particulas nuevas
 };

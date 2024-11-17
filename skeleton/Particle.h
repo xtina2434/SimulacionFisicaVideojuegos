@@ -21,6 +21,8 @@ class Particle {
 		//getters
 		bool isAlive() noexcept{ return life_time > 0 && pose.p.y > 0; }
 		float getMass() const noexcept { return mass; }
+		Vector3 getVel() const { return vel; }
+		Vector3 getPos() const { return pose.p; }
 		//setters
 		void setAcel(const Vector3& a) { acel = a; }
 	protected:
