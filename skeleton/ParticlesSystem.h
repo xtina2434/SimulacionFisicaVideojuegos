@@ -11,7 +11,7 @@ class ParticlesSystem {
 
 public:
 	ParticlesSystem();
-	ParticlesSystem(Vector4 color, Vector3 ini_pos, Vector3 mean_vel,int num, float size, float prob, float gravity);
+	ParticlesSystem(Vector4 color, Vector3 ini_pos, Vector3 mean_vel,int num, float size, float prob, float gravity, float mass);
 	~ParticlesSystem();
 
 	//si dist es true se usara la distribucion uniforme para la posicion y velocidad
@@ -50,6 +50,7 @@ protected:
 	Vector4 color;
 	float size;
 	float gravity;
+	float mass;
 	Vector3 ini_pos;						//posicion inicial del sistema
 	Vector3 mean_vel;						//velocidad media para las particulas
 	int num_generator;						//num de particulas generadas por frame

@@ -1,10 +1,26 @@
 #include "Particle.h"
 #include <cmath>
-Particle::Particle(Vector3 Pos, Vector3 Vel, Vector3 Acel, float Size, Vector4 Color, double LifeTime) : pose(Pos), vel(Vel), acel(Acel), size(Size),color(Color), life_time(LifeTime){
+#include "ForceGenerator.h"
+Particle::Particle(Vector3 Pos, Vector3 Vel,/* Vector3 Acel,*/ float Size, Vector4 Color, double LifeTime, float Mass) : 
+	pose(Pos), vel(Vel),/* acel(Acel),*/ size(Size),color(Color), life_time(LifeTime),mass(Mass) {
+	acel = Vector3(0.0f, 0.0f, 0.0f);
 	renderItem = new RenderItem(CreateShape(physx::PxSphereGeometry(size)), &pose, color);
 }
 Particle::~Particle() {
 	DeregisterRenderItem(renderItem);
+	for (auto fg : generators) {
+		delete fg;
+	}
+	generators.clear();
+}
+void Particle::addForce(Vector3 f) {
+	accF += f;
+}
+void Particle::addForceGenerator(ForceGenerator* fg) {
+	generators.push_back(fg);
+}
+void Particle::clearForces() {
+	accF = Vector3(0.0f, 0.0f, 0.0f);
 }
 void Particle::integrate(double t) {
 	
@@ -13,11 +29,19 @@ void Particle::integrate(double t) {
 	vel = vel + t * acel;
 	vel = vel * pow(doumping, t);*/
 
-	
+	if(mass > 0.0f)
+		acel = accF / mass;
 	//Euler sempli-implicito
 	vel = vel +( t * acel);
 	pose.p = pose.p + (vel * t);
 	vel = vel * pow(doumping, t);
 
+	clearForces();
+}
+void Particle::update(double t) {
+
+	for (auto fg : generators) {
+		fg->updateForce(this, t);
+	}
 	life_time -= t;
 }

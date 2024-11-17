@@ -1,6 +1,6 @@
 #include "Proyectil.h"
-Proyectil::Proyectil(Vector3 Pos, Vector3 Vel, Vector3 Acel, int Size, Vector4 Color, int LifeTime, int Masa) :
-	Particle(Pos, Vel, Acel,Size, Color, LifeTime), masa(Masa) {
+Proyectil::Proyectil(Vector3 Pos, Vector3 Vel, Vector3 Acel, float Size, Vector4 Color, double LifeTime, float Mass) :
+	Particle(Pos, Vel,Size, Color, LifeTime, Mass), acel(Acel) {
 
 
 }

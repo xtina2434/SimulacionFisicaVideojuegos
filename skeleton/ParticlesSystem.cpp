@@ -1,8 +1,8 @@
 	#include "ParticlesSystem.h"
 
 
-	ParticlesSystem::ParticlesSystem(Vector4 c, Vector3 p, Vector3 v, int n, float s, float prob, float g) :
-		color(c), size(s), ini_pos(p), mean_vel(v), num_generator(n), generation_prob(prob), gravity(g),
+	ParticlesSystem::ParticlesSystem(Vector4 c, Vector3 p, Vector3 v, int n, float s, float prob, float g,float m) :
+		color(c), size(s), ini_pos(p), mean_vel(v), num_generator(n), generation_prob(prob), gravity(g),mass(m), 
 		distrib(0.0, 1.0), mt(rd())
 	{
 		use_uni_distrib = false;
@@ -57,7 +57,8 @@
 			if (life_time < 0)
 				life_time = 0;
 			//crear particula con propiedades aleatorias
-			Particle* new_particle = new Particle( pos, vel, Vector3(0.0f, gravity, 0.0f), size, color, life_time);
+			Particle* new_particle = new Particle( pos, vel, size, color, life_time, mass);
+			new_particle->setAcel(Vector3(0.0f, gravity, 0.0f));
 			particles.push_back(new_particle);
 		}
 	}
@@ -68,6 +69,7 @@
 		for (auto it = particles.begin(); it != particles.end();) {
 			//llamar update de cada particula
 			(*it)->integrate(t);
+			(*it)->update(t);
 			//comprobar si siguen vivas, si no es asi se elimina
 			if (!(*it)->isAlive()) {
 				delete (*it);

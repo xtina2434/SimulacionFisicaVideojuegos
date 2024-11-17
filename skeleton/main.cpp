@@ -258,7 +258,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	case 'N':
 	{
 		if (currentScene == gScene2) {
-			fog_system = new ParticlesSystem(Vector4(1.0, 1.0, 1.0, 0.1), Vector3(0, 30.0, 0), Vector3(0.1, 0.2, 0.1),150, 0.05f, 0.9f, 0.0f);
+			fog_system = new ParticlesSystem(Vector4(1.0, 1.0, 1.0, 0.1), Vector3(0, 30.0, 0), Vector3(0.1, 0.2, 0.1),150, 0.05f, 0.9f, 0.0f,0.0f);
 			fog_system->set_u_Distribution(false);
 
 			fog_system->setNormalDistribPos(1.0, 1.5);
@@ -270,7 +270,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	case 'F':
 	{
 		if (currentScene == gScene2) {
-			fire_system = new ParticlesSystem(Vector4(1.0, 0.5, 0.0, 1.0), Vector3(-15.0, 50.0, 0), Vector3(0, 0, 0), 20, 1.5f, 0.8f, 0.0f);
+			fire_system = new ParticlesSystem(Vector4(1.0, 0.5, 0.0, 1.0), Vector3(-15.0, 50.0, 0), Vector3(0, 0, 0), 20, 1.5f, 0.8f, 0.0f,0.0f);
 			fire_system->set_u_Distribution(false);
 
 			fire_system->setNormalDistribPos(1.0, 0.5);
@@ -282,7 +282,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	case 'R':
 	{
 		if (currentScene == gScene2) {
-			rain_system = new ParticlesSystem(Vector4(0.0, 0.0, 1.0, 0.5), Vector3(15.0, 50.0, 0), Vector3(0.0, 1.0, 0.0), 100, 0.05f, 0.9f, -10.0f);
+			rain_system = new ParticlesSystem(Vector4(0.0, 0.0, 1.0, 0.5), Vector3(15.0, 50.0, 0), Vector3(0.0, 1.0, 0.0), 100, 0.05f, 0.9f, -10.0f, 0.0f);
 			rain_system->set_u_Distribution(true);
 
 			rain_system->setUniformDistribPos(1.0, 10.0);
@@ -294,7 +294,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	case 'H':
 	{
 		if (currentScene == gScene2) {
-			smoke_system = new ParticlesSystem(Vector4(0.6, 0.6, 0.6, 0.5), Vector3(0, 0, 0), Vector3(0.0, 5.0, 0.0), 1, 1.0f, 0.1f, 10.0f);
+			smoke_system = new ParticlesSystem(Vector4(0.6, 0.6, 0.6, 0.5), Vector3(0, 0, 0), Vector3(0.0, 5.0, 0.0), 1, 1.0f, 0.1f, 10.0f, 0.0f);
 			smoke_system->set_u_Distribution(false);
 
 			smoke_system->setNormalDistribPos(1.0, 0.5);

@@ -5,13 +5,11 @@ class Proyectil : public Particle
 {
 public:
 	Proyectil() : Particle() {}
-	Proyectil(Vector3 Pos, Vector3 Vel, Vector3 Acel, int Size, Vector4 Color, int LifeTime, int masa);
+	Proyectil(Vector3 Pos, Vector3 Vel, Vector3 Acel,float Size, Vector4 Color, double LifeTime, float mass);
 	~Proyectil();
 
-	//void integrate(double t) override;
-
 private:
-	int masa;
+	Vector3 acel;
 };
 
 #endif
