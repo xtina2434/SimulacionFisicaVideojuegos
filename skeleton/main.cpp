@@ -13,7 +13,7 @@
 #include <iostream>
 #include <list>
 #include "ParticlesSystem.h"
-
+#include "GravityForceGenerator.h"
 
 std::string display_text = "This is a test";
 
@@ -46,6 +46,8 @@ ParticlesSystem* fog_system;
 ParticlesSystem* fire_system;
 ParticlesSystem* rain_system;
 ParticlesSystem* smoke_system;
+
+ParticlesSystem* rain_gravity_system;
 
 PxScene* createScene() {
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
@@ -164,6 +166,9 @@ void stepPhysics(bool interactive, double t)
 		if (smoke_system) {
 			smoke_system->update(t);
 		}
+		if (rain_gravity_system) {
+			rain_gravity_system->update(t);
+		}
 	}
 }
 
@@ -193,6 +198,10 @@ void cleanupPhysics(bool interactive)
 	if (smoke_system) {
 		delete smoke_system;
 	}
+	if (rain_gravity_system) {
+		delete rain_gravity_system;
+	}
+	
 	/*delete myParticle;*/
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
 	currentScene->release();
@@ -227,7 +236,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 				physx::PxVec3 vel = dir * speed;
 				Proyectil* newProyectil = new Proyectil
-				(pos, vel, Vector3(0.0f, -1.0f, 0.0f), 1, Vector4(0.0f, 0.0f, 0.0f, 1.0f), 60, 2);
+				(pos, vel, Vector3(0.0f, -1.0f, 0.0f), 1.0f, Vector4(0.0f, 0.0f, 0.0f, 1.0f), 60, 0.0f);
 				particles.push_back(newProyectil);
 
 			}
@@ -247,7 +256,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 				physx::PxVec3 vel = dir * speed;
 				Proyectil* newProyectil = new Proyectil
-				(pos, vel, Vector3(0.0f, -1.0f, 0.0f), 1, Vector4(0.0f, 0.0f, 0.0f, 1.0f), 60, 2);
+				(pos, vel, Vector3(0.0f, -1.0f, 0.0f), 1.0f, Vector4(0.0f, 0.0f, 0.0f, 1.0f), 60, 0.0f);
 				particles.push_back(newProyectil);
 
 			}
@@ -300,6 +309,21 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			smoke_system->setNormalDistribPos(1.0, 0.5);
 			smoke_system->setNormalDistribVel(5.0, 2.0);
 			smoke_system->setNormalDistribLifeTime(1.0, 0.5);
+		}
+		break;
+	}
+	case 'G':
+	{
+		if (currentScene == gScene2) {
+
+			rain_gravity_system = new ParticlesSystem(Vector4(0.0, 0.0, 1.0, 0.5), Vector3(0.0, 50.0, 0), Vector3(0.0, 0.0, 0.0), 100, 0.05f, 0.9f, 0.0f, 0.1f);
+			
+			rain_gravity_system->set_u_Distribution(true);
+			rain_gravity_system->setGravityForce();
+
+			rain_gravity_system->setUniformDistribPos(1.0, 10.0);
+			rain_gravity_system->setUniformDistribVel(0.0, 0.0);
+			rain_gravity_system->setNormalDistribLifeTime(1.0, 5.0);
 		}
 		break;
 	}

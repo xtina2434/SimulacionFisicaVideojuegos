@@ -6,6 +6,7 @@
 #include "Particle.h"
 #include <list>
 #include <random>
+#include "GravityForceGenerator.h"
 using namespace std;
 class ParticlesSystem {
 
@@ -43,6 +44,8 @@ public:
 	}
 	void update(double t);
 
+	void setGravityForce() noexcept 
+	{ has_gravityForce = true; }
 protected:
 	list<Particle*> particles;				//coleccion de particulas
 
@@ -65,6 +68,9 @@ protected:
 		random_vel_max, random_vel_min;
 
 	std::uniform_real_distribution<double> distrib; //distribucion uniforme para la probabilidad de generacion de particulas
+
+	GravityForceGenerator* gravity_generator;
+	bool has_gravityForce = false;
 
 	void addParticles(int num); //metodo para agregar particulas nuevas
 };

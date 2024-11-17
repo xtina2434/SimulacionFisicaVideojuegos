@@ -6,12 +6,16 @@
 		distrib(0.0, 1.0), mt(rd())
 	{
 		use_uni_distrib = false;
+		gravity_generator = new GravityForceGenerator(Vector3(0.0f, -9.8f, 0.0f));
 	}
 	ParticlesSystem::~ParticlesSystem() {
 		for (auto p : particles) {
 			delete p;
 		}
 		particles.clear();
+
+		delete gravity_generator;
+		gravity_generator = nullptr;
 	}
 
 	void
@@ -59,6 +63,10 @@
 			//crear particula con propiedades aleatorias
 			Particle* new_particle = new Particle( pos, vel, size, color, life_time, mass);
 			new_particle->setAcel(Vector3(0.0f, gravity, 0.0f));
+
+			if (has_gravityForce) 
+				new_particle->addForceGenerator(gravity_generator);
+
 			particles.push_back(new_particle);
 		}
 	}

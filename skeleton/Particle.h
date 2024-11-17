@@ -19,8 +19,8 @@ class Particle {
 		void addForce(Vector3 f);
 		void addForceGenerator(ForceGenerator* fg);
 		//getters
-		bool isAlive() { return life_time > 0 && pose.p.y > 0; }
-		float getMass() const { return mass; }
+		bool isAlive() noexcept{ return life_time > 0 && pose.p.y > 0; }
+		float getMass() const noexcept { return mass; }
 		//setters
 		void setAcel(const Vector3& a) { acel = a; }
 	protected:
