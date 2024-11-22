@@ -18,20 +18,11 @@ ParticlesSystem::~ParticlesSystem() {
 	gravity_generator = nullptr;
 	delete wind_generator;
 	wind_generator = nullptr;
-	delete whirlwind_generator;
-	whirlwind_generator = nullptr;
 }
 void 
-ParticlesSystem::setWindForce(const Vector3& vel, float k1 /*d*/) {
+ParticlesSystem::setWindForce(const Vector3& vel, float k1) {
 	has_windForce = true;
-	//wind_generator = new WindForceGenerator(d,0.5f,vel, Vector3(0.0f, 50.0f, 0.0f), 15.0f);
 	wind_generator = new WindForceGenerator(vel, k1, 0.0f, Vector3(0.0f,50.0f,0.0f), 15.0f);
-}
-void
-ParticlesSystem::setWhirlWindForce(float k, float k1) {
-	has_whirlwindForce = true;
-
-	whirlwind_generator = new WhirlwindForceGenerator(Vector3(0.0f,0.0f,0.0f), 20.0f, k, k1);
 }
 void
 ParticlesSystem::addParticles(int num) {
@@ -84,9 +75,6 @@ ParticlesSystem::addParticles(int num) {
 
 		if (has_windForce)
 			new_particle->addForceGenerator(wind_generator);
-
-		if (has_whirlwindForce)
-			new_particle->addForceGenerator(whirlwind_generator);
 
 		particles.push_back(new_particle);
 	}

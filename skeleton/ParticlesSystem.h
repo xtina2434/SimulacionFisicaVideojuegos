@@ -8,7 +8,6 @@
 #include <random>
 #include "GravityForceGenerator.h"
 #include "WindForceGenerator.h"
-#include "WhirlwindForceGenerator.h"
 using namespace std;
 class ParticlesSystem {
 
@@ -51,8 +50,6 @@ public:
 
 	void setWindForce(const Vector3& vel, float k1) ;
 
-	void setWhirlWindForce(float k, float k1);
-
 protected:
 	list<Particle*> particles;				//coleccion de particulas
 
@@ -81,9 +78,6 @@ protected:
 
 	WindForceGenerator* wind_generator;
 	bool has_windForce = false;
-
-	WhirlwindForceGenerator* whirlwind_generator;
-	bool has_whirlwindForce = false;
 
 	void addParticles(int num); //metodo para agregar particulas nuevas
 };
