@@ -13,8 +13,6 @@
 #include <iostream>
 #include <list>
 #include "ParticlesSystem.h"
-
-
 std::string display_text = "This is a test";
 
 
@@ -49,6 +47,7 @@ ParticlesSystem* smoke_system;
 
 ParticlesSystem* rain_gravity_system;
 ParticlesSystem* wind_system;
+ParticlesSystem* whirlwind_system;
 
 PxScene* createScene() {
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
@@ -146,6 +145,7 @@ void stepPhysics(bool interactive, double t)
 		
 		for (auto it = particles.begin(); it != particles.end();) {
 			(*it)->integrate(t);
+			(*it)->update(t);
 			////comprobar si siguen vivas, si no es asi se elimina
 			if (!(*it)->isAlive()) {
 				delete (*it);
@@ -173,6 +173,10 @@ void stepPhysics(bool interactive, double t)
 		if (wind_system) {
 			wind_system->update(t);
 		}
+		if (whirlwind_system) {
+			whirlwind_system->update(t);
+		}
+		
 	}
 }
 
@@ -207,6 +211,9 @@ void cleanupPhysics(bool interactive)
 	}
 	if (wind_system) {
 		delete wind_system;
+	}
+	if (whirlwind_system) {
+		delete whirlwind_system;
 	}
 	
 	/*delete myParticle;*/
@@ -323,17 +330,29 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	{
 		if (currentScene == gScene2) {
 
-			rain_gravity_system = new ParticlesSystem(Vector4(0.0, 0.0, 1.0, 0.5), Vector3(0.0, 50.0, 0), Vector3(0.0, 0.0, 0.0), 100, 0.05f, 0.9f, 0.0f, 0.1f);
+			/*rain_gravity_system = new ParticlesSystem(Vector4(0.0, 0.0, 1.0, 0.5), Vector3(0.0, 50.0, 0), Vector3(0.0, 0.0, 0.0), 100, 0.05f, 0.9f, 0.0f, 0.1f);
 			
 			rain_gravity_system->set_u_Distribution(true);
 			rain_gravity_system->setGravityForce();
 
 			rain_gravity_system->setUniformDistribPos(1.0, 10.0);
 			rain_gravity_system->setUniformDistribVel(0.0, 0.0);
-			rain_gravity_system->setNormalDistribLifeTime(1.0, 5.0);
+			rain_gravity_system->setNormalDistribLifeTime(1.0, 5.0);*/
+			
+			Particle* p1 = new Particle(Vector3(-10.0f, 70.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 2.0f, Vector4(1.0f, 0.0f, 0.0f, 1.0f), 50, 2.0f);
+			Particle* p2 = new Particle(Vector3(0.0f, 70.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 1.0f, Vector4(0.0f, 0.0f, 1.0f, 1.0f), 50, 0.1f);
+
+			GravityForceGenerator* g = new GravityForceGenerator(Vector3(0.0f, -9.8f, 0.0f));
+
+			p1->addForceGenerator(g);
+			p2->addForceGenerator(g);
+
+			particles.push_back(p1);
+			particles.push_back(p2);
 		}
 		break;
 	}
+	
 	case 'V':
 	{
 		if (currentScene == gScene2) {
@@ -347,6 +366,23 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			wind_system->setNormalDistribPos(5.0, 2.0);
 			wind_system->setNormalDistribVel(3.0, 1.0);
 			wind_system->setNormalDistribLifeTime(10.0, 2.0);
+		}
+		break;
+	}
+	case 'T':
+	{
+		if (currentScene == gScene2) {
+
+			whirlwind_system = new ParticlesSystem(Vector4(1.0, 0.0, 1.0, 1.0), Vector3(1.0, 0.0, 1.0), Vector3(0.0, 0.0, 0.0), 1, 1.0f, 0.5f, 0.0f, 0.5f);
+
+			whirlwind_system->set_u_Distribution(false);
+			whirlwind_system->setGravityForce();
+			whirlwind_system->setWhirlWindForce(20.0f,0.5f);
+
+			whirlwind_system->setNormalDistribPos(5.0, 2.0);
+			whirlwind_system->setNormalDistribVel(3.0, 1.0);
+			whirlwind_system->setNormalDistribLifeTime(5.0, 2.0);
+		
 		}
 		break;
 	}
