@@ -13,7 +13,6 @@
 #include <iostream>
 #include <list>
 #include "ParticlesSystem.h"
-#include "ExplosionForceGenerator.h"
 std::string display_text = "This is a test";
 
 
@@ -49,8 +48,6 @@ ParticlesSystem* smoke_system;
 ParticlesSystem* rain_gravity_system;
 ParticlesSystem* wind_system;
 ParticlesSystem* whirlwind_system;
-
-ExplosionForceGenerator* explosion_generator;
 
 PxScene* createScene() {
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
@@ -218,9 +215,7 @@ void cleanupPhysics(bool interactive)
 	if (whirlwind_system) {
 		delete whirlwind_system;
 	}
-	if (explosion_generator) {
-		delete explosion_generator;
-	}
+	
 	/*delete myParticle;*/
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
 	currentScene->release();
@@ -357,6 +352,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		}
 		break;
 	}
+	
 	case 'V':
 	{
 		if (currentScene == gScene2) {
@@ -387,31 +383,6 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			whirlwind_system->setNormalDistribVel(3.0, 1.0);
 			whirlwind_system->setNormalDistribLifeTime(5.0, 2.0);
 		
-		}
-		break;
-	}
-	case 'E':
-	{
-		if (currentScene == gScene2) {
-
-			Particle* p1 = new Particle(Vector3(0.0f, 30.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 1.0f, Vector4(1.0f, 0.0f, 0.0f, 1.0f), 20, 1.0f);
-			Particle* p2 = new Particle(Vector3(5.0f, 30.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 1.0f, Vector4(0.0f, 1.0f, 0.0f, 1.0f), 20, 5.0f);
-			Particle* p3 = new Particle(Vector3(-5.0f, 30.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 1.0f, Vector4(0.0f, 0.0f, 1.0f, 1.0f), 20, 0.1f);
-
-			particles.push_back(p1);
-			particles.push_back(p2);
-			particles.push_back(p3);
-		}
-		break;
-	}
-	case 'X':
-	{
-		if (currentScene == gScene2) {
-			explosion_generator = new ExplosionForceGenerator(200.0f, 2000.f, 1.0f, Vector3(0.0f,0.0f, 0.0f));
-
-			for (auto p : particles) {
-				p->addForceGenerator(explosion_generator);
-			}
 		}
 		break;
 	}
