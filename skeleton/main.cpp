@@ -49,6 +49,9 @@ ParticlesSystem* smoke_system;
 ParticlesSystem* rain_gravity_system;
 ParticlesSystem* wind_system;
 ParticlesSystem* whirlwind_system;
+ParticlesSystem* system1;
+ParticlesSystem* system2;
+ParticlesSystem* system3;
 
 ExplosionForceGenerator* explosion_generator;
 
@@ -179,6 +182,15 @@ void stepPhysics(bool interactive, double t)
 		if (whirlwind_system) {
 			whirlwind_system->update(t);
 		}
+		if (system1) {
+			system1->update(t);
+		}
+		if (system2) {
+			system2->update(t);
+		}
+		if (system3) {
+			system3->update(t);
+		}
 		
 	}
 }
@@ -220,6 +232,15 @@ void cleanupPhysics(bool interactive)
 	}
 	if (explosion_generator) {
 		delete explosion_generator;
+	}
+	if (system1) {
+		delete system1;
+	}
+	if (system2) {
+		delete system2;
+	}
+	if (system3) {
+		delete system3;
 	}
 	/*delete myParticle;*/
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
@@ -394,24 +415,55 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	{
 		if (currentScene == gScene2) {
 
-			Particle* p1 = new Particle(Vector3(0.0f, 30.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 1.0f, Vector4(1.0f, 0.0f, 0.0f, 1.0f), 20, 1.0f);
+			/*Particle* p1 = new Particle(Vector3(0.0f, 30.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 1.0f, Vector4(1.0f, 0.0f, 0.0f, 1.0f), 20, 1.0f);
 			Particle* p2 = new Particle(Vector3(5.0f, 30.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 1.0f, Vector4(0.0f, 1.0f, 0.0f, 1.0f), 20, 5.0f);
 			Particle* p3 = new Particle(Vector3(-5.0f, 30.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 1.0f, Vector4(0.0f, 0.0f, 1.0f, 1.0f), 20, 0.1f);
 
 			particles.push_back(p1);
 			particles.push_back(p2);
-			particles.push_back(p3);
+			particles.push_back(p3);*/
+			system1 = new ParticlesSystem(Vector4(1.0, 0.0, 0.0, 1.0), Vector3(0.0f, 30.0f, 0.0f), Vector3(0.0, 0.0, 0.0), 1, 1.0f, 0.2f, 0.0f, 1.0f);
+			system2 = new ParticlesSystem(Vector4(0.0, 1.0, 0.0, 1.0), Vector3(5.0f, 30.0f, 0.0f), Vector3(0.0, 0.0, 0.0), 1, 1.0f, 0.2f, 0.0f, 5.0f);
+			system3 = new ParticlesSystem(Vector4(0.0, 0.0, 1.0, 1.0), Vector3(-5.0f, 30.0f, 0.0f), Vector3(0.0, 0.0, 0.0), 1, 1.0f, 0.2f, 0.0f, 0.1f);
+
+			system1->set_u_Distribution(true);
+
+			system1->setUniformDistribPos(0.0, 1.0);
+			system1->setUniformDistribVel(0.0, 0.0);
+			system1->setNormalDistribLifeTime(5.0, 2.0);
+
+			system2->set_u_Distribution(true);
+
+			system2->setUniformDistribPos(0.0, 1.0);
+			system2->setUniformDistribVel(0.0, 0.0);
+			system2->setNormalDistribLifeTime(5.0, 2.0);
+
+			system3->set_u_Distribution(true);
+
+			system3->setUniformDistribPos(0.0, 1.0);
+			system3->setUniformDistribVel(0.0, 0.0);
+			system3->setNormalDistribLifeTime(5.0, 2.0);
+
 		}
 		break;
 	}
 	case 'X':
 	{
 		if (currentScene == gScene2) {
-			explosion_generator = new ExplosionForceGenerator(200.0f, 2000.f, 1.0f, Vector3(0.0f,0.0f, 0.0f));
+			/*explosion_generator = new ExplosionForceGenerator(200.0f, 2000.f, 1.0f, Vector3(0.0f,0.0f, 0.0f));
+
+			for (auto p : particles) {
+				p->addForceGenerator(explosion_generator);
+			}*/
+			explosion_generator = new ExplosionForceGenerator(200.0f, 2000.f, 1.0f, Vector3(0.0f, 0.0f, 0.0f));
 
 			for (auto p : particles) {
 				p->addForceGenerator(explosion_generator);
 			}
+			system1->addForceGenerator(explosion_generator);
+			system2->addForceGenerator(explosion_generator);
+			system3->addForceGenerator(explosion_generator);
+
 		}
 		break;
 	}

@@ -34,6 +34,13 @@ ParticlesSystem::setWhirlWindForce(float k, float k1) {
 	whirlwind_generator = new WhirlwindForceGenerator(Vector3(0.0f,0.0f,0.0f), 20.0f, k, k1);
 }
 void
+ParticlesSystem::addForceGenerator(ForceGenerator* fg) {
+	for (auto p : particles) {
+		p->addForceGenerator(fg);
+	}
+}
+
+void
 ParticlesSystem::addParticles(int num) {
 
 	std::normal_distribution<double> normal_dist_time(mean_life_time, desv_life_time);

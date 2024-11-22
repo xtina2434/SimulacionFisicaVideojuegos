@@ -53,6 +53,8 @@ public:
 
 	void setWhirlWindForce(float k, float k1);
 
+	void addForceGenerator(ForceGenerator* fg);
+
 protected:
 	list<Particle*> particles;				//coleccion de particulas
 

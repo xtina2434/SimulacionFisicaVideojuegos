@@ -14,8 +14,8 @@ public:
 	void updateForce(Particle* p, double t) override;
 protected:
 	Vector3 wind_vel;	//velocidad del viento
-	float k1 = 0.0f;			//coeficiente de rozamiento
-	float k2 = 0.0f;			//coeficiente para flujo turbulento
+	float k1;			//coeficiente de rozamiento
+	float k2;			//coeficiente para flujo turbulento
 	Vector3 center;
 	float radius;
 	RenderItem* sphere;
