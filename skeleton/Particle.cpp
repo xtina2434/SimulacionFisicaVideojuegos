@@ -21,13 +21,16 @@ void Particle::clearForces() {
 }
 void Particle::integrate(double t) {
 	
+	
+
+	if(mass > 0.0f)
+		acel = accF / mass;
+
 	//Euler
 	/*pose.p = pose.p + t * vel;
 	vel = vel + t * acel;
 	vel = vel * pow(doumping, t);*/
 
-	if(mass > 0.0f)
-		acel = accF / mass;
 	//Euler sempli-implicito
 	vel = vel +( t * acel);
 	pose.p = pose.p + (vel * t);

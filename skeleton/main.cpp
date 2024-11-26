@@ -14,6 +14,8 @@
 #include <list>
 #include "ParticlesSystem.h"
 #include "ExplosionForceGenerator.h"
+#include "SpringForceGenerator.h"
+#include "GravityForceGenerator.h"
 std::string display_text = "This is a test";
 
 
@@ -33,6 +35,7 @@ PxDefaultCpuDispatcher*	gDispatcher = NULL;
 //escenas
 PxScene*				gScene1      = NULL;
 PxScene*				gScene2		 = NULL;
+PxScene*				gScene3		= NULL;
 PxScene*				currentScene = NULL;
 ContactReportCallback gContactReportCallback;
 //Definicion de variables globales
@@ -54,6 +57,7 @@ ParticlesSystem* system2;
 ParticlesSystem* system3;
 
 ExplosionForceGenerator* explosion_generator;
+SpringForceGenerator* spring_generator;
 
 PxScene* createScene() {
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
@@ -115,6 +119,17 @@ void initScene2() {
 	currentScene = gScene2;
 
 }
+void initScene3() {
+
+	if (currentScene) {
+		cleanScreen();
+		currentScene->release();
+
+	}
+	gScene3 = createScene();
+	currentScene = gScene3;
+
+}
 // Initialize physics engine
 void initPhysics(bool interactive)
 {
@@ -147,7 +162,7 @@ void stepPhysics(bool interactive, double t)
 		currentScene->fetchResults(true);
 	}
 	//myParticle->integrate(t);
-	if (currentScene == gScene2) {
+	if (currentScene == gScene2 || currentScene == gScene3) {
 		
 		for (auto it = particles.begin(); it != particles.end();) {
 			(*it)->integrate(t);
@@ -302,6 +317,11 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			}
 			
 		}
+		else if (currentScene == gScene3) {
+			if (spring_generator) {
+				spring_generator->changeK(-5.0);
+			}
+		}
 		break;
 	}
 	case 'N':
@@ -313,6 +333,28 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			fog_system->setNormalDistribPos(1.0, 1.5);
 			fog_system->setNormalDistribVel(0.0, 0.1);
 			fog_system->setNormalDistribLifeTime(5.0, 5.0);
+		}
+		if (currentScene == gScene3) {
+
+			
+
+			Particle* p1 = new Particle(Vector3(-10.0, 10.0, 0.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector4(1.0, 0.0, 0.0, 1.0), 60, 0.0f);
+
+			Particle* p2 = new Particle(Vector3(10.0, 10.0, 0.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector4(0.0, 0.0, 1.0, 1.0), 60, 2.0f);
+
+			SpringForceGenerator* f1 = new SpringForceGenerator(1, 10, p2);
+			SpringForceGenerator* f2 = new SpringForceGenerator(1, 10, p1);
+
+			GravityForceGenerator* g = new GravityForceGenerator(Vector3(0.0, -9.8, 0.0));
+
+			/*p1->addForceGenerator(g);
+			p2->addForceGenerator(g);*/
+
+			p1->addForceGenerator(f1);
+			p2->addForceGenerator(f2);
+
+			particles.push_back(p1);
+			particles.push_back(p2);
 		}
 		break;
 	}
@@ -467,6 +509,42 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		}
 		break;
 	}
+	case 'M':
+	{
+		if (currentScene == gScene3) {
+			
+			//el punto de anclaje es un cubo
+			const Vector3 anchorPoint(0.0, 20.0, 0.0);
+			RenderItem* cube = new RenderItem(CreateShape(physx::PxBoxGeometry(2, 2, 2)),
+				new physx::PxTransform(anchorPoint), Vector4(0, 0, 1, 1));
+
+			Particle* p1 = new Particle(Vector3(0.0, 10.0, 0.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector4(1.0, 0.0, 0.0, 1.0), 60, 1.0f);
+
+			//Particle* p2 = new Particle(Vector3(10.0, 10.0, 0.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector4(0.0, 0.0, 1.0, 1.0), 60, 2.0f);
+
+			//SpringForceGenerator* f1 = new SpringForceGenerator(1, 10, p2);
+
+			GravityForceGenerator* g = new GravityForceGenerator(Vector3(0.0, -9.8, 0.0));
+			spring_generator = new SpringForceGenerator(50.0, 5.0, anchorPoint);
+
+			p1->addForceGenerator(g);
+			p1->addForceGenerator(spring_generator);
+			//p2->addForceGenerator(f2);
+
+			particles.push_back(p1);
+			//particles.push_back(p2);
+		}
+		break;
+	}
+	case 'K':
+	{
+		if (currentScene == gScene3) {
+			if (spring_generator) {
+				spring_generator->changeK(10.0);
+			}
+		}
+		break;
+	}
 	case '1':
 	{
 		initScene1();
@@ -475,6 +553,11 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	case '2':
 	{
 		initScene2();
+		break;
+	}
+	case '3':
+	{
+		initScene3();
 		break;
 	}
 	default:
