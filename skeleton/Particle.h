@@ -11,6 +11,7 @@ class Particle {
 	public:
 		Particle();
 		Particle(Vector3 Pos, Vector3 Vel, /*Vector3 Acel,*/ float Size, Vector4 Color, double LifeTime, float mass);
+		Particle(Vector3 Pos, Vector3 Size, Vector4 Color);
 		~Particle();
 
 		virtual void integrate(double t);
@@ -36,7 +37,6 @@ class Particle {
 		double life_time;			//tiempo de vida
 		float size;				//tamaño inicial
 		float mass;
-
 		std::vector<ForceGenerator*> generators;
 		void clearForces();
 };

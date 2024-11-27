@@ -16,6 +16,8 @@
 #include "ExplosionForceGenerator.h"
 #include "SpringForceGenerator.h"
 #include "GravityForceGenerator.h"
+#include "ElasticBandForceGenerator.h"
+#include "BuoyancyForceGenerator.h"
 std::string display_text = "This is a test";
 
 
@@ -338,14 +340,17 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 			
 
-			Particle* p1 = new Particle(Vector3(-10.0, 10.0, 0.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector4(1.0, 0.0, 0.0, 1.0), 60, 0.0f);
+			Particle* p1 = new Particle(Vector3(-10.0, 10.0, 0.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector4(1.0, 0.0, 0.0, 1.0), 60, 1.0);
 
 			Particle* p2 = new Particle(Vector3(10.0, 10.0, 0.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector4(0.0, 0.0, 1.0, 1.0), 60, 2.0f);
 
-			SpringForceGenerator* f1 = new SpringForceGenerator(1, 10, p2);
-			SpringForceGenerator* f2 = new SpringForceGenerator(1, 10, p1);
+			/*SpringForceGenerator* f1 = new SpringForceGenerator(1, 10, p2);
+			SpringForceGenerator* f2 = new SpringForceGenerator(1, 10, p1);*/
 
-			GravityForceGenerator* g = new GravityForceGenerator(Vector3(0.0, -9.8, 0.0));
+			ElasticBandForceGenerator* f1 = new ElasticBandForceGenerator(1, 10, p2);
+			ElasticBandForceGenerator* f2 = new ElasticBandForceGenerator(1, 10, p1);
+
+			//GravityForceGenerator* g = new GravityForceGenerator(Vector3(0.0, -9.8, 0.0));
 
 			/*p1->addForceGenerator(g);
 			p2->addForceGenerator(g);*/
@@ -379,6 +384,25 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			rain_system->setUniformDistribPos(1.0, 10.0);
 			rain_system->setUniformDistribVel(1.0, 3.0);
 			rain_system->setNormalDistribLifeTime(1.0,5.0);
+		}
+		if (currentScene == gScene3) {
+			Particle* waterPlane = new Particle(Vector3(0.0, 5.0, 0.0), Vector3(5.0, 0.01, 5.0), Vector4(0.0, 0.0, 1.0, 0.0));
+			Particle* floatingParticle = new Particle(Vector3(0.0, 10.0, 0.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector4(1.0, 0.5, 0.0, 1.0), 60.0f, 1.0f);
+
+			BuoyancyForceGenerator* buoyancy_generator = new BuoyancyForceGenerator(5.0f, 10.0f, 1.0f);
+			GravityForceGenerator* g = new GravityForceGenerator(Vector3(0.0, -9.8, 0.0));
+			buoyancy_generator->setliquid_particle(waterPlane);
+
+			floatingParticle->addForceGenerator(buoyancy_generator);
+			floatingParticle->addForceGenerator(g);
+
+
+			//particles.push_back(waterPlane);
+			particles.push_back(floatingParticle);
+			
+			
+			
+
 		}
 		break;
 	}

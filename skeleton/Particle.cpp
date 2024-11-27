@@ -7,6 +7,16 @@ Particle::Particle(Vector3 Pos, Vector3 Vel,/* Vector3 Acel,*/ float Size, Vecto
 	accF = Vector3(0.0f, 0.0f, 0.f);
 	renderItem = new RenderItem(CreateShape(physx::PxSphereGeometry(size)), &pose, color);
 }
+Particle::Particle(Vector3 Pos, Vector3 Size, Vector4 Color) :
+	pose(Pos), color(Color)
+{
+	mass = 0.0f;
+	size = 0.0f;
+	life_time = 0.0f;
+	vel = Vector3(0, 0, 0);
+	renderItem = new RenderItem(CreateShape(physx::PxBoxGeometry(Size)), &pose, color);
+	
+}
 Particle::~Particle() {
 	DeregisterRenderItem(renderItem);
 }

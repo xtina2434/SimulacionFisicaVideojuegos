@@ -9,10 +9,12 @@ public:
 	~BuoyancyForceGenerator();
 
 	void updateForce(Particle* p, double t) override;
+
+	void setliquid_particle(Particle* p) { liquid_particle = p; }
 protected:
 	float height;
-	float volume;
-	float density;
+	float volume ;
+	float density ;
 	float gravity = 9.8;
 
 	Particle* liquid_particle;
