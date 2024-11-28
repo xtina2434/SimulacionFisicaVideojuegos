@@ -13,6 +13,8 @@ public:
 	void updateForce(Particle* p, double t) override;
 private:
 	float k;				//cte del torbellino
+	Vector3 center;
+	float radius;
 };
 
 

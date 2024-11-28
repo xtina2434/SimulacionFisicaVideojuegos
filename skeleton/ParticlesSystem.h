@@ -49,7 +49,7 @@ public:
 	void setGravityForce() noexcept 
 	{ has_gravityForce = true; }
 
-	void setWindForce(const Vector3& vel, float k1) ;
+	void setWindForce(Vector3& vel, float k1) ;
 
 	void setWhirlWindForce(float k, float k1);
 

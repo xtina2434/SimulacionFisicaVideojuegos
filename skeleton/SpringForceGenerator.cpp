@@ -1,12 +1,14 @@
 #include "SpringForceGenerator.h"
 
 SpringForceGenerator::SpringForceGenerator(double _k, double _r_l, Particle* _other) :
-	k(_k), resting_length(_r_l), other(_other) 
+	ForceGenerator({ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, 0.0f), 
+	k(_k), resting_length(_r_l), other(_other)
 {
 	anchor = Vector3(0, 0, 0);
 	use_anchor = false;
 }
 SpringForceGenerator::SpringForceGenerator(double _k, double _r_l, const Vector3& _anchor) :
+	ForceGenerator({ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, 0.0f), 
 	k(_k), resting_length(_r_l), anchor(_anchor)
 {
 	other = nullptr;
