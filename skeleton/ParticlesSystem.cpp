@@ -22,10 +22,10 @@ ParticlesSystem::~ParticlesSystem() {
 	whirlwind_generator = nullptr;
 }
 void 
-ParticlesSystem::setWindForce(Vector3& vel, float k1 /*d*/) {
+ParticlesSystem::setWindForce(const Vector3& vel, float k1 /*d*/) {
 	has_windForce = true;
 	//wind_generator = new WindForceGenerator(d,0.5f,vel, Vector3(0.0f, 50.0f, 0.0f), 15.0f);
-	wind_generator = new WindForceGenerator(vel, k1, 0.0f, Vector3(5.0f, 30.0f, 5.0f), Vector3(0.0f, 0.0f, 0.0f), 30.0f);
+	wind_generator = new WindForceGenerator(vel, k1, 0.0f, Vector3(0.0f,50.0f,0.0f), 15.0f);
 }
 void
 ParticlesSystem::setWhirlWindForce(float k, float k1) {

@@ -2,7 +2,6 @@
 
 
 ExplosionForceGenerator::ExplosionForceGenerator(float _R, float _k, float _t, Vector3 _c) :
-	ForceGenerator({ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, 0.0f),
 	Radius(_R), k(_k), t(_t), center(_c) {
 
 }
