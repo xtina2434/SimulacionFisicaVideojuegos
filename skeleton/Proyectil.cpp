@@ -1,6 +1,6 @@
 #include "Proyectil.h"
 Proyectil::Proyectil(Vector3 Pos, Vector3 Vel, Vector3 Acel, float Size, Vector4 Color, double LifeTime, float Mass) :
-	Particle(Pos, Vel,Size, Color, LifeTime, Mass), acel(Acel) {
+	Particle(Pos, Vel,Size, Vector3(0.0,0.0,0.0), Color, LifeTime, Mass, "SPHERE"), acel(Acel) {
 
 
 }

@@ -83,7 +83,7 @@ ParticlesSystem::addParticles(int num) {
 		if (life_time < 0)
 			life_time = 0;
 		//crear particula con propiedades aleatorias
-		Particle* new_particle = new Particle( pos, vel, size, color, life_time, mass);
+		Particle* new_particle = new Particle( pos, vel, size, Vector3(0.0, 0.0, 0.0), color, life_time, mass, "SPHERE");
 		new_particle->setAcel(Vector3(0.0f, gravity, 0.0f));
 
 		if (has_gravityForce) 

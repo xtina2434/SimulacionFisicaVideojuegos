@@ -341,9 +341,9 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 			
 
-			Particle* p1 = new Particle(Vector3(-10.0, 10.0, 0.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector4(1.0, 0.0, 0.0, 1.0), 60, 1.0);
+			Particle* p1 = new Particle(Vector3(-10.0, 10.0, 0.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector3(0.0,0.0,0.0),Vector4(1.0, 0.0, 0.0, 1.0), 60, 1.0, "SPHERE");
 
-			Particle* p2 = new Particle(Vector3(10.0, 10.0, 0.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector4(0.0, 0.0, 1.0, 1.0), 60, 2.0f);
+			Particle* p2 = new Particle(Vector3(10.0, 10.0, 0.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector3(0.0, 0.0, 0.0), Vector4(0.0, 0.0, 1.0, 1.0), 60, 2.0f, "SPHERE");
 
 			/*SpringForceGenerator* f1 = new SpringForceGenerator(1, 10, p2);
 			SpringForceGenerator* f2 = new SpringForceGenerator(1, 10, p1);*/
@@ -387,8 +387,8 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			rain_system->setNormalDistribLifeTime(1.0,5.0);
 		}
 		if (currentScene == gScene3) {
-			Particle* waterPlane = new Particle(Vector3(0.0, 5.0, 0.0), Vector3(5.0, 0.01, 5.0), Vector4(0.0, 0.0, 1.0, 0.0));
-			Particle* floatingParticle = new Particle(Vector3(0.0, 10.0, 0.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector4(1.0, 0.5, 0.0, 1.0), 60.0f, 1.0f);
+			Particle* waterPlane = new Particle(Vector3(0.0, 5.0, 0.0), Vector3(0.0,0.0,0.0),0.0, Vector3(5.0, 0.01, 5.0), Vector4(0.0, 0.0, 1.0, 0.0), 0.0f, 0.0f, "BOX");
+			Particle* floatingParticle = new Particle(Vector3(0.0, 10.0, 0.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector3(0.0, 0.0, 0.0), Vector4(1.0, 0.5, 0.0, 1.0), 60.0f, 1.0f, "SPHERE");
 
 			BuoyancyForceGenerator* buoyancy_generator = new BuoyancyForceGenerator(5.0f, 10.0f, 1.0f);
 			GravityForceGenerator* g = new GravityForceGenerator(Vector3(0.0, -9.8, 0.0));
@@ -432,8 +432,8 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			rain_gravity_system->setUniformDistribVel(0.0, 0.0);
 			rain_gravity_system->setNormalDistribLifeTime(1.0, 5.0);*/
 			
-			Particle* p1 = new Particle(Vector3(-10.0f, 70.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 2.0f, Vector4(1.0f, 0.0f, 0.0f, 1.0f), 50, 2.0f);
-			Particle* p2 = new Particle(Vector3(0.0f, 70.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 1.0f, Vector4(0.0f, 0.0f, 1.0f, 1.0f), 50, 0.1f);
+			Particle* p1 = new Particle(Vector3(-10.0f, 70.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 2.0f, Vector3(0.0, 0.0, 0.0), Vector4(1.0f, 0.0f, 0.0f, 1.0f), 50, 2.0f, "SPHERE");
+			Particle* p2 = new Particle(Vector3(0.0f, 70.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 1.0f, Vector3(0.0, 0.0, 0.0), Vector4(0.0f, 0.0f, 1.0f, 1.0f), 50, 0.1f, "SPHERE");
 
 			GravityForceGenerator* g = new GravityForceGenerator(Vector3(0.0f, -9.8f, 0.0f));
 
@@ -454,11 +454,11 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 			wind_system->set_u_Distribution(true);
 			wind_system->setGravityForce();
-			wind_system->setWindForce(Vector3(0.0f, 10.0f, 0.0f), 200.0f);
+			wind_system->setWindForce(Vector3(0.0f, 10.0f, 0.0f), 10.0f);
 
 			/*wind_system->setNormalDistribPos(5.0, 2.0);
 			wind_system->setNormalDistribVel(3.0, 1.0);*/
-			wind_system->setUniformDistribPos(0.0, 1.0);
+			wind_system->setUniformDistribPos(0.0, 10.0);
 			wind_system->setUniformDistribVel(0.0, 10.0);
 			wind_system->setNormalDistribLifeTime(10.0, 2.0);
 		}
@@ -546,7 +546,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			RenderItem* cube = new RenderItem(CreateShape(physx::PxBoxGeometry(2, 2, 2)),
 				new physx::PxTransform(anchorPoint), Vector4(0, 0, 1, 1));
 
-			Particle* p1 = new Particle(Vector3(0.0, 10.0, 0.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector4(1.0, 0.0, 0.0, 1.0), 60, 1.0f);
+			Particle* p1 = new Particle(Vector3(0.0, 10.0, 0.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector3(0.0, 0.0, 0.0), Vector4(1.0, 0.0, 0.0, 1.0), 60, 1.0f, "SPHERE");
 
 			//Particle* p2 = new Particle(Vector3(10.0, 10.0, 0.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector4(0.0, 0.0, 1.0, 1.0), 60, 2.0f);
 

@@ -1,21 +1,17 @@
 #include "Particle.h"
 #include <cmath>
 #include "ForceGenerator.h"
-Particle::Particle(Vector3 Pos, Vector3 Vel,/* Vector3 Acel,*/ float Size, Vector4 Color, double LifeTime, float Mass) : 
-	pose(Pos), vel(Vel),/* acel(Acel),*/ size(Size),color(Color), life_time(LifeTime),mass(Mass) {
+Particle::Particle(Vector3 Pos, Vector3 Vel,/* Vector3 Acel,*/ float Size, Vector3 Vol, Vector4 Color, double LifeTime, float Mass, std::string SHAPE) : 
+	pose(Pos), vel(Vel),/* acel(Acel),*/ size(Size),vol(Vol),color(Color), life_time(LifeTime),mass(Mass) {
 	acel = Vector3(0.0f, 0.0f, 0.0f);
 	accF = Vector3(0.0f, 0.0f, 0.f);
+
+	if(SHAPE == "SPHERE")
 	renderItem = new RenderItem(CreateShape(physx::PxSphereGeometry(size)), &pose, color);
-}
-Particle::Particle(Vector3 Pos, Vector3 Size, Vector4 Color) :
-	pose(Pos), color(Color)
-{
-	mass = 0.0f;
-	size = 0.0f;
-	life_time = 0.0f;
-	vel = Vector3(0, 0, 0);
-	renderItem = new RenderItem(CreateShape(physx::PxBoxGeometry(Size)), &pose, color);
-	
+
+	if (SHAPE == "BOX") {
+		renderItem = new RenderItem(CreateShape(physx::PxBoxGeometry(vol)), &pose, color);
+	}
 }
 Particle::~Particle() {
 	DeregisterRenderItem(renderItem);
