@@ -1,11 +1,17 @@
 #include "WindForceGenerator.h"
 
-WindForceGenerator::WindForceGenerator(const Vector3& v, float _k1, float k2 , Vector3 c, float r) :
-	wind_vel(v), k1(_k1), center(c), radius(r)
+WindForceGenerator::WindForceGenerator(Vector3& v, float _k1, float _k2, Vector3 _p1, Vector3 _p2, float r) :
+	ForceGenerator(_p1,_p2,r), wind_vel(v) , k1(_k1), k2(_k2)
+
 {
-	sphere = new RenderItem(CreateShape(physx::PxSphereGeometry(radius)),
-		new physx::PxTransform(center),Vector4(0.6, 0.6, 0.6, 0.5));
 }
+
+//WindForceGenerator::WindForceGenerator(const Vector3& v, float _k1, float k2 , Vector3 c, float r) :
+//	wind_vel(v), k1(_k1), center(c), radius(r)
+//{
+//	sphere = new RenderItem(CreateShape(physx::PxSphereGeometry(radius)),
+//		new physx::PxTransform(center),Vector4(0.6, 0.6, 0.6, 0.5));
+//}
 //WindForceGenerator::WindForceGenerator(float d, float coef, const Vector3& v,  Vector3 c, float r) :
 //	air_density(d), drag_coeff(coef), wind_vel(v), sphereCenter(c), sphereRadius(r)
 //{
@@ -13,12 +19,25 @@ WindForceGenerator::WindForceGenerator(const Vector3& v, float _k1, float k2 , V
 //		new physx::PxTransform(sphereCenter), Vector4(0.6, 0.6, 0.6, 0.5));
 //}
 WindForceGenerator::~WindForceGenerator() {
-	if (sphere) DeregisterRenderItem(sphere);
+	
 }
 void
 WindForceGenerator::updateForce(Particle* p,double t) {
 
 	//evitar division entre 0
+	if (p != nullptr && p->getMass() > 0.0f) {
+		
+		if (use_bounding && bounding_shape->isInside(p->getPos()) || !use_bounding) {
+			Vector3 vel_diff = wind_vel - p->getVel();
+			Vector3 wind_force = k1 * vel_diff;
+			if (k2 > 0.0f) {
+				wind_force += k2 * vel_diff.magnitude() * vel_diff;
+			}
+			p->addForce(wind_force);
+		}
+		
+	}
+	/*//evitar division entre 0
 	if (p != nullptr && p->getMass() > 0.0f) {
 		//calcular distancia particula dentro de la esfera
 		Vector3 particlePos = p->getPos();
@@ -51,6 +70,7 @@ WindForceGenerator::updateForce(Particle* p,double t) {
 			p->addForce(wind_force);
 		}
 	}
+	*/
 	
 }
 
