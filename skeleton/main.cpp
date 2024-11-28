@@ -454,11 +454,11 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 			wind_system->set_u_Distribution(true);
 			wind_system->setGravityForce();
-			wind_system->setWindForce(Vector3(0.0f, 60.0f, 0.0f), 1.0f);
+			wind_system->setWindForce(Vector3(0.0f, 10.0f, 0.0f), 200.0f);
 
 			/*wind_system->setNormalDistribPos(5.0, 2.0);
 			wind_system->setNormalDistribVel(3.0, 1.0);*/
-			wind_system->setUniformDistribPos(0.0, 10.0);
+			wind_system->setUniformDistribPos(0.0, 1.0);
 			wind_system->setUniformDistribVel(0.0, 10.0);
 			wind_system->setNormalDistribLifeTime(10.0, 2.0);
 		}

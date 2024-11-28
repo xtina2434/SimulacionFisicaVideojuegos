@@ -20,9 +20,6 @@
     <ClCompile Include="SpringForceGenerator.cpp" />
     <ClCompile Include="BuoyancyForceGenerator.cpp" />
     <ClCompile Include="ElasticBandForceGenerator.cpp" />
-    <ClCompile Include="BoundingSphere.cpp" />
-    <ClCompile Include="BoundingBox.cpp" />
-    <ClCompile Include="ForceGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -46,9 +43,6 @@
     <ClInclude Include="SpringForceGenerator.h" />
     <ClInclude Include="BuoyancyForceGenerator.h" />
     <ClInclude Include="ElasticBandForceGenerator.h" />
-    <ClInclude Include="BoundingSphere.h" />
-    <ClInclude Include="BoundingBox.h" />
-    <ClInclude Include="Bounding.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

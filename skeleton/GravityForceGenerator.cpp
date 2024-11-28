@@ -1,6 +1,6 @@
 #include "GravityForceGenerator.h"
 GravityForceGenerator::GravityForceGenerator(const Vector3& g) : 
-	ForceGenerator({ 0.0f,0.0f,0.0f }, {0.0f,0.0f,0.0f}, 0.0f), gravity(g) {}
+	gravity(g) {}
 
 GravityForceGenerator::~GravityForceGenerator(){
 
