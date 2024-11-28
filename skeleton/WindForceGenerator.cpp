@@ -1,7 +1,7 @@
 #include "WindForceGenerator.h"
 
-WindForceGenerator::WindForceGenerator(Vector3& v, float _k1, float _k2, Vector3 _p1, Vector3 _p2, float r) :
-	ForceGenerator(_p1,_p2,r), wind_vel(v) , k1(_k1), k2(_k2)
+WindForceGenerator::WindForceGenerator(Vector3& v, float _k1, float _k2) :
+	wind_vel(v) , k1(_k1), k2(_k2)
 
 {
 }
@@ -27,15 +27,12 @@ WindForceGenerator::updateForce(Particle* p,double t) {
 	//evitar division entre 0
 	if (p != nullptr && p->getMass() > 0.0f) {
 		
-		if (use_bounding && bounding_shape->isInside(p->getPos()) || !use_bounding) {
-			Vector3 vel_diff = wind_vel - p->getVel();
-			Vector3 wind_force = k1 * vel_diff;
-			if (k2 > 0.0f) {
-				wind_force += k2 * vel_diff.magnitude() * vel_diff;
-			}
-			p->addForce(wind_force);
+		Vector3 vel_diff = wind_vel - p->getVel();
+		Vector3 wind_force = k1 * vel_diff;
+		if (k2 > 0.0f) {
+			wind_force += k2 * vel_diff.magnitude() * vel_diff;
 		}
-		
+		p->addForce(wind_force);
 	}
 	/*//evitar division entre 0
 	if (p != nullptr && p->getMass() > 0.0f) {

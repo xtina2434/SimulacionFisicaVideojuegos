@@ -1,7 +1,7 @@
 #include "WhirlwindForceGenerator.h"
 
 WhirlwindForceGenerator::WhirlwindForceGenerator(const Vector3& c, float r, float _k, float k1) :
-	WindForceGenerator(Vector3(0, 0, 0), k1, 0.0f, { 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f },0.0f /*c, r*/), 
+	WindForceGenerator(Vector3(0, 0, 0), k1, 0.0f), 
 	k(_k), center(c), radius(r)
 {
 	//if(sphere) DeregisterRenderItem(sphere);
