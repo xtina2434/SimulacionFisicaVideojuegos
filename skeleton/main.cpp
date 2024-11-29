@@ -387,12 +387,12 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			rain_system->setNormalDistribLifeTime(1.0,5.0);
 		}
 		if (currentScene == gScene3) {
-			Particle* waterPlane = new Particle(Vector3(10.0, 20.0, -20.0), Vector3(0.0,0.0,0.0),0.0, Vector3(20.0, 0.2, 10.0), Vector4(0.0, 0.0, 1.0, 0.0), 0.0f, 0.0f, "BOX");
-			Particle* floor = new Particle(Vector3(10.0, 0.0, -20.0), Vector3(0.0, 0.0, 0.0), 0.0, Vector3(20.0, 0.2, 10.0), Vector4(0.5, 0.5, 0.5, 0.0), 0.0f, 0.0f, "BOX");
-			Particle* floatingParticle1 = new Particle(Vector3(0.0, 20.0, -20.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector3(0.0, 0.0, 0.0), Vector4(1.0, 0.5, 0.0, 1.0), 60.0f, 1.0f, "SPHERE");
-			Particle* floatingParticle2 = new Particle(Vector3(10.0, 20.0, -20.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector3(0.0, 0.0, 0.0), Vector4(1.0, 0.5, 0.0, 1.0), 60.0f, 8.0f, "SPHERE");
-			Particle* floatingParticle3 = new Particle(Vector3(20.0, 20.0, -20.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector3(0.0, 0.0, 0.0), Vector4(1.0, 0.5, 0.0, 1.0), 60.0f, 10.0f, "SPHERE");
-			BuoyancyForceGenerator* buoyancy_generator = new BuoyancyForceGenerator(1.0f);
+			Particle* waterPlane = new Particle(Vector3(10.0, 40.0, -20.0), Vector3(0.0,0.0,0.0),0.0, Vector3(20.0, 0.2, 10.0), Vector4(0.0, 0.0, 1.0, 0.0), 0.0f, 0.0f, "BOX");
+			Particle* floor = new Particle(Vector3(10.0, 20.0, -20.0), Vector3(0.0, 0.0, 0.0), 0.0, Vector3(20.0, 0.2, 10.0), Vector4(0.5, 0.5, 0.5, 0.0), 0.0f, 0.0f, "BOX");
+			Particle* floatingParticle1 = new Particle(Vector3(0.0, 40.0, -20.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector3(1.0, 1.0, 1.0), Vector4(1.0, 0.5, 0.0, 1.0), 60.0f, 10000.0f, "BOX");
+			Particle* floatingParticle2 = new Particle(Vector3(10.0, 40.0, -20.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector3(1.0, 1.0, 1.0), Vector4(1.0, 0.5, 0.0, 1.0), 60.0f, 500.0f, "BOX");
+			Particle* floatingParticle3 = new Particle(Vector3(20.0, 40.0, -20.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector3(1.0, 1.0, 1.0), Vector4(1.0, 0.5, 0.0, 1.0), 60.0f, 8000.0f, "BOX");
+			BuoyancyForceGenerator* buoyancy_generator = new BuoyancyForceGenerator(1000.0f);
 			GravityForceGenerator* g = new GravityForceGenerator(Vector3(0.0, -9.8, 0.0));
 			buoyancy_generator->setliquid_particle(waterPlane);
 
