@@ -18,10 +18,10 @@ ElasticBandForceGenerator::updateForce(Particle* p, double t) {
 		
 		//la fuerza solo se aplica si la distancia supera la longitud en reposo
 		if (length > resting_length) {
-			float delta_x = length - resting_length;				 //deformacion goma
-			Vector3 elastic_force = relative_pos_vector* delta_x* k; //ley de hook;
+			float diff = length - resting_length;				 //deformacion goma
+			if (diff <= 0) diff = 0;
+			Vector3 elastic_force = relative_pos_vector* diff* k; //ley de hook;
 			p->addForce(elastic_force);
 		}
-
 	}
 }

@@ -32,9 +32,9 @@ SpringForceGenerator::updateForce(Particle* p, double t) {
 
 	//normalizar la posicion relativa y devolver su longitud
 	float length = relative_pos_vector.normalize();	//distancia entre los dos extremos del muelle
-	float delta_x = length - resting_length;		//diferencia entre la longitud actual del muelle y su longitud en reposo
+	float diff = length - resting_length;		//diferencia entre la longitud actual del muelle y su longitud en reposo
 
-	spring_force = relative_pos_vector * delta_x * k; //ley de hook
+	spring_force = relative_pos_vector * diff * k; //ley de hook
 
 	p->addForce(spring_force);
 }
