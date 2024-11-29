@@ -387,11 +387,11 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			rain_system->setNormalDistribLifeTime(1.0,5.0);
 		}
 		if (currentScene == gScene3) {
-			Particle* waterPlane = new Particle(Vector3(10.0, 20.0, -50.0), Vector3(0.0,0.0,0.0),0.0, Vector3(20.0, 0.2, 10.0), Vector4(0.2, 0.2, 0.8, 0.0), 0.0f, 0.0f, "BOX");
-			Particle* floor = new Particle(Vector3(10.0, 0.0, -50.0), Vector3(0.0, 0.0, 0.0), 0.0, Vector3(20.0, 0.2, 10.0), Vector4(0.5, 0.5, 0.5, 0.0), 0.0f, 0.0f, "BOX");
-			Particle* floatingParticle1 = new Particle(Vector3(0.0, 20.0, -50.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector3(0.0, 0.0, 0.0), Vector4(1.0, 0.5, 0.0, 1.0), 60.0f, 1.0f, "SPHERE");
-			Particle* floatingParticle2 = new Particle(Vector3(10.0, 20.0, -50.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector3(0.0, 0.0, 0.0), Vector4(1.0, 0.5, 0.0, 1.0), 60.0f, 8.0f, "SPHERE");
-			Particle* floatingParticle3 = new Particle(Vector3(20.0, 20.0, -50.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector3(0.0, 0.0, 0.0), Vector4(1.0, 0.5, 0.0, 1.0), 60.0f, 10.0f, "SPHERE");
+			Particle* waterPlane = new Particle(Vector3(10.0, 20.0, -20.0), Vector3(0.0,0.0,0.0),0.0, Vector3(20.0, 0.2, 10.0), Vector4(0.0, 0.0, 1.0, 0.0), 0.0f, 0.0f, "BOX");
+			Particle* floor = new Particle(Vector3(10.0, 0.0, -20.0), Vector3(0.0, 0.0, 0.0), 0.0, Vector3(20.0, 0.2, 10.0), Vector4(0.5, 0.5, 0.5, 0.0), 0.0f, 0.0f, "BOX");
+			Particle* floatingParticle1 = new Particle(Vector3(0.0, 20.0, -20.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector3(0.0, 0.0, 0.0), Vector4(1.0, 0.5, 0.0, 1.0), 60.0f, 1.0f, "SPHERE");
+			Particle* floatingParticle2 = new Particle(Vector3(10.0, 20.0, -20.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector3(0.0, 0.0, 0.0), Vector4(1.0, 0.5, 0.0, 1.0), 60.0f, 8.0f, "SPHERE");
+			Particle* floatingParticle3 = new Particle(Vector3(20.0, 20.0, -20.0), Vector3(0.0, 0.0, 0.0), 1.0f, Vector3(0.0, 0.0, 0.0), Vector4(1.0, 0.5, 0.0, 1.0), 60.0f, 10.0f, "SPHERE");
 			BuoyancyForceGenerator* buoyancy_generator = new BuoyancyForceGenerator(1.0f);
 			GravityForceGenerator* g = new GravityForceGenerator(Vector3(0.0, -9.8, 0.0));
 			buoyancy_generator->setliquid_particle(waterPlane);
@@ -535,14 +535,18 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			for (auto p : particles) {
 				p->addForceGenerator(explosion_generator);
 			}*/
-			explosion_generator = new ExplosionForceGenerator(200.0f, 2000.f, 1.0f, Vector3(0.0f, 0.0f, 0.0f));
+			explosion_generator = new ExplosionForceGenerator(50.0f, 1000.0f, 0.05f, Vector3(0.0f, 0.0f, 0.0f), 125.0f);
+			explosion_generator->init();
 
 			for (auto p : particles) {
 				p->addForceGenerator(explosion_generator);
 			}
-			system1->addForceGenerator(explosion_generator);
-			system2->addForceGenerator(explosion_generator);
-			system3->addForceGenerator(explosion_generator);
+			if (system1 && system2 && system3) {
+				system1->addForceGenerator(explosion_generator);
+				system2->addForceGenerator(explosion_generator);
+				system3->addForceGenerator(explosion_generator);
+			}
+			
 
 		}
 		break;
