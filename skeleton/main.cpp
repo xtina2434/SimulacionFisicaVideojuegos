@@ -508,21 +508,21 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 			system1->set_u_Distribution(true);
 
-			system1->setUniformDistribPos(0.0, 1.0);
+			system1->setUniformDistribPos(-5.0, 5.0);
 			system1->setUniformDistribVel(0.0, 0.0);
-			system1->setNormalDistribLifeTime(5.0, 2.0);
+			system1->setNormalDistribLifeTime(10.0, 5.0);
 
 			system2->set_u_Distribution(true);
 
-			system2->setUniformDistribPos(0.0, 1.0);
+			system2->setUniformDistribPos(-5.0, 5.0);
 			system2->setUniformDistribVel(0.0, 0.0);
-			system2->setNormalDistribLifeTime(5.0, 2.0);
+			system2->setNormalDistribLifeTime(10.0, 5.0);
 
 			system3->set_u_Distribution(true);
 
-			system3->setUniformDistribPos(0.0, 1.0);
+			system3->setUniformDistribPos(-5.0, 5.0);
 			system3->setUniformDistribVel(0.0, 0.0);
-			system3->setNormalDistribLifeTime(5.0, 2.0);
+			system3->setNormalDistribLifeTime(10.0, 5.0);
 
 		}
 		break;
@@ -535,8 +535,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			for (auto p : particles) {
 				p->addForceGenerator(explosion_generator);
 			}*/
-			explosion_generator = new ExplosionForceGenerator(50.0f, 1000.0f, 0.05f, Vector3(0.0f, 0.0f, 0.0f), 125.0f);
-			explosion_generator->init();
+			explosion_generator = new ExplosionForceGenerator(50.0f, 2000.0, 0.5f, Vector3(0.0f, 30.0f, 0.0f));
 
 			for (auto p : particles) {
 				p->addForceGenerator(explosion_generator);
