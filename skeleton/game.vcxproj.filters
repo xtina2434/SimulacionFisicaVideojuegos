@@ -20,6 +20,7 @@
     <ClCompile Include="SpringForceGenerator.cpp" />
     <ClCompile Include="BuoyancyForceGenerator.cpp" />
     <ClCompile Include="ElasticBandForceGenerator.cpp" />
+    <ClCompile Include="RigidSolid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -43,6 +44,7 @@
     <ClInclude Include="SpringForceGenerator.h" />
     <ClInclude Include="BuoyancyForceGenerator.h" />
     <ClInclude Include="ElasticBandForceGenerator.h" />
+    <ClInclude Include="RigidSolid.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

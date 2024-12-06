@@ -19,6 +19,7 @@
 #include "GravityForceGenerator.h"
 #include "ElasticBandForceGenerator.h"
 #include "BuoyancyForceGenerator.h"
+#include "RigidSolid.h"
 std::string display_text = "This is a test";
 
 
@@ -38,7 +39,8 @@ PxDefaultCpuDispatcher*	gDispatcher = NULL;
 //escenas
 PxScene*				gScene1      = NULL;
 PxScene*				gScene2		 = NULL;
-PxScene*				gScene3		= NULL;
+PxScene*				gScene3		 = NULL;
+PxScene*				gScene4		 = NULL;
 PxScene*				currentScene = NULL;
 ContactReportCallback gContactReportCallback;
 //Definicion de variables globales
@@ -47,6 +49,7 @@ std::list<RenderItem*> items;
 RenderItem *xRenderItem = NULL, *yRenderItem = NULL, *zRenderItem = NULL, *originRenderItem = NULL;
 PxTransform x, y, z, origin;
 std::list<Particle*> particles;
+std::list<ParticlesSystem*> systems;
 ParticlesSystem* fog_system;
 ParticlesSystem* fire_system;
 ParticlesSystem* rain_system;
@@ -61,6 +64,8 @@ ParticlesSystem* system3;
 
 ExplosionForceGenerator* explosion_generator;
 SpringForceGenerator* spring_generator;
+
+std::list<RigidSolid*> rigidSolids;
 
 PxScene* createScene() {
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
@@ -82,6 +87,16 @@ void cleanScreen() {
 		delete *it;
 	}
 	particles.clear();
+	for (auto it = rigidSolids.begin(); it != rigidSolids.end(); ++it) {
+		delete* it;
+	}
+	rigidSolids.clear();
+	for (auto it = systems.begin(); it != systems.end(); ++it) {
+		if (*it != nullptr) {
+			delete* it;
+		}
+	}
+	systems.clear();
 }
 void initScene1() {
 	if (currentScene) {
@@ -110,7 +125,6 @@ void initScene1() {
 	items.push_back(originRenderItem);
 
 }
-
 void initScene2() {
 	
 	if (currentScene) {
@@ -132,6 +146,36 @@ void initScene3() {
 	gScene3 = createScene();
 	currentScene = gScene3;
 
+}
+void initScene4() {
+
+	if (currentScene) {
+		cleanScreen();
+		currentScene->release();
+
+	}
+	gScene4 = createScene();
+	currentScene = gScene4;
+
+	//generador de actores estaticos
+	//suelo, definir posicion y forma
+	PxRigidStatic* suelo = gPhysics->createRigidStatic(PxTransform({ 0,0,0 }));
+	PxShape* shape = CreateShape(PxBoxGeometry(100, 0.1, 100));
+	suelo->attachShape(*shape);
+	gScene4->addActor(*suelo); //aniade el elemeno a la escena
+
+	//pintar suelo
+	RenderItem* item = new RenderItem(shape, suelo, { 0.8,0.8,0.8,1 });
+
+
+	RigidSolid* solid1 = new RigidSolid(gPhysics, gScene4,
+		Vector3(-70, 50, -70), Vector3(0, 5, 0), Vector3(0, 0, 0), Vector3(5, 5, 5), Vector4(0.8, 0.8, 0.8, 1),
+		0.65, 500);
+	rigidSolids.push_back(solid1);
+	RigidSolid* solid2 = new RigidSolid(gPhysics, gScene4,
+		Vector3(-70, 100, -70), Vector3(0, 5, 0), Vector3(0, 0, 0), Vector3(5, 5, 5), Vector4(0.8, 0.8, 0.8, 1),
+		0.15, 500);
+	rigidSolids.push_back(solid2);
 }
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -179,7 +223,12 @@ void stepPhysics(bool interactive, double t)
 				++it;
 			}
 		}
-		if (fog_system) {
+		for (auto it = systems.begin(); it != systems.end(); ++it) {
+			if (*it != nullptr) {
+				(*it)->update(t);
+			}
+		}
+		/*if (fog_system) {
 			fog_system->update(t);
 		}
 		if (fire_system) {
@@ -208,8 +257,21 @@ void stepPhysics(bool interactive, double t)
 		}
 		if (system3) {
 			system3->update(t);
+		}*/
+	}
+
+	if (currentScene == gScene4) {
+		for (auto it = rigidSolids.begin(); it != rigidSolids.end();) {
+			(*it)->integrate(t);
+			
+			if (!(*it)->isAlive()) {
+				delete (*it);
+				it = rigidSolids.erase(it);
+			}
+			else {
+				++it;
+			}
 		}
-		
 	}
 }
 
@@ -227,7 +289,17 @@ void cleanupPhysics(bool interactive)
 		delete* it;
 	}
 	particles.clear();
-	if (fog_system) {
+	for (auto it = rigidSolids.begin(); it != rigidSolids.end(); ++it) {
+		delete* it;
+	}
+	rigidSolids.clear();
+	for (auto it = systems.begin(); it != systems.end(); ++it) {
+		if (*it != nullptr) {
+			delete* it;
+		}
+	}
+	systems.clear();
+	/*if (fog_system) {
 		delete fog_system;
 	}
 	if (fire_system) {
@@ -259,7 +331,7 @@ void cleanupPhysics(bool interactive)
 	}
 	if (system3) {
 		delete system3;
-	}
+	}*/
 	/*delete myParticle;*/
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
 	currentScene->release();
@@ -336,6 +408,8 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			fog_system->setNormalDistribPos(1.0, 1.5);
 			fog_system->setNormalDistribVel(0.0, 0.1);
 			fog_system->setNormalDistribLifeTime(5.0, 5.0);
+
+			systems.push_back(fog_system);
 		}
 		if (currentScene == gScene3) {
 
@@ -373,6 +447,8 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			fire_system->setNormalDistribPos(1.0, 0.5);
 			fire_system->setNormalDistribVel(1.0, 0.5);
 			fire_system->setNormalDistribLifeTime(1.0, 0.5);
+
+			systems.push_back(fire_system);
 		}
 		break;
 	}
@@ -385,6 +461,8 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			rain_system->setUniformDistribPos(1.0, 10.0);
 			rain_system->setUniformDistribVel(1.0, 3.0);
 			rain_system->setNormalDistribLifeTime(1.0,5.0);
+
+			systems.push_back(rain_system);
 		}
 		if (currentScene == gScene3) {
 			Particle* waterPlane = new Particle(Vector3(10.0, 40.0, -20.0), Vector3(0.0,0.0,0.0),0.0, Vector3(20.0, 0.2, 10.0), Vector4(0.0, 0.0, 1.0, 0.0), 0.0f, 0.0f, "BOX");
@@ -426,6 +504,8 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			smoke_system->setNormalDistribPos(1.0, 0.5);
 			smoke_system->setNormalDistribVel(5.0, 2.0);
 			smoke_system->setNormalDistribLifeTime(1.0, 0.5);
+
+			systems.push_back(smoke_system);
 		}
 		break;
 	}
@@ -471,6 +551,8 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			wind_system->setUniformDistribPos(0.0, 10.0);
 			wind_system->setUniformDistribVel(0.0, 10.0);
 			wind_system->setNormalDistribLifeTime(10.0, 2.0);
+
+			systems.push_back(wind_system);
 		}
 		break;
 	}
@@ -487,6 +569,8 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			whirlwind_system->setNormalDistribPos(5.0, 2.0);
 			whirlwind_system->setNormalDistribVel(3.0, 1.0);
 			whirlwind_system->setNormalDistribLifeTime(5.0, 2.0);
+
+			systems.push_back(whirlwind_system);
 		
 		}
 		break;
@@ -523,6 +607,10 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			system3->setUniformDistribPos(-5.0, 5.0);
 			system3->setUniformDistribVel(0.0, 0.0);
 			system3->setNormalDistribLifeTime(10.0, 5.0);
+
+			systems.push_back(system1);
+			systems.push_back(system2);
+			systems.push_back(system3);
 
 		}
 		break;
@@ -599,6 +687,11 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	case '3':
 	{
 		initScene3();
+		break;
+	}
+	case '4':
+	{
+		initScene4();
 		break;
 	}
 	default:

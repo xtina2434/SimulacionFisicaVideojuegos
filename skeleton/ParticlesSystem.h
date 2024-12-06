@@ -78,13 +78,13 @@ protected:
 
 	std::uniform_real_distribution<double> distrib; //distribucion uniforme para la probabilidad de generacion de particulas
 
-	GravityForceGenerator* gravity_generator;
+	GravityForceGenerator* gravity_generator = nullptr;
 	bool has_gravityForce = false;
 
-	WindForceGenerator* wind_generator;
+	WindForceGenerator* wind_generator = nullptr;
 	bool has_windForce = false;
 
-	WhirlwindForceGenerator* whirlwind_generator;
+	WhirlwindForceGenerator* whirlwind_generator = nullptr;
 	bool has_whirlwindForce = false;
 
 	void addParticles(int num); //metodo para agregar particulas nuevas

@@ -14,12 +14,18 @@ ParticlesSystem::~ParticlesSystem() {
 	}
 	particles.clear();
 
-	delete gravity_generator;
-	gravity_generator = nullptr;
-	delete wind_generator;
-	wind_generator = nullptr;
-	delete whirlwind_generator;
-	whirlwind_generator = nullptr;
+	if (gravity_generator != nullptr) {
+		delete gravity_generator;
+		gravity_generator = nullptr;
+	}
+	if (wind_generator != nullptr) {
+		delete wind_generator;
+		wind_generator = nullptr;
+	}
+	if (whirlwind_generator != nullptr) {
+		delete whirlwind_generator;
+		whirlwind_generator = nullptr;
+	}
 }
 void 
 ParticlesSystem::setWindForce(Vector3& vel, float k1 /*d*/) {
