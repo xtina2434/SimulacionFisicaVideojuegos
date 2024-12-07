@@ -20,6 +20,7 @@
 #include "ElasticBandForceGenerator.h"
 #include "BuoyancyForceGenerator.h"
 #include "RigidSolid.h"
+#include "RigidSolidSystem.h"
 std::string display_text = "This is a test";
 
 
@@ -66,6 +67,9 @@ ExplosionForceGenerator* explosion_generator;
 SpringForceGenerator* spring_generator;
 
 std::list<RigidSolid*> rigidSolids;
+std::list<RigidSolidSystem*> solidSystems;
+
+RigidSolidSystem* snow_solid_system;
 
 PxScene* createScene() {
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
@@ -97,6 +101,12 @@ void cleanScreen() {
 		}
 	}
 	systems.clear();
+	for (auto it = solidSystems.begin(); it != solidSystems.end(); ++it) {
+		if (*it != nullptr) {
+			delete* it;
+		}
+	}
+	solidSystems.clear();
 }
 void initScene1() {
 	if (currentScene) {
@@ -157,25 +167,25 @@ void initScene4() {
 	gScene4 = createScene();
 	currentScene = gScene4;
 
-	//generador de actores estaticos
-	//suelo, definir posicion y forma
-	PxRigidStatic* suelo = gPhysics->createRigidStatic(PxTransform({ 0,0,0 }));
-	PxShape* shape = CreateShape(PxBoxGeometry(100, 0.1, 100));
-	suelo->attachShape(*shape);
-	gScene4->addActor(*suelo); //aniade el elemeno a la escena
+	////generador de actores estaticos
+	////suelo, definir posicion y forma
+	//PxRigidStatic* suelo = gPhysics->createRigidStatic(PxTransform({ 0,0,0 }));
+	//PxShape* shape = CreateShape(PxBoxGeometry(100, 0.1, 100));
+	//suelo->attachShape(*shape);
+	//gScene4->addActor(*suelo); //aniade el elemeno a la escena
 
-	//pintar suelo
-	RenderItem* item = new RenderItem(shape, suelo, { 0.8,0.8,0.8,1 });
+	////pintar suelo
+	//RenderItem* item = new RenderItem(shape, suelo, { 0.8,0.8,0.8,1 });
 
 
-	RigidSolid* solid1 = new RigidSolid(gPhysics, gScene4,
-		Vector3(-70, 50, -70), Vector3(0, 5, 0), Vector3(0, 0, 0), Vector3(5, 5, 5), Vector4(0.8, 0.8, 0.8, 1),
-		0.65, 500);
+	/*RigidSolid* solid1 = new RigidSolid(gPhysics, gScene4, gMaterial,
+		Vector3(-70, 50, -70), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(5, 5, 5), Vector4(0.8, 0.8, 0.8, 1),
+		0.65, 500, "BOX");
 	rigidSolids.push_back(solid1);
-	RigidSolid* solid2 = new RigidSolid(gPhysics, gScene4,
-		Vector3(-70, 100, -70), Vector3(0, 5, 0), Vector3(0, 0, 0), Vector3(5, 5, 5), Vector4(0.8, 0.8, 0.8, 1),
-		0.15, 500);
-	rigidSolids.push_back(solid2);
+	RigidSolid* solid2 = new RigidSolid(gPhysics, gScene4, gMaterial,
+		Vector3(-70, 100, -70), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(5, 5, 5), Vector4(0.8, 0.8, 0.8, 1),
+		0.15, 500, "SPHERE");
+	rigidSolids.push_back(solid2);*/
 }
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -272,6 +282,11 @@ void stepPhysics(bool interactive, double t)
 				++it;
 			}
 		}
+		for (auto it = solidSystems.begin(); it != solidSystems.end(); ++it) {
+			if (*it != nullptr) {
+				(*it)->update(t);
+			}
+		}
 	}
 }
 
@@ -293,6 +308,10 @@ void cleanupPhysics(bool interactive)
 		delete* it;
 	}
 	rigidSolids.clear();
+	for (auto it = solidSystems.begin(); it != solidSystems.end(); ++it) {
+		delete* it;
+	}
+	solidSystems.clear();
 	for (auto it = systems.begin(); it != systems.end(); ++it) {
 		if (*it != nullptr) {
 			delete* it;
@@ -435,6 +454,41 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 			particles.push_back(p1);
 			particles.push_back(p2);
+		}
+		if (currentScene == gScene4) {
+			
+	
+			PxRigidStatic* suelo = gPhysics->createRigidStatic(PxTransform({ 0,0,0 }));
+			PxShape* shape = CreateShape(PxBoxGeometry(100, 0.1, 100));
+			suelo->attachShape(*shape);
+			gScene4->addActor(*suelo); 
+			RenderItem* item = new RenderItem(shape, suelo, { 0.1,0.5,0.1,1 });
+
+			PxRigidStatic* tronco = gPhysics->createRigidStatic(PxTransform({ 0,0,0 }));
+			PxShape* shape2 = CreateShape(PxBoxGeometry(5, 20, 5));
+			tronco->attachShape(*shape2);
+			gScene4->addActor(*tronco);
+			RenderItem* item2 = new RenderItem(shape2, tronco, { 0.6,0.1,0.1,1 });
+
+			PxRigidStatic* esfera = gPhysics->createRigidStatic(PxTransform({ 0,30,0 }));
+			PxShape* shape3 = CreateShape(PxSphereGeometry(10));
+			esfera->attachShape(*shape3);
+			gScene4->addActor(*esfera);
+			RenderItem* item3 = new RenderItem(shape3, esfera, { 1.0,0.0,0.0,1 });
+
+			snow_solid_system = new RigidSolidSystem(gPhysics, gScene4,
+				Vector3(0.0f, 50.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0, 0, 0),
+				Vector3(0.5f, 0.5f, 0.5f), Vector4(1.0f, 1.0f, 1.0f, 0.8f),
+				5, 0.7f, 1.0f, "SPHERE");
+
+			snow_solid_system->set_u_Distribution(false); //usar distribucion  normal
+			snow_solid_system->setNormalDistribPos(0.0, 2.0);
+			snow_solid_system->setNormalDistribLinealVel(0.0, 0.01);
+			snow_solid_system->setNormalDistribAngularVel(0.0, 0.01);
+			snow_solid_system->setNormalDistribLifeTime(10.0, 2.0);
+			
+			snow_solid_system->setMaterial(0.1f, 0.1f, 0.2f);
+			solidSystems.push_back(snow_solid_system);
 		}
 		break;
 	}

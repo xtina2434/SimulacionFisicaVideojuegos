@@ -3,16 +3,16 @@
 
 #include "core.hpp"
 #include "RenderUtils.hpp"
-
+#include <string>
 
 using namespace physx;
 
 class RigidSolid {
 public:
 	RigidSolid();
-	RigidSolid(PxPhysics* _gPhysics, PxScene* _scene,
+	RigidSolid(PxPhysics* _gPhysics, PxScene* _scene, PxMaterial* _mat,
 				Vector3 _pose, Vector3 _l_v, Vector3 _w_v, Vector3 _size, Vector4 _color,
-				float _d, float _t);
+				float _d, float _t, std::string shape);
 	~RigidSolid();
 
 
@@ -23,8 +23,11 @@ public:
 	bool isAlive() const{ return is_alive; }
 
 	//setters
-	void setInertia() { 
+	/*void setInertia() { 
 		solid->setMassSpaceInertiaTensor({ size.y * size.z, size.x * size.z, size.x * size.y });
+	}*/
+	void setInertia(Vector3 inertia) {
+		solid->setMassSpaceInertiaTensor(inertia);
 	}
 	void setPosition(Vector3 pos) { 
 		pose.p = pos; 
@@ -42,13 +45,18 @@ public:
 		mass = m;
 		solid->setMass(m);
 	}
-
+	void setMaterialProperties(float restitution, float static_friction, float dynamic_friction) {
+		material->setRestitution(restitution);
+		material->setStaticFriction(static_friction);
+		material->setDynamicFriction(dynamic_friction);
+	}
 	void integrate(double t);
 
 	
 protected:
 	PxRigidDynamic* solid = nullptr;
 	RenderItem*		item  = nullptr;
+	PxMaterial* material = nullptr;
 
 	PxTransform		pose;
 	Vector3			lineal_vel;

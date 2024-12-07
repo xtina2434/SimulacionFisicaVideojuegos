@@ -21,6 +21,7 @@
     <ClCompile Include="BuoyancyForceGenerator.cpp" />
     <ClCompile Include="ElasticBandForceGenerator.cpp" />
     <ClCompile Include="RigidSolid.cpp" />
+    <ClCompile Include="RigidSolidSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -45,6 +46,7 @@
     <ClInclude Include="BuoyancyForceGenerator.h" />
     <ClInclude Include="ElasticBandForceGenerator.h" />
     <ClInclude Include="RigidSolid.h" />
+    <ClInclude Include="RigidSolidSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">
