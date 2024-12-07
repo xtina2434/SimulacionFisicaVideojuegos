@@ -71,9 +71,10 @@ void RigidSolidSystem::addSolids(int num)
 			RigidSolid* new_solid = new RigidSolid(gPhysics, scene,material, pos, lineal_vel, angular_vel, size, color, density, life_time, shape);
 
 			//configurar tensor de inercia personalizado
-			Vector3 inertia = {
-				size.y * size.z, size.x * size.z, size.x * size.y
-			};
+			float inertia_x = size.y * size.z * distrib(mt) * 0.1f;
+			float inertia_y = size.x * size.z * distrib(mt) * 0.1f;
+			float inertia_z = size.x * size.y * distrib(mt) * 0.1f;
+			Vector3 inertia = Vector3(inertia_x, inertia_y, inertia_z);
 			new_solid->setInertia(inertia);
 
 			solids.push_back(new_solid);
