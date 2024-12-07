@@ -477,17 +477,17 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			RenderItem* item3 = new RenderItem(shape3, esfera, { 1.0,0.0,0.0,1 });
 
 			snow_solid_system = new RigidSolidSystem(gPhysics, gScene4,
-				Vector3(0.0f, 50.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0, 0, 0),
-				Vector3(0.5f, 0.5f, 0.5f), Vector4(1.0f, 1.0f, 1.0f, 0.8f),
+				Vector3(0.0f, 50.0f, 0.0f), Vector3(0.0f, -9.8f, 0.0f), Vector3(0, 0, 0),
+				Vector3(0.5f, 0.5f, 0.5f), Vector4(1.0f, 1.0f, 1.0f, 1.0f),
 				5, 0.7f, 1.0f, "SPHERE");
 
 			snow_solid_system->set_u_Distribution(false); //usar distribucion  normal
 			snow_solid_system->setNormalDistribPos(0.0, 2.0);
-			snow_solid_system->setNormalDistribLinealVel(0.0, 0.01);
-			snow_solid_system->setNormalDistribAngularVel(0.0, 0.01);
+			snow_solid_system->setNormalDistribLinealVel(0.0, 5.0);
+			snow_solid_system->setNormalDistribAngularVel(0.0, 1.0);
 			snow_solid_system->setNormalDistribLifeTime(10.0, 2.0);
 			
-			snow_solid_system->setMaterial(0.1f, 0.1f, 0.2f);
+			snow_solid_system->setMaterial(0.1f, 0.1f, 0.01f);
 			solidSystems.push_back(snow_solid_system);
 		}
 		break;
