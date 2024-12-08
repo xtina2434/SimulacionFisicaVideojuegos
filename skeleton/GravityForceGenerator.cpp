@@ -15,4 +15,8 @@ void GravityForceGenerator::updateForce(Particle* p, double t) {
 
 void GravityForceGenerator::updateForce(RigidSolid* s, double t)
 {
+	if (s != nullptr && s->getMass() > 0.0f) {
+		s->addForce(gravity * s->getMass());
+	}
+
 }

@@ -20,8 +20,9 @@ public:
 	Vector3 getPosition() const{ 
 		if (solid) return solid->getGlobalPose().p;
 	}
-	bool isAlive() const{ return is_alive; }
-
+	bool isAlive() const{ return life_time > 0 && pose.p.y > 0; }
+	float getMass() const { return solid->getMass(); }
+	Vector3 getLinealVel() const { return lineal_vel; }
 	//setters
 	/*void setInertia() { 
 		solid->setMassSpaceInertiaTensor({ size.y * size.z, size.x * size.z, size.x * size.y });
@@ -75,9 +76,10 @@ protected:
 	float			density;
 	float			mass;
 	float			life_time;
-	bool			is_alive;
 
 	std::vector<ForceGenerator*> generators;
+
+
 };
 
 #endif

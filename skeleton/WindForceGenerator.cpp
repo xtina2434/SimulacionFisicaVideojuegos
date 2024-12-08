@@ -73,5 +73,21 @@ WindForceGenerator::updateForce(Particle* p,double t) {
 
 void WindForceGenerator::updateForce(RigidSolid* s, double t)
 {
+	if (s != nullptr && s->getMass() > 0.0f) {
+
+		Vector3 vel_diff = wind_vel - s->getLinealVel();
+		Vector3 wind_force = k1 * vel_diff;
+		if (k2 > 0.0f) {
+			wind_force += k2 * vel_diff.magnitude() * vel_diff;
+		}
+		s->addForce(wind_force);
+
+		//aplicar torque por si el viento genera una fuerza fuera del centro de masa
+		Vector3 offset = Vector3(0, 0, 0); //punto de aplicacion de la fuerza
+		if (offset != Vector3(0, 0, 0)) {
+			Vector3 torque = offset.cross(wind_force); //torque = offset x force
+			s->addTorque(torque);
+		}
+	}
 }
 

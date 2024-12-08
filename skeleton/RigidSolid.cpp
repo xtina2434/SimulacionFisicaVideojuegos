@@ -31,7 +31,6 @@ RigidSolid::RigidSolid(PxPhysics* _gPhysics, PxScene* _scene, PxMaterial* _mater
 	_scene->addActor(*solid);
 
 	item = new RenderItem(shape, solid, color);
-	is_alive = true;
 }
 
 RigidSolid::~RigidSolid()
@@ -57,5 +56,4 @@ void RigidSolid::integrate(double t)
 		}
 	}
 	life_time -= t;
-	if (life_time <= 0) is_alive = false;
 }

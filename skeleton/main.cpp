@@ -14,6 +14,8 @@
 #include <iostream>
 #include <list>
 #include "ParticlesSystem.h"
+#include "WindForceGenerator.h"
+#include "WhirlwindForceGenerator.h"
 #include "ExplosionForceGenerator.h"
 #include "SpringForceGenerator.h"
 #include "GravityForceGenerator.h"
@@ -51,14 +53,7 @@ RenderItem *xRenderItem = NULL, *yRenderItem = NULL, *zRenderItem = NULL, *origi
 PxTransform x, y, z, origin;
 std::list<Particle*> particles;
 std::list<ParticlesSystem*> systems;
-ParticlesSystem* fog_system;
-ParticlesSystem* fire_system;
-ParticlesSystem* rain_system;
-ParticlesSystem* smoke_system;
 
-ParticlesSystem* rain_gravity_system;
-ParticlesSystem* wind_system;
-ParticlesSystem* whirlwind_system;
 ParticlesSystem* system1;
 ParticlesSystem* system2;
 ParticlesSystem* system3;
@@ -69,7 +64,6 @@ SpringForceGenerator* spring_generator;
 std::list<RigidSolid*> rigidSolids;
 std::list<RigidSolidSystem*> solidSystems;
 
-RigidSolidSystem* snow_solid_system;
 RigidSolidSystem* system1_r;
 PxScene* createScene() {
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
@@ -421,7 +415,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	case 'N':
 	{
 		if (currentScene == gScene2) {
-			fog_system = new ParticlesSystem(Vector4(1.0, 1.0, 1.0, 0.1), Vector3(0, 30.0, 0), Vector3(0.1, 0.2, 0.1),150, 0.05f, 0.9f, 0.0f,0.0f);
+			ParticlesSystem* fog_system = new ParticlesSystem(Vector4(1.0, 1.0, 1.0, 0.1), Vector3(0, 30.0, 0), Vector3(0.1, 0.2, 0.1),150, 0.05f, 0.9f, 0.0f,0.0f);
 			fog_system->set_u_Distribution(false);
 
 			fog_system->setNormalDistribPos(1.0, 1.5);
@@ -476,7 +470,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			gScene4->addActor(*esfera);
 			RenderItem* item3 = new RenderItem(shape3, esfera, { 1.0,0.0,0.0,1 });
 
-			snow_solid_system = new RigidSolidSystem(gPhysics, gScene4,
+			RigidSolidSystem* snow_solid_system = new RigidSolidSystem(gPhysics, gScene4,
 				Vector3(0.0f, 50.0f, 0.0f), Vector3(0.0f, -9.8f, 0.0f), Vector3(0, 0, 0),
 				Vector3(0.5f, 0.5f, 0.5f), Vector4(1.0f, 1.0f, 1.0f, 1.0f),
 				5, 0.7f, 1.0f, "SPHERE");
@@ -495,7 +489,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	case 'F':
 	{
 		if (currentScene == gScene2) {
-			fire_system = new ParticlesSystem(Vector4(1.0, 0.5, 0.0, 1.0), Vector3(-15.0, 50.0, 0), Vector3(0, 0, 0), 20, 1.5f, 0.8f, 0.0f,0.0f);
+			ParticlesSystem* fire_system = new ParticlesSystem(Vector4(1.0, 0.5, 0.0, 1.0), Vector3(-15.0, 50.0, 0), Vector3(0, 0, 0), 20, 1.5f, 0.8f, 0.0f,0.0f);
 			fire_system->set_u_Distribution(false);
 
 			fire_system->setNormalDistribPos(1.0, 0.5);
@@ -509,7 +503,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	case 'R':
 	{
 		if (currentScene == gScene2) {
-			rain_system = new ParticlesSystem(Vector4(0.0, 0.0, 1.0, 0.5), Vector3(15.0, 50.0, 0), Vector3(0.0, 1.0, 0.0), 100, 0.05f, 0.9f, -10.0f, 0.0f);
+			ParticlesSystem* rain_system = new ParticlesSystem(Vector4(0.0, 0.0, 1.0, 0.5), Vector3(15.0, 50.0, 0), Vector3(0.0, 1.0, 0.0), 100, 0.05f, 0.9f, -10.0f, 0.0f);
 			rain_system->set_u_Distribution(true);
 
 			rain_system->setUniformDistribPos(1.0, 10.0);
@@ -552,7 +546,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	case 'H':
 	{
 		if (currentScene == gScene2) {
-			smoke_system = new ParticlesSystem(Vector4(0.6, 0.6, 0.6, 0.5), Vector3(0, 0, 0), Vector3(0.0, 5.0, 0.0), 1, 1.0f, 0.1f, 10.0f, 0.0f);
+			ParticlesSystem* smoke_system = new ParticlesSystem(Vector4(0.6, 0.6, 0.6, 0.5), Vector3(0, 0, 0), Vector3(0.0, 5.0, 0.0), 1, 1.0f, 0.1f, 10.0f, 0.0f);
 			smoke_system->set_u_Distribution(false);
 
 			smoke_system->setNormalDistribPos(1.0, 0.5);
@@ -587,13 +581,26 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			particles.push_back(p1);
 			particles.push_back(p2);
 		}
+		if (currentScene == gScene4) {
+
+			RigidSolid* solid1 = new RigidSolid(gPhysics, gScene4, gMaterial,
+				Vector3(0, 100, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(1, 1, 1), Vector4(0.8, 0.8, 0.8, 1),
+				0.65, 500, "SPHERE");
+
+			GravityForceGenerator* g = new GravityForceGenerator(Vector3(0.0f, -9.8f, 0.0f));
+			solid1->addForceGenerator(g);
+
+			rigidSolids.push_back(solid1);
+			
+
+		}
 		break;
 	}
 	case 'V':
 	{
 		if (currentScene == gScene2) {
 
-			wind_system = new ParticlesSystem(Vector4(1.0, 0.0, 1.0, 1.0), Vector3(0.0, 0.0, 0.0), Vector3(0.0, 0.0, 0.0),
+			ParticlesSystem* wind_system = new ParticlesSystem(Vector4(1.0, 0.0, 1.0, 1.0), Vector3(0.0, 0.0, 0.0), Vector3(0.0, 0.0, 0.0),
 				1, 1.0f, 0.1f, 0.0f, 1.0f);
 
 			wind_system->set_u_Distribution(true);
@@ -608,13 +615,30 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 			systems.push_back(wind_system);
 		}
+		if (currentScene == gScene4) {
+
+			RigidSolidSystem* wind_solid_system = new RigidSolidSystem(gPhysics, gScene4,
+				Vector3(0, 50, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(1, 1, 1), Vector4(0, 0, 1, 1),
+				5, 0.7f, 1.0f, "BOX");
+
+
+			wind_solid_system->set_u_Distribution(true);
+			wind_solid_system->setUniformDistribLinearVel(5.0,15.0);
+			wind_solid_system->setUniformDistribAngularVel(0.0, 10.0);
+			wind_solid_system->setUniformDistribPos(-10.0, 10.0);
+			wind_solid_system->setNormalDistribLifeTime(10.0, 2.0);
+
+			wind_solid_system->setGravityForce();
+			wind_solid_system->setWindForce(Vector3(0,10,0), 0.1f);
+			solidSystems.push_back(wind_solid_system);
+		}
 		break;
 	}
 	case 'T':
 	{
 		if (currentScene == gScene2) {
 
-			whirlwind_system = new ParticlesSystem(Vector4(1.0, 0.0, 1.0, 1.0), Vector3(1.0, 0.0, 1.0), Vector3(0.0, 0.0, 0.0), 1, 1.0f, 0.5f, 0.0f, 0.5f);
+			ParticlesSystem* whirlwind_system = new ParticlesSystem(Vector4(1.0, 0.0, 1.0, 1.0), Vector3(1.0, 0.0, 1.0), Vector3(0.0, 0.0, 0.0), 1, 1.0f, 0.5f, 0.0f, 0.5f);
 
 			whirlwind_system->set_u_Distribution(false);
 			whirlwind_system->setGravityForce();
@@ -626,6 +650,21 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 			systems.push_back(whirlwind_system);
 		
+		}
+		if (currentScene == gScene4) {
+			RigidSolidSystem* whirlwind_solid_system = new RigidSolidSystem(gPhysics, gScene4,
+				Vector3(1, 0, 1), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(1, 1, 1), Vector4(0, 0, 1, 1),
+				1, 0.5f, 0.5f, "BOX");
+
+
+			whirlwind_solid_system->set_u_Distribution(false);
+			whirlwind_solid_system->setGravityForce();
+			whirlwind_solid_system->setNormalDistribPos(5.0, 2.0);
+			whirlwind_solid_system->setNormalDistribLinealVel(3.0, 1.0);
+			whirlwind_solid_system->setNormalDistribAngularVel(0.0, 0.01);
+			whirlwind_solid_system->setNormalDistribLifeTime(10.0, 2.0);
+			whirlwind_solid_system->setWhirlWindForce(20.0f, 0.5f);
+			solidSystems.push_back(whirlwind_solid_system);
 		}
 		break;
 	}

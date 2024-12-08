@@ -8,6 +8,9 @@
 #include <random>
 #include <string>
 #include "ForceGenerator.h"
+#include "GravityForceGenerator.h"
+#include "WindForceGenerator.h"
+#include "WhirlwindForceGenerator.h"
 constexpr int MAX_SOLIDS = 200;
 using namespace std;
 class RigidSolidSystem {
@@ -57,6 +60,13 @@ public:
 	}
 	void update(double t);
 	void setMaterial(float fricc_st, float fricc_dyn, float elast);
+	void setGravityForce() noexcept
+	{
+		has_gravityForce = true;
+	}
+	void setWindForce(Vector3& vel, float k1);
+
+	void setWhirlWindForce(float k, float k1);
 	void addForceGenerator(ForceGenerator* fg);
 protected:
 	list<RigidSolid*> solids;				//coleccion de solidos rigidos
@@ -87,6 +97,16 @@ protected:
 	std::uniform_real_distribution<double> distrib; //distribucion uniforme para la probabilidad de generacion de solidos
 
 	void addSolids(int num); //metodo para agregar solidos nuevos
+
+
+	GravityForceGenerator* gravity_generator = nullptr;
+	bool has_gravityForce = false;
+
+	WindForceGenerator* wind_generator = nullptr;
+	bool has_windForce = false;
+
+	WhirlwindForceGenerator* whirlwind_generator = nullptr;
+	bool has_whirlwindForce = false;
 };
 
 #endif

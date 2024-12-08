@@ -10,6 +10,7 @@ RigidSolidSystem::RigidSolidSystem(PxPhysics* _gPhysics, PxScene* _scene,
 	distrib(0.0, 1.0), mt(rd()), shape(SHAPE), gPhysics(_gPhysics), scene(_scene), density(d)
 {
 	use_uni_distrib = false;
+	gravity_generator = new GravityForceGenerator(Vector3(0.0f, -9.8f, 0.0f));
 }
 
 RigidSolidSystem::~RigidSolidSystem()
@@ -77,6 +78,15 @@ void RigidSolidSystem::addSolids(int num)
 			Vector3 inertia = Vector3(inertia_x, inertia_y, inertia_z);
 			new_solid->setInertia(inertia);
 
+			if (has_gravityForce)
+				new_solid->addForceGenerator(gravity_generator);
+
+			if (has_windForce)
+				new_solid->addForceGenerator(wind_generator);
+
+			if (has_whirlwindForce)
+				new_solid->addForceGenerator(whirlwind_generator);
+
 			solids.push_back(new_solid);
 		}
 		
@@ -115,6 +125,16 @@ void RigidSolidSystem::setMaterial(float fricc_st, float fricc_dyn, float elast)
 	);
 }
 
+void
+RigidSolidSystem::setWindForce(Vector3& vel, float k1) {
+	has_windForce = true;
+	wind_generator = new WindForceGenerator(vel, k1, 0.0f);
+}
+void
+RigidSolidSystem::setWhirlWindForce(float k, float k1) {
+	has_whirlwindForce = true;
+	whirlwind_generator = new WhirlwindForceGenerator(Vector3(0.0f, 0.0f, 0.0f), 20.0f, k, k1);
+}
 void RigidSolidSystem::addForceGenerator(ForceGenerator* fg)
 {
 	for (auto s : solids) {
