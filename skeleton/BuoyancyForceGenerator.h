@@ -9,7 +9,7 @@ public:
 	~BuoyancyForceGenerator();
 
 	void updateForce(Particle* p, double t) override;
-
+	void updateForce(RigidSolid* s, double t) override;
 	void setliquid_particle(Particle* p) { liquid_particle = p; }
 protected:
 	float density ;

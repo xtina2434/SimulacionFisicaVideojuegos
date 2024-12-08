@@ -33,3 +33,7 @@ BuoyancyForceGenerator::updateForce(Particle* p, double t) {
 	}
 	
 }
+
+void BuoyancyForceGenerator::updateForce(RigidSolid* s, double t)
+{
+}

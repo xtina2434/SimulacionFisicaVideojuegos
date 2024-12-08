@@ -11,6 +11,7 @@ public:
 	~ExplosionForceGenerator();
 
 	void updateForce(Particle* p, double t) override;
+	void updateForce(RigidSolid* s, double t) override;
 	
 private:
 

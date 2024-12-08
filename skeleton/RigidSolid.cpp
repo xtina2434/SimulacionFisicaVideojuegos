@@ -1,5 +1,5 @@
 #include "RigidSolid.h"
-
+#include "ForceGenerator.h"
 RigidSolid::RigidSolid()
 {
 }
@@ -42,14 +42,20 @@ RigidSolid::~RigidSolid()
 	if (solid) {
 		solid->release();
 	}
-	/*if (material) {
-		material->release();
-	}*/
+}
+
+void RigidSolid::addForceGenerator(ForceGenerator* fg)
+{
+	generators.push_back(fg);
 }
 
 void RigidSolid::integrate(double t)
 {
+	for (auto fg : generators) {
+		if (fg != nullptr) {
+			fg->updateForce(this, t);
+		}
+	}
 	life_time -= t;
-
 	if (life_time <= 0) is_alive = false;
 }

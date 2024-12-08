@@ -12,3 +12,7 @@ void GravityForceGenerator::updateForce(Particle* p, double t) {
 		p->addForce(gravity * p->getMass());
 	}
 }
+
+void GravityForceGenerator::updateForce(RigidSolid* s, double t)
+{
+}

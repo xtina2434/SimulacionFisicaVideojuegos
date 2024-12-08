@@ -7,8 +7,8 @@
 #include <list>
 #include <random>
 #include <string>
-
-constexpr int MAX_SOLIDS = 50;
+#include "ForceGenerator.h"
+constexpr int MAX_SOLIDS = 200;
 using namespace std;
 class RigidSolidSystem {
 
@@ -57,7 +57,7 @@ public:
 	}
 	void update(double t);
 	void setMaterial(float fricc_st, float fricc_dyn, float elast);
-
+	void addForceGenerator(ForceGenerator* fg);
 protected:
 	list<RigidSolid*> solids;				//coleccion de solidos rigidos
 	PxPhysics* gPhysics = nullptr;

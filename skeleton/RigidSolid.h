@@ -6,7 +6,7 @@
 #include <string>
 
 using namespace physx;
-
+class ForceGenerator;
 class RigidSolid {
 public:
 	RigidSolid();
@@ -50,8 +50,16 @@ public:
 		material->setStaticFriction(static_friction);
 		material->setDynamicFriction(dynamic_friction);
 	}
+	void addForce(Vector3 f) {
+		if (solid)
+			solid->addForce(PxVec3(f.x, f.y, f.z), PxForceMode::eFORCE);
+	}
+	void addTorque(Vector3 t) {
+		if (solid)
+			solid->addTorque(PxVec3(t.x, t.y, t.z));
+	}
+	void addForceGenerator(ForceGenerator* fg);
 	void integrate(double t);
-
 	
 protected:
 	PxRigidDynamic* solid = nullptr;
@@ -68,6 +76,8 @@ protected:
 	float			mass;
 	float			life_time;
 	bool			is_alive;
+
+	std::vector<ForceGenerator*> generators;
 };
 
 #endif

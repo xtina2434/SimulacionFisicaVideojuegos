@@ -114,3 +114,10 @@ void RigidSolidSystem::setMaterial(float fricc_st, float fricc_dyn, float elast)
 		distrib(mt) * elast //elasticidad: que tanto rebota el choque
 	);
 }
+
+void RigidSolidSystem::addForceGenerator(ForceGenerator* fg)
+{
+	for (auto s : solids) {
+		s->addForceGenerator(fg);
+	}
+}

@@ -33,3 +33,7 @@ WhirlwindForceGenerator::updateForce(Particle* p, double t) {
 
 }
 
+void WhirlwindForceGenerator::updateForce(RigidSolid* s, double t)
+{
+}
+

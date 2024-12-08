@@ -25,3 +25,7 @@ ElasticBandForceGenerator::updateForce(Particle* p, double t) {
 		}
 	}
 }
+
+void ElasticBandForceGenerator::updateForce(RigidSolid* s, double t)
+{
+}

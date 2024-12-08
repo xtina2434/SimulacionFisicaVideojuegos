@@ -71,3 +71,7 @@ WindForceGenerator::updateForce(Particle* p,double t) {
 	
 }
 
+void WindForceGenerator::updateForce(RigidSolid* s, double t)
+{
+}
+

@@ -11,6 +11,7 @@ class SpringForceGenerator : public ForceGenerator {
 		~SpringForceGenerator();
 
 		void updateForce(Particle* p, double t) override;
+		void updateForce(RigidSolid* s, double t) override;
 
 		void setK(double _k) noexcept { k = _k; }
 

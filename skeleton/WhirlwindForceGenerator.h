@@ -11,6 +11,7 @@ public:
 	~WhirlwindForceGenerator() = default;
 
 	void updateForce(Particle* p, double t) override;
+	void updateForce(RigidSolid* s, double t) override;
 private:
 	float k;				//cte del torbellino
 	Vector3 center;

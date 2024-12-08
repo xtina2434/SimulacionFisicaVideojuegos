@@ -70,7 +70,7 @@ std::list<RigidSolid*> rigidSolids;
 std::list<RigidSolidSystem*> solidSystems;
 
 RigidSolidSystem* snow_solid_system;
-
+RigidSolidSystem* system1_r;
 PxScene* createScene() {
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
 	PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
@@ -667,11 +667,26 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			systems.push_back(system3);
 
 		}
+		if (currentScene == gScene4) {
+			system1_r = new RigidSolidSystem(gPhysics, gScene4,
+				Vector3(0.0f, 30.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0, 0, 0),
+				Vector3(1.0f, 1.0f, 1.0f), Vector4(0.0f, 0.0f, 1.0f, 1.0f),
+				1, 0.2f, 1.0f, "SPHERE");
+
+			system1_r->set_u_Distribution(true);
+			system1_r->setUniformDistribPos(-5.0, 5.0);
+			system1_r->setUniformDistribLinearVel(0.0, 0.0);
+			system1_r->setUniformDistribAngularVel(0.0, 0.0);
+			system1_r->setNormalDistribLifeTime(10.0, 5.0);
+
+			system1_r->setMaterial(0.9f, 0.9f, 0.8f);
+			solidSystems.push_back(system1_r);
+		}
 		break;
 	}
 	case 'X':
 	{
-		if (currentScene == gScene2) {
+		if (currentScene == gScene2 || currentScene == gScene4) {
 			/*explosion_generator = new ExplosionForceGenerator(200.0f, 2000.f, 1.0f, Vector3(0.0f,0.0f, 0.0f));
 
 			for (auto p : particles) {
@@ -687,7 +702,9 @@ void keyPress(unsigned char key, const PxTransform& camera)
 				system2->addForceGenerator(explosion_generator);
 				system3->addForceGenerator(explosion_generator);
 			}
-			
+			if (system1_r) {
+				system1_r->addForceGenerator(explosion_generator);
+			}
 
 		}
 		break;

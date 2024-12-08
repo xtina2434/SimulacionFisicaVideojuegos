@@ -13,6 +13,7 @@ class GravityForceGenerator : public ForceGenerator {
 		~GravityForceGenerator();
 
 		void updateForce(Particle* p, double t) override;
+		void updateForce(RigidSolid* s, double t) override;
 	private:
 		Vector3 gravity;
 };

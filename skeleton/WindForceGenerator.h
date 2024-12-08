@@ -13,6 +13,7 @@ public:
 	~WindForceGenerator();
 
 	void updateForce(Particle* p, double t) override;
+	void updateForce(RigidSolid* s, double t) override;
 protected:
 	Vector3 wind_vel;	//velocidad del viento
 	float k1;			//coeficiente de rozamiento
