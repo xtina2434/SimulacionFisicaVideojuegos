@@ -14,14 +14,17 @@ RigidSolid::RigidSolid(PxPhysics* _gPhysics, PxScene* _scene, PxMaterial* _mater
 	solid->setLinearVelocity(lineal_vel);
 	solid->setAngularVelocity(angular_vel);
 
-	PxShape* shape;
+	PxShape* shape = nullptr;
 	if (SHAPE == "BOX") {
 		shape = CreateShape(PxBoxGeometry(size));
 	}
 	else if (SHAPE == "SPHERE") {
 		shape = CreateShape(PxSphereGeometry(size.x));
 	}
-	solid->attachShape(*shape);
+	if (shape != nullptr) {
+		solid->attachShape(*shape);
+	}
+	
 
 	shape->setMaterials(&material, 1);	//asignar material al shape
 	
@@ -49,6 +52,21 @@ void RigidSolid::addForceGenerator(ForceGenerator* fg)
 }
 
 void RigidSolid::integrate(double t)
+{
+	/*for (auto fg : generators) {
+		if (fg != nullptr) {
+			fg->updateForce(this, t);
+		}
+	}
+	life_time -= t;*/
+
+	if (solid) {
+		solid->clearForce();
+	}
+	
+}
+
+void RigidSolid::update(double t)
 {
 	for (auto fg : generators) {
 		if (fg != nullptr) {

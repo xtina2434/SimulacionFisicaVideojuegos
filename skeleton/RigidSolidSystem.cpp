@@ -100,6 +100,7 @@ void RigidSolidSystem::update(double t)
 	for (auto it = solids.begin(); it != solids.end();) {
 		//llamar update de cada solid
 		(*it)->integrate(t);
+		(*it)->update(t);
 		//comprobar si siguen vivos, si no es asi se elimina
 		if (!(*it)->isAlive()) {
 			delete (*it);

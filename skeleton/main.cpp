@@ -65,6 +65,8 @@ std::list<RigidSolid*> rigidSolids;
 std::list<RigidSolidSystem*> solidSystems;
 
 RigidSolidSystem* system1_r;
+
+RigidSolid* player = nullptr;
 PxScene* createScene() {
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
 	PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
@@ -267,7 +269,7 @@ void stepPhysics(bool interactive, double t)
 	if (currentScene == gScene4) {
 		for (auto it = rigidSolids.begin(); it != rigidSolids.end();) {
 			(*it)->integrate(t);
-			
+			(*it)->update(t);
 			if (!(*it)->isAlive()) {
 				delete (*it);
 				it = rigidSolids.erase(it);
@@ -366,6 +368,17 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	{
 	//case 'B': break;
 	//case ' ':	break;
+	case 'Z':
+	{
+		if (currentScene == gScene4) {
+			if (player) {
+				Vector3 pos = player->getPosition();
+				pos.x += 1.0f;
+				player->setPosition(pos);
+			}
+		}
+		break;
+	}
 	case 'P':
 	{
 		if (currentScene == gScene2) {
@@ -772,6 +785,47 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 			particles.push_back(p1);
 			//particles.push_back(p2);
+		}
+		if (currentScene == gScene4) {
+
+			//el punto de anclaje es un cubo
+			const Vector3 anchorPoint(0.0, 20.0, 0.0);
+			RenderItem* cube = new RenderItem(CreateShape(physx::PxBoxGeometry(2, 2, 2)),
+				new physx::PxTransform(anchorPoint), Vector4(0, 0, 1, 1));
+
+			RigidSolid* s = new RigidSolid(gPhysics, gScene4, gMaterial,
+				Vector3(0, 20,10), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(1, 1, 1), Vector4(0.0, 0.0, 1, 1),
+				0.3, 500, "SPHERE");
+
+			rigidSolids.push_back(s);
+
+			GravityForceGenerator* g = new GravityForceGenerator(Vector3(0.0, -9.8, 0.0));
+			spring_generator = new SpringForceGenerator(200.0, 1.0, anchorPoint);
+
+			s->addForceGenerator(g);
+			s->addForceGenerator(spring_generator);
+			s->setInertia(Vector3(1, 1, 1));
+
+			s->getSolid()->setRigidDynamicLockFlags(
+				PxRigidDynamicLockFlag::eLOCK_LINEAR_X |
+				PxRigidDynamicLockFlag::eLOCK_LINEAR_Y
+			);
+
+			player = new RigidSolid(gPhysics, gScene4, gMaterial,
+				Vector3(-5, 20, 8), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(2, 2, 2), Vector4(1.0, 0.0,0.0, 1),
+				0.3, 500, "BOX");
+
+			player->setMaterialProperties(0.0f, 0.5f, 0.4f);
+			player->setInertia(Vector3(2, 2, 2));
+			rigidSolids.push_back(player);
+			
+
+			PxRigidStatic* suelo = gPhysics->createRigidStatic(PxTransform({ 0,18,0 }));
+			PxShape* shape = CreateShape(PxBoxGeometry(100, 0.1, 100));
+			suelo->attachShape(*shape);
+			gScene4->addActor(*suelo); //aniade el elemeno a la escena
+			RenderItem* item = new RenderItem(shape, suelo, { 0.8,0.8,0.8,1 });
+			
 		}
 		break;
 	}

@@ -23,6 +23,9 @@ public:
 	bool isAlive() const{ return life_time > 0 && pose.p.y > 0; }
 	float getMass() const { return solid->getMass(); }
 	Vector3 getLinealVel() const { return lineal_vel; }
+	float getSize() const { return size.x; }
+	Vector3 getVolumen() const { return size; }
+	PxRigidDynamic* getSolid() const { return solid; }
 	//setters
 	/*void setInertia() { 
 		solid->setMassSpaceInertiaTensor({ size.y * size.z, size.x * size.z, size.x * size.y });
@@ -61,6 +64,7 @@ public:
 	}
 	void addForceGenerator(ForceGenerator* fg);
 	void integrate(double t);
+	void update(double t);
 	
 protected:
 	PxRigidDynamic* solid = nullptr;

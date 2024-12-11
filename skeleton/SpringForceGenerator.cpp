@@ -41,4 +41,21 @@ SpringForceGenerator::updateForce(Particle* p, double t) {
 
 void SpringForceGenerator::updateForce(RigidSolid* s, double t)
 {
+	//vector que conecta la particula p con el otro extremo del muelle (otra particula, punto fijo)
+	Vector3 relative_pos_vector;
+	if (use_anchor) {
+		relative_pos_vector = anchor - s->getPosition();
+	}
+	else if (other) {
+		relative_pos_vector = other->getPos() - s->getPosition();
+	}
+	Vector3 spring_force;
+
+	//normalizar la posicion relativa y devolver su longitud
+	float length = relative_pos_vector.normalize();	//distancia entre los dos extremos del muelle
+	float diff = length - resting_length;		//diferencia entre la longitud actual del muelle y su longitud en reposo
+
+	spring_force = relative_pos_vector * diff * k; //ley de hook
+
+	s->addForce(spring_force);
 }
