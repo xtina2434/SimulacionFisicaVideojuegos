@@ -33,6 +33,7 @@ public:
 	void setInertia(Vector3 inertia) {
 		solid->setMassSpaceInertiaTensor(inertia);
 	}
+	
 	void setPosition(Vector3 pos) { 
 		pose.p = pos; 
 		solid->setGlobalPose(pose);

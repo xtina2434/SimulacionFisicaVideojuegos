@@ -838,6 +838,22 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		}
 		break;
 	}
+	case 'C':
+	{
+		if (currentScene == gScene4) {
+			RigidSolid* cylinder = new RigidSolid(gPhysics, gScene4, gMaterial,
+				Vector3(0, 20, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(5,10, 5), Vector4(1, 0, 0, 1),
+				1.0f, 500, "CYLINDER");
+			rigidSolids.push_back(cylinder);
+
+			PxRigidStatic* suelo = gPhysics->createRigidStatic(PxTransform({ 0,0,0 }));
+			PxShape* shape = CreateShape(PxBoxGeometry(100, 0.1, 100));
+			suelo->attachShape(*shape);
+			gScene4->addActor(*suelo); 
+			RenderItem* item = new RenderItem(shape, suelo, { 0,0,1,1 });
+		}
+		break;
+	}
 	case '1':
 	{
 		initScene1();
