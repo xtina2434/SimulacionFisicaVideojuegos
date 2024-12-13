@@ -48,6 +48,8 @@ RigidSolid::RigidSolid(PxPhysics* _gPhysics, PxScene* _scene, PxMaterial* _mater
 	_scene->addActor(*solid);
 
 	item = new RenderItem(shape, solid, color);
+	solid->setName("solid");
+	solid->userData = this;
 }
 
 RigidSolid::~RigidSolid()

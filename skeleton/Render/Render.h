@@ -51,7 +51,10 @@ extern std::string title_text;
 extern std::string next_text;
 extern std::string intro_text;
 extern std::string intro_text2;
-
+extern std::string points_text;
+extern std::string lives_text;
+extern std::string intro_text3;
+extern std::string intro_text4;
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
  

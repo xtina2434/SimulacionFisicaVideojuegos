@@ -13,16 +13,15 @@ public:
 	Diana(PxPhysics* _gPhysics, PxScene* _scene,Vector3 _pose);
 	~Diana();
 
-	void die();
-	bool isAlive() const { return alive; }
 	void setTransform(const Vector3& transform);
 
 protected:
 	
-	bool alive = true;
 	PxTransform		pose;
 	PxRigidStatic* rigid = nullptr;
 	PxRigidStatic* center = nullptr;
+	RenderItem* item1 = nullptr;
+	RenderItem* item2 = nullptr;
 };
 
 #endif

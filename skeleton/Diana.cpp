@@ -7,19 +7,26 @@ Diana::Diana(PxPhysics* _gPhysics, PxScene* _scene, Vector3 _pose) :
 	PxShape* shape1 = CreateShape(PxSphereGeometry(4));
 	rigid->attachShape(*shape1);
 	_scene->addActor(*rigid);
-	RenderItem* item1 = new RenderItem(shape1, rigid, { 1.0,0.0,0.0,1.0 });
-
+	item1 = new RenderItem(shape1, rigid, { 1.0,0.0,0.0,1.0 });
+	rigid->setName("Diana");
+	
 	PxTransform pose2 = { pose.p.x += 4, pose.p.y, pose.p.z };
 	center = _gPhysics->createRigidStatic(pose2);
 	PxShape* shape2 = CreateShape(PxSphereGeometry(2));
 	center->attachShape(*shape1);
 	_scene->addActor(*center);
-	RenderItem* item2 = new RenderItem(shape2, center, { 1.0,1.0,1.0,1.0 });
-
+	item2 = new RenderItem(shape2, center, { 1.0,1.0,1.0,1.0 });
+	center->setName("Diana_center");
 }
 
 Diana::~Diana()
 {
+	if (item1) {
+		DeregisterRenderItem(item1);
+	}
+	if (item2) {
+		DeregisterRenderItem(item2);
+	}
 	if (rigid) {
 		rigid->release();
 	}

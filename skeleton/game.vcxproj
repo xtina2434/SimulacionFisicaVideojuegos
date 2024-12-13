@@ -269,6 +269,7 @@
     <ClCompile Include="Render\Render.cpp" />
     <ClCompile Include="RigidSolid.cpp" />
     <ClCompile Include="RigidSolidSystem.cpp" />
+    <ClCompile Include="RigidStatic.cpp" />
     <ClCompile Include="SpringForceGenerator.cpp" />
     <ClCompile Include="WhirlwindForceGenerator.cpp" />
     <ClCompile Include="WindForceGenerator.cpp" />
@@ -276,6 +277,7 @@
   <ItemGroup>
     <ClInclude Include="BuoyancyForceGenerator.h" />
     <ClInclude Include="callbacks.hpp" />
+    <ClInclude Include="ContactCallback.h" />
     <ClInclude Include="core.hpp" />
     <ClInclude Include="Diana.h" />
     <ClInclude Include="ElasticBandForceGenerator.h" />
@@ -291,6 +293,7 @@
     <ClInclude Include="Render\Render.h" />
     <ClInclude Include="RigidSolid.h" />
     <ClInclude Include="RigidSolidSystem.h" />
+    <ClInclude Include="RigidStatic.h" />
     <ClInclude Include="SpringForceGenerator.h" />
     <ClInclude Include="Vector3D.h" />
     <ClInclude Include="WhirlwindForceGenerator.h" />

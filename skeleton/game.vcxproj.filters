@@ -22,6 +22,9 @@
     <ClCompile Include="ElasticBandForceGenerator.cpp" />
     <ClCompile Include="RigidSolid.cpp" />
     <ClCompile Include="RigidSolidSystem.cpp" />
+    <ClCompile Include="Diana.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="RigidStatic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -47,6 +50,10 @@
     <ClInclude Include="ElasticBandForceGenerator.h" />
     <ClInclude Include="RigidSolid.h" />
     <ClInclude Include="RigidSolidSystem.h" />
+    <ClInclude Include="Diana.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="ContactCallback.h" />
+    <ClInclude Include="RigidStatic.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

@@ -16,6 +16,10 @@ std::string title_text = " ";
 std::string next_text = " ";
 std::string intro_text = " ";
 std::string intro_text2 = " ";
+std::string points_text = " ";
+std::string lives_text = " ";
+std::string intro_text3 = " ";
+std::string intro_text4 = " ";
 int SCREEN_WIDTH = 0;
 int SCREEN_HEIGHT = 0;
 using namespace physx;
@@ -128,6 +132,8 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 {
 	PX_UNUSED(actor1);
 	PX_UNUSED(actor2);
+
+	game->onCollision(actor1, actor2);
 }
 
 
