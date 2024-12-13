@@ -32,7 +32,7 @@
 #include "Camera.h"
 #include <ctype.h>
 #include "foundation/PxMat33.h"
-
+#include "../core.hpp"
 using namespace physx;
 
 namespace Snippets
@@ -106,6 +106,24 @@ PxTransform Camera::getTransform() const
 	PxMat33 m(mDir.cross(viewY), viewY, -mDir);
 	return PxTransform(mEye, PxQuat(m));
 }
+
+physx::PxVec2 Camera::getMousePos()
+{
+	float ndcX = (2.0f * mMouseX) / 800.0f - 1.0f;
+	float ndcY = 1.0f - (2.0f * mMouseY) / 600.0f;
+
+	return { (float)ndcX, (float)ndcY };
+}
+
+void Camera::setTransform(const physx::PxTransform& transform)
+{
+	mEye = transform.p;
+
+	PxVec3 forward = PxVec3(-1, 0, 0);
+	mDir = transform.q.rotate(forward).getNormalized();
+}
+
+
 
 PxVec3 Camera::getEye() const
 { 

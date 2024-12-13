@@ -255,6 +255,7 @@
   <ItemGroup>
     <ClCompile Include="BuoyancyForceGenerator.cpp" />
     <ClCompile Include="callbacks.cpp" />
+    <ClCompile Include="Diana.cpp" />
     <ClCompile Include="ElasticBandForceGenerator.cpp" />
     <ClCompile Include="ExplosionForceGenerator.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -276,6 +277,7 @@
     <ClInclude Include="BuoyancyForceGenerator.h" />
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="core.hpp" />
+    <ClInclude Include="Diana.h" />
     <ClInclude Include="ElasticBandForceGenerator.h" />
     <ClInclude Include="ExplosionForceGenerator.h" />
     <ClInclude Include="ForceGenerator.h" />

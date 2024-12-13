@@ -48,6 +48,10 @@ public:
 	physx::PxVec3		getEye()	const;
 	physx::PxVec3		getDir()	const;
 	physx::PxTransform	getTransform() const;
+	physx::PxVec2		getMousePos();
+
+	void setTransform(const physx::PxTransform& transform);
+
 private:
 	physx::PxVec3	mEye;
 	physx::PxVec3	mDir;
@@ -57,6 +61,4 @@ private:
 
 
 }
-
-
 #endif //PHYSX_SNIPPET_CAMERA_H

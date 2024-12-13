@@ -237,6 +237,8 @@ namespace
 void reshapeCallback(int width, int height)
 {
 	glViewport(0, 0, width, height);
+	//screen_width = width;
+	//screen_height = height;
 }
 }
 
@@ -300,9 +302,6 @@ void startRender(const PxVec3& cameraEye, const PxVec3& cameraDir, PxReal clipNe
 
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
 	drawText(intro_text2,50, 260);
-
-	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-	drawText(intro_text3, 200, 230);
 
 	// Setup camera
 	glMatrixMode(GL_PROJECTION);

@@ -16,7 +16,6 @@ std::string title_text = " ";
 std::string next_text = " ";
 std::string intro_text = " ";
 std::string intro_text2 = " ";
-std::string intro_text3 = " ";
 using namespace physx;
 
 PxDefaultAllocator		gAllocator;
@@ -117,7 +116,12 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		break;
 	}
 }
+void handleMouseInput(int button, int state, int x, int y) {
 
+	game->handleMouse(button, state, x, y);
+	PX_UNUSED(state);
+	PX_UNUSED(button);
+}
 void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 {
 	PX_UNUSED(actor1);
