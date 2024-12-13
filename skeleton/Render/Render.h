@@ -51,6 +51,10 @@ extern std::string title_text;
 extern std::string next_text;
 extern std::string intro_text;
 extern std::string intro_text2;
+
+extern int SCREEN_WIDTH;
+extern int SCREEN_HEIGHT;
+ 
 namespace Snippets
 {
 void setupDefaultWindow(const char* name);

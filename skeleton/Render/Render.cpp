@@ -237,8 +237,8 @@ namespace
 void reshapeCallback(int width, int height)
 {
 	glViewport(0, 0, width, height);
-	//screen_width = width;
-	//screen_height = height;
+	SCREEN_WIDTH = width;
+	SCREEN_HEIGHT = height;
 }
 }
 

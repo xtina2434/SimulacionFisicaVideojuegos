@@ -24,6 +24,8 @@ constexpr double MAX_Z = 100.0;
 constexpr double MIN_Z = -100.0;
 constexpr double MAX_Y = 100.0;
 constexpr double MIN_Y = 10.0;
+
+constexpr double COOLDOWN = 0.5;
 class Game {
 private:
 	PxPhysics* gPhysics = NULL;
@@ -45,6 +47,9 @@ private:
 	std::random_device rd;
 	std::mt19937 mt;
 	Diana* diana = nullptr;
+
+	double cooldownTime;
+	bool can_shoot = true;
 
 public:
 	Game(PxPhysics* gPhysics, PxMaterial* gMaterial, PxScene* gScene);

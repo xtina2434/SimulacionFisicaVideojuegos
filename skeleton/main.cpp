@@ -16,6 +16,8 @@ std::string title_text = " ";
 std::string next_text = " ";
 std::string intro_text = " ";
 std::string intro_text2 = " ";
+int SCREEN_WIDTH = 0;
+int SCREEN_HEIGHT = 0;
 using namespace physx;
 
 PxDefaultAllocator		gAllocator;

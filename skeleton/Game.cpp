@@ -33,6 +33,12 @@ void Game::update(double t)
 		setDiana();
 		elapsedTime = 0;
 	}
+	if (!can_shoot) {
+		cooldownTime += t;
+		if (cooldownTime >= COOLDOWN) {
+			can_shoot = true;
+		}
+	}
 	for (auto it = systems.begin(); it != systems.end(); ++it) {
 		if (*it != nullptr) {
 			(*it)->update(t);
@@ -150,23 +156,23 @@ void Game::setDiana()
 }
 void Game::handleMouse(int button, int state, int x, int y)
 {
-	if (current == SNOW && button == 0) {
+	if (can_shoot && current == SNOW && button == 0) {
 		Camera* cam = GetCamera();
 		if (cam != nullptr) {
 
+			Vector3 pos = cam->getEye();
+			Vector3 dir = cam->getMousePos(x,y);
 
-			Vector3 mousePos = { cam->getMousePos().x, cam->getMousePos().y, 0 };
-
-			//Vector3 pos = cam->getEye();
-			Vector3 dir = { mousePos.x / 5, mousePos.y / 5, -1 };
-
-			float speed = 100.0f;
+			float speed = 200.0f;
 
 			physx::PxVec3 vel = dir * speed;
+
 			Particle* p = new Particle
-			(Vector3(0.0f, 0.0f, 0.0f), vel, 1.0f, Vector3(0.0f, 0.0f, 0.0f), Vector4(0.0f, 0.0f, 0.0f, 1.0f), 1.0f, 1.0f, "SPHERE");
+			(pos, vel, 1.0f, Vector3(0.0f, 0.0f, 0.0f), Vector4(0.0f, 0.0f, 0.0f, 1.0f), 1.0f, 1.0f, "SPHERE");
 			particles.push_back(p);
 
+			can_shoot = false;
+			cooldownTime = 0;
 		}
 	}
 }

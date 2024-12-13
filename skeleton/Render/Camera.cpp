@@ -62,10 +62,10 @@ bool Camera::handleKey(unsigned char key, int x, int y, float speed)
 	PxVec3 viewY = mDir.cross(PxVec3(0,1,0)).getNormalized();
 	switch(toupper(key))
 	{
-	case 'W':	mEye += mDir*2.0f*speed;		break;
+	/*case 'W':	mEye += mDir*2.0f*speed;		break;
 	case 'S':	mEye -= mDir*2.0f*speed;		break;
 	case 'A':	mEye -= viewY*2.0f*speed;		break;
-	case 'D':	mEye += viewY*2.0f*speed;		break;
+	case 'D':	mEye += viewY*2.0f*speed;		break;*/
 	default:							return false;
 	}
 	return true;
@@ -73,14 +73,14 @@ bool Camera::handleKey(unsigned char key, int x, int y, float speed)
 
 void Camera::handleAnalogMove(float x, float y)
 {
-	PxVec3 viewY = mDir.cross(PxVec3(0,1,0)).getNormalized();
+	/*PxVec3 viewY = mDir.cross(PxVec3(0,1,0)).getNormalized();
 	mEye += mDir*y;
-	mEye += viewY*x;
+	mEye += viewY*x;*/
 }
 
 void Camera::handleMotion(int x, int y)
 {
-	int dx = mMouseX - x;
+	/*int dx = mMouseX - x;
 	int dy = mMouseY - y;
 
 	PxVec3 viewY = mDir.cross(PxVec3(0,1,0)).getNormalized();
@@ -93,7 +93,7 @@ void Camera::handleMotion(int x, int y)
 	mDir.normalize();
 
 	mMouseX = x;
-	mMouseY = y;
+	mMouseY = y;*/
 }
 
 PxTransform Camera::getTransform() const
@@ -107,12 +107,26 @@ PxTransform Camera::getTransform() const
 	return PxTransform(mEye, PxQuat(m));
 }
 
-physx::PxVec2 Camera::getMousePos()
+physx::PxVec3 Camera::getMousePos(int x, int y)
 {
-	float ndcX = (2.0f * mMouseX) / 800.0f - 1.0f;
-	float ndcY = 1.0f - (2.0f * mMouseY) / 600.0f;
+	float fovY = 60.0f;
 
-	return { (float)ndcX, (float)ndcY };
+	//convertir coordenadas del raton a NDC (-1 a 1)
+	
+	float ndcY = 1.0f - (2.0f * y / SCREEN_HEIGHT);
+	float ndcZ = (2.0f * x / SCREEN_WIDTH) - 1.0f;
+
+	//convertir de NDC a coordenadas del espacio de la camara
+	float tanHalfFovY = tanf(PxPi * fovY / 360.0f);
+	float tanHalfFovZ = tanHalfFovY * ((float)SCREEN_WIDTH / (float)SCREEN_HEIGHT);
+
+	float projY = ndcY * tanHalfFovY;
+	float projZ = ndcZ * tanHalfFovZ * -1.0f;
+
+	PxVec3 rayDirCamera(-1.0f, projY, projZ);
+
+	return rayDirCamera.getNormalized();
+
 }
 
 void Camera::setTransform(const physx::PxTransform& transform)
@@ -122,8 +136,6 @@ void Camera::setTransform(const physx::PxTransform& transform)
 	PxVec3 forward = PxVec3(-1, 0, 0);
 	mDir = transform.q.rotate(forward).getNormalized();
 }
-
-
 
 PxVec3 Camera::getEye() const
 { 

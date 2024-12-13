@@ -48,7 +48,7 @@ public:
 	physx::PxVec3		getEye()	const;
 	physx::PxVec3		getDir()	const;
 	physx::PxTransform	getTransform() const;
-	physx::PxVec2		getMousePos();
+	physx::PxVec3		getMousePos(int x, int y);
 
 	void setTransform(const physx::PxTransform& transform);
 
