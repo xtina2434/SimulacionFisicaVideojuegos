@@ -25,6 +25,8 @@ extern std::string points_text;
 extern std::string lives_text;
 extern std::string intro_text3;
 extern std::string intro_text4;
+extern std::string respawn_text;
+extern std::string lost_text;
 
 constexpr double SPAWN_DIANA = 1.5;
 constexpr double MAX_Z = 100.0;
@@ -79,6 +81,7 @@ private:
 
 	double respawnTime;
 	bool dying = false;
+	bool wait_restart = false;
 
 	bool next_level = false;
 

@@ -20,6 +20,9 @@ std::string points_text = " ";
 std::string lives_text = " ";
 std::string intro_text3 = " ";
 std::string intro_text4 = " ";
+std::string respawn_text = " ";
+std::string lost_text = " ";
+
 int SCREEN_WIDTH = 0;
 int SCREEN_HEIGHT = 0;
 using namespace physx;

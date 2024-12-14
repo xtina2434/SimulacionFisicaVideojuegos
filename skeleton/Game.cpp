@@ -47,6 +47,14 @@ void Game::update(double t)
 		}
 
 	}
+	if (wait_restart) {
+		respawnTime += t;
+		if (respawnTime >= RESPAWN) {
+			wait_restart = false;
+			changeScene();
+		}
+
+	}
 	for (auto it = systems.begin(); it != systems.end(); ++it) {
 		if (*it != nullptr) {
 			(*it)->update(t);
@@ -125,7 +133,7 @@ void Game::intro2Scene()
 }
 void Game::level1()
 {
-	lives = 10;
+
 	lives_text = "Vidas: " + to_string(lives);
 
 	if (cam != nullptr) {
@@ -180,13 +188,19 @@ void Game::level3()
 }
 void Game::respawn()
 {
+	respawn_text = "Eso ha quemado. No te preocupes, aun te queda(n) " + to_string(lives) + " vida(s)";
 
+	wait_restart = true;
+	respawnTime = 0;
 }
 void Game::lost()
 {
+	lost_text = "Has perdido todas tus vidas :(. No te rindas, seguro que completas la carrera en otra convocatoria";
+	next_text = "Pulse c para continuar";
 }
 void Game::win()
 {
+
 }
 void Game::clearScene()
 {
@@ -265,6 +279,7 @@ void Game::changeScene()
 	}
 	case LEVEL1:
 	{
+		lives_text = "";
 		if (lives <= 0) {
 			current = LOST;
 			lost();
@@ -282,10 +297,18 @@ void Game::changeScene()
 	}
 	case RESPAWN:
 	{
+		respawn_text = "";
 		current = last_scene;
 		if (current == LEVEL1) {
 			level1();
 		}
+		break;
+	}
+	case LOST:
+	{
+		lost_text = "";
+		current = START;
+		titleScene();
 		break;
 	}
 	default:
@@ -317,16 +340,14 @@ void Game::setDiana()
 }
 void Game::createPlayer()
 {
-	if (player == nullptr) {
+	
 		player = new RigidSolid(gPhysics, gScene, gMaterial,
 			Vector3(-80, 50, 0), Vector3(0, -1.0, 0), Vector3(0, 0, 0), Vector3(2, 2, 2), Vector4(1.0, 0.0, 1.0, 1),
 			2.0, 500, "BOX", "player");
 
 		player->setMaterialProperties(0.0f, 0.6f, 0.5f);
-	}
-	else {
-		player->setPosition(Vector3(-80, 50, 0));
-	}
+	
+	
 
 	rigid_solids.push_back(player);
 }
@@ -455,7 +476,7 @@ void Game::onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 		systems.push_back(fire_system);
 		
 		
-		player->invisible();
+		player->setInvisible();
 		player->die();
 	}
 }

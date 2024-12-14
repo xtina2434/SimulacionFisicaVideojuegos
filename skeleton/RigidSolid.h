@@ -70,10 +70,11 @@ public:
 	void quitGravity() {
 		solid->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
 	}
-	void invisible() {
+	void setInvisible() {
 
 		if (item) {
 			DeregisterRenderItem(item);
+			invisble = true;
 		}
 	}
 protected:
@@ -91,6 +92,7 @@ protected:
 	float			mass;
 	float			life_time;
 	bool			alive = true;
+	bool			invisble = false;
 	std::vector<ForceGenerator*> generators;
 
 
