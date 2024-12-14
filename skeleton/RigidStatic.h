@@ -11,7 +11,7 @@ class RigidStatic {
 public:
 	RigidStatic();
 	RigidStatic(PxPhysics* _gPhysics, PxScene* _scene,
-		Vector3 _pose, Vector3 _size, Vector4 _color,  std::string shape);
+		Vector3 _pose, Vector3 _size, Vector4 _color,  std::string shape, const char* name);
 	~RigidStatic();
 
 

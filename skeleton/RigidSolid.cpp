@@ -6,7 +6,7 @@ RigidSolid::RigidSolid()
 
 RigidSolid::RigidSolid(PxPhysics* _gPhysics, PxScene* _scene, PxMaterial* _material,
 					   Vector3 _pose, Vector3 _l_v, Vector3 _w_v, Vector3 _size, Vector4 _color,
-						float _d, float _t, std::string SHAPE) :
+						float _d, float _t, std::string SHAPE, const char* name) :
 	 material(_material),pose(_pose), lineal_vel(_l_v), angular_vel(_w_v), size(_size), color(_color),
 	density(_d), life_time(_t)
 {
@@ -48,7 +48,7 @@ RigidSolid::RigidSolid(PxPhysics* _gPhysics, PxScene* _scene, PxMaterial* _mater
 	_scene->addActor(*solid);
 
 	item = new RenderItem(shape, solid, color);
-	solid->setName("solid");
+	solid->setName(name);
 	solid->userData = this;
 }
 

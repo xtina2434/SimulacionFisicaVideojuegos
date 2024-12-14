@@ -34,9 +34,11 @@ constexpr double MIN_Y = 10.0;
 constexpr double COOLDOWN = 0.5;
 
 constexpr int DIANA_POINTS = 5;
-constexpr int TOTAL_DIANAS = 10;
+constexpr int TOTAL_DIANAS = 1;
 class Game {
 private:
+	Camera* cam = GetCamera();
+
 	PxPhysics* gPhysics = NULL;
 	PxMaterial* gMaterial = NULL;
 	PxScene* gScene = NULL;
@@ -46,6 +48,7 @@ private:
 		INTRO,
 		SNOW,
 		INTRO2,
+		LEVEL1,
 		TOTAL
 	};
 	Scenes current;
@@ -54,17 +57,23 @@ private:
 	std::list<ParticlesSystem*> systems;
 	std::list<RigidSolid*> rigid_solids;
 	std::list<RigidStatic*> rigid_statics;
+
 	double elapsedTime;
+
 	std::random_device rd;
 	std::mt19937 mt;
+
 	Diana* diana = nullptr;
+	RigidSolid* player = nullptr;
+
+	bool canJump = false;
 
 	double cooldownTime;
 	bool can_shoot = true;
+
 	int cont_dianas = 0;
 	int points = 0;
 	int lives = 0;
-
 public:
 	Game(PxPhysics* gPhysics, PxMaterial* gMaterial, PxScene* gScene);
 	~Game();
@@ -78,13 +87,14 @@ private:
 	void introScene();
 	void snowScene();
 	void intro2Scene();
+	void level1();
 
 	void changeScene();
 	void clearScene();
 
 
 	void setDiana();
-	
+	void createPlayer();
 };
 
 #endif

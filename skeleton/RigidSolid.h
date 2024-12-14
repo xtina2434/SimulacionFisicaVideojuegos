@@ -12,7 +12,7 @@ public:
 	RigidSolid();
 	RigidSolid(PxPhysics* _gPhysics, PxScene* _scene, PxMaterial* _mat,
 				Vector3 _pose, Vector3 _l_v, Vector3 _w_v, Vector3 _size, Vector4 _color,
-				float _d, float _t, std::string shape);
+				float _d, float _t, std::string shape, const char* name);
 	~RigidSolid();
 
 

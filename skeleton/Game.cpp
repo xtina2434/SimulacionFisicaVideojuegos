@@ -7,7 +7,7 @@ Game::Game(PxPhysics* _gPhysics, PxMaterial* _gMaterial, PxScene* _gScene) :
 	elapsedTime = 0;
 
 
-	titleScene();
+	level1();
 }
 
 Game::~Game()
@@ -83,13 +83,12 @@ void Game::introScene()
 void Game::snowScene() {
 
 	points_text = "Puntos: " + to_string(points);
-
-	//posicion inicial de la camara es 50 50 50
-	Camera* cam = GetCamera();
+	
 	if (cam != nullptr) {
-		cam->setTransform(PxTransform({ 100, 54, 2 }));
+		cam->setTransform(PxTransform({ 100, 54, 2 }), PxVec3(-1, 0, 0));
 	}
-	RigidStatic* suelo = new RigidStatic(gPhysics, gScene, Vector3(0, 0, 0), Vector3(200, 0.1, 200), Vector4(1.0, 1.0, 1.0, 1.0), "BOX");
+	
+	RigidStatic* suelo = new RigidStatic(gPhysics, gScene, Vector3(0, 0, 0), Vector3(200, 0.1, 200), Vector4(1.0, 1.0, 1.0, 1.0), "BOX", "suelo");
 	rigid_statics.push_back(suelo);
 
 	ParticlesSystem* snow_system = new ParticlesSystem(Vector4(1.0, 1.0, 1.0, 1.0), Vector3(0.0, 80.0, 0), Vector3(0.0, -2.0, 0.0), 1, 1.0f, 0.5f, 0.0f, 1.0f);
@@ -105,9 +104,29 @@ void Game::snowScene() {
 void Game::intro2Scene()
 {
 	lives = points / 10;
+	if (lives == 0) lives = 1;
+	next_text = "Pulse c para continuar";
 	intro_text3 = "Lo has hecho genial, por hacer " + to_string(points) + " puntos tienes " + to_string(lives) + " vidas";
 	intro_text4 = "Ahora tienes que superar los 3 niveles finales. Esquiva los obstaculos y evita caer a la lava";
-	next_text = "Pulse c para continuar";
+	
+}
+void Game::level1()
+{
+	lives_text = "Vidas: " + to_string(lives);
+
+	if (cam != nullptr) {
+		cam->resetInitialTransform();
+	}
+
+	RigidStatic* lava = new RigidStatic(gPhysics, gScene, Vector3(0, 0, 0), Vector3(200, 0.1, 200), Vector4(1.0, 0.1, 0.0, 1.0), "BOX", "lava");
+	rigid_statics.push_back(lava);
+
+	createPlayer();
+	RigidStatic* plataforma = new RigidStatic(gPhysics, gScene, Vector3(0, 30, 20), Vector3(100, 10, 4), Vector4(0.8, 0.8, 0.8, 1), "BOX", "plataforma");
+	rigid_statics.push_back(plataforma);
+	RigidStatic* plataforma2 = new RigidStatic(gPhysics, gScene, Vector3(0, 30, -50), Vector3(100, 10, 4), Vector4(0.0, 0.0, 0.0, 1), "BOX", "plataforma");
+	rigid_statics.push_back(plataforma);
+	
 }
 void Game::clearScene()
 {
@@ -169,6 +188,15 @@ void Game::changeScene()
 		intro2Scene();
 		break;
 	}
+	case INTRO2:
+	{
+		next_text = "";
+		intro_text3 = "";
+		intro_text4 = "";
+		current = LEVEL1;
+		level1();
+		break;
+	}
 	default:
 		break;
 	}
@@ -196,10 +224,26 @@ void Game::setDiana()
 	}
 	
 }
+void Game::createPlayer()
+{
+	player = new RigidSolid(gPhysics, gScene, gMaterial,
+		Vector3(-80, 50, 20), Vector3(0, -1.0, 0), Vector3(0, 0, 0), Vector3(2, 2, 2), Vector4(1.0, 0.0, 1.0, 1),
+		2.0, 500, "BOX", "player");
+
+	player->setMaterialProperties(0.0f, 0.6f, 0.5f);
+
+	/*player->getSolid()->setRigidDynamicLockFlags(
+		PxRigidDynamicLockFlag::eLOCK_ANGULAR_X |
+		PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y |
+		PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z 
+	);*/
+
+	rigid_solids.push_back(player);
+}
 void Game::handleMouse(int button, int state, int x, int y)
 {
 	if (can_shoot && current == SNOW && button == 0) {
-		Camera* cam = GetCamera();
+		
 		if (cam != nullptr) {
 
 			Vector3 pos = cam->getEye();
@@ -210,14 +254,13 @@ void Game::handleMouse(int button, int state, int x, int y)
 			physx::PxVec3 vel = dir * speed;
 			RigidSolid* s = new RigidSolid(
 				gPhysics, gScene, gMaterial,
-				pos, vel, Vector3(0, 0, 0), Vector3(1, 1, 1), Vector4(0.0f, 0.0f, 0.0f, 1.0f), 1.0f, 1.0f, "SPHERE");
+				pos, vel, Vector3(0, 0, 0), Vector3(1, 1, 1), Vector4(0.0f, 0.0f, 0.0f, 1.0f), 1.0f, 1.0f, "SPHERE", "laser");
 			rigid_solids.push_back(s);
 			can_shoot = false;
 			cooldownTime = 0;
 		}
 	}
 }
-
 void Game::keyPress(unsigned char key)
 {
 	switch (toupper(key))
@@ -228,15 +271,44 @@ void Game::keyPress(unsigned char key)
 		changeScene();
 		break;
 	}
+	case 'D':
+	{
+		if (player) {
+			Vector3 pos = player->getPosition();
+			pos.x += 1.0f;
+			player->setPosition(pos);
+		}
+		break;
+	}
+	case 'A':
+	{
+		if (player) {
+			Vector3 pos = player->getPosition();
+			pos.x -= 1.0f;
+			player->setPosition(pos);
+		}
+		break;
+	}
+	case 'W':
+	{
+		if (player && canJump) {
+			Vector3 pos = player->getPosition();
+			pos.y += 10.0f;
+			player->setPosition(pos);
+			canJump = false;
+		}
+		break;
+	}
 	case 'P':
 	{
-		Camera* cam = GetCamera();
+		
 		if (cam != nullptr) {
 			
 			PxTransform p = cam->getTransform();
-
+			PxVec3 dir = cam->getDir();
 			std::cout << p.p.x << " " << p.p.y << " " << p.p.z << std::endl;
 			std::cout << p.q.x << " " << p.q.y << " " << p.q.z << std::endl;
+			std::cout << dir.x << " " << dir.y << " " << dir.z << std::endl;
 		}
 		break;
 	}
@@ -251,22 +323,27 @@ void Game::onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 	const char* name2 = actor2->getName();
 
 	
-	if ((name1 && strcmp(name1, "solid") == 0 && name2 && strcmp(name2, "Diana") == 0) ||
-		(name1 && strcmp(name1, "Diana") == 0 && name2 && strcmp(name2, "solid") == 0) ||
-		(name1 && strcmp(name1, "solid") == 0 && name2 && strcmp(name2, "Diana_center") == 0) ||
-		(name1 && strcmp(name1, "Diana_center") == 0 && name2 && strcmp(name2, "solid") == 0)) {
-		std::cout << "Collision";
-		
-		if (name1 && strcmp(name1, "solid") == 0) {
+	if ((name1 && strcmp(name1, "laser") == 0 && name2 && strcmp(name2, "Diana") == 0) ||
+		(name1 && strcmp(name1, "Diana") == 0 && name2 && strcmp(name2, "laser") == 0) ||
+		(name1 && strcmp(name1, "laser") == 0 && name2 && strcmp(name2, "Diana_center") == 0) ||
+		(name1 && strcmp(name1, "Diana_center") == 0 && name2 && strcmp(name2, "laser") == 0)) {
+
+		if (name1 && strcmp(name1, "laser") == 0) {
 			RigidSolid* s1 = static_cast<RigidSolid*>(actor1->userData);
 			if (s1) s1->die();
 		}
-		if (name2 && strcmp(name2, "solid") == 0) {
+		if (name2 && strcmp(name2, "laser") == 0) {
 			RigidSolid* s2 = static_cast<RigidSolid*>(actor2->userData);
 			if (s2) s2->die();
 		}
 
 		points += DIANA_POINTS;
 		points_text = "Puntos: " + to_string(points);
+	}
+
+	if ((name1 && strcmp(name1, "player") == 0 && name2 && strcmp(name2, "plataforma") == 0) ||
+		(name1 && strcmp(name1, "plataforma") == 0 && name2 && strcmp(name2, "player") == 0)) {
+		
+		canJump = true;
 	}
 }

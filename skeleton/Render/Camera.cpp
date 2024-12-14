@@ -44,6 +44,9 @@ Camera::Camera(const PxVec3& eye, const PxVec3& dir)
 	mDir = dir.getNormalized();
 	mMouseX = 0;
 	mMouseY = 0;
+
+	mIniTransform = PxTransform(mEye, PxQuat(PxIdentity));
+	mIniDir = mDir;
 }
 
 void Camera::handleMouse(int button, int state, int x, int y)
@@ -129,12 +132,16 @@ physx::PxVec3 Camera::getMousePos(int x, int y)
 
 }
 
-void Camera::setTransform(const physx::PxTransform& transform)
+void Camera::setTransform(const physx::PxTransform& transform, const physx::PxVec3& forward)
 {
 	mEye = transform.p;
 
-	PxVec3 forward = PxVec3(-1, 0, 0);
 	mDir = transform.q.rotate(forward).getNormalized();
+}
+
+void Camera::resetInitialTransform()
+{
+	setTransform(mIniTransform, mIniDir);
 }
 
 PxVec3 Camera::getEye() const

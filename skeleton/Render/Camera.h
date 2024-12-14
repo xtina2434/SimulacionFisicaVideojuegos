@@ -50,13 +50,16 @@ public:
 	physx::PxTransform	getTransform() const;
 	physx::PxVec3		getMousePos(int x, int y);
 
-	void setTransform(const physx::PxTransform& transform);
-
+	void setTransform(const physx::PxTransform& transform, const physx::PxVec3& forward);
+	void resetInitialTransform();
 private:
 	physx::PxVec3	mEye;
 	physx::PxVec3	mDir;
+	physx::PxVec3	mIniDir;
 	int				mMouseX;
 	int				mMouseY;
+
+	physx::PxTransform mIniTransform;
 };
 
 

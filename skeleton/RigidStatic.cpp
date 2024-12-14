@@ -1,6 +1,6 @@
 #include "RigidStatic.h"
 
-RigidStatic::RigidStatic(PxPhysics* _gPhysics, PxScene* _scene, Vector3 _pose, Vector3 _size, Vector4 _color, std::string SHAPE) :
+RigidStatic::RigidStatic(PxPhysics* _gPhysics, PxScene* _scene, Vector3 _pose, Vector3 _size, Vector4 _color, std::string SHAPE, const char* name) :
 	pose(_pose)
 {
 	solid = _gPhysics->createRigidStatic(pose);
@@ -16,6 +16,9 @@ RigidStatic::RigidStatic(PxPhysics* _gPhysics, PxScene* _scene, Vector3 _pose, V
 	solid->attachShape(*shape);
 	_scene->addActor(*solid);
 	item = new RenderItem(shape, solid, _color);
+
+	solid->setName(name);
+	solid->userData = this;
 }
 
 RigidStatic::~RigidStatic()
