@@ -77,7 +77,7 @@ void Game::titleScene()
 }
 void Game::introScene()
 {
-	intro_text = "Enhorabuena eres el/la finalista de CHAOS RUN. Seras capaz de superar la prueba final para ganar los 6 creditos";
+	intro_text = "Enhorabuena eres el/la finalista de CHAOS RUN. Ahora tienes que ser capaz de superar la prueba final para ganar los 6 creditos";
 	intro_text2 = "Para determinar tus vidas para la prueba final tienes que acertar el mayor numero de dianas. Por cada 10 puntos conseguiras una vida.";
 }
 void Game::snowScene() {

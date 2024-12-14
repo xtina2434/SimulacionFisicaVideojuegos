@@ -298,10 +298,10 @@ void startRender(const PxVec3& cameraEye, const PxVec3& cameraDir, PxReal clipNe
 
 	//Intro text
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
-	drawText(intro_text, 100, 300);
+	drawText(intro_text, 50, 300);
 
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
-	drawText(intro_text2,50, 260);
+	drawText(intro_text2,40, 260);
 
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
 	drawText(points_text, 10, 10);
