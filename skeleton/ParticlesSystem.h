@@ -35,6 +35,7 @@ public:
 		mean_life_time = mean;
 		desv_life_time = desv;
 	}
+	
 	void setUniformDistribVel(double min,double max) noexcept {
 		random_vel_max = max;
 		random_vel_min = min;
@@ -43,6 +44,16 @@ public:
 	void setUniformDistribPos(double min, double max)noexcept {
 		random_pos_max = max;
 		random_pos_min = min;
+	}
+
+	void setRandomMass(double mean, double desv) {
+		random_mass = true;
+		mean_mass = mean;
+		desv_mass = desv;
+	}
+	void setAcel(const Vector3& a) {
+		has_acel = true;
+		acel = a;
 	}
 	void update(double t);
 
@@ -59,6 +70,7 @@ protected:
 	list<Particle*> particles;				//coleccion de particulas
 
 	//propiedades de cada particula
+	Vector3 acel;
 	Vector4 color;
 	float size;
 	float gravity;
@@ -70,11 +82,14 @@ protected:
 	std::random_device rd;
 	std::mt19937 mt;						//genera numeros aleatorios
 	bool use_uni_distrib;					//saber si usar distribucion uniforme 
+	bool random_mass = false;
+	bool has_acel = false;
 	double mean_v, desv_v,					//medias, desviaciones, minimos o maximos para las distribuciones uniforme o normal
 		mean_pos, desv_pos,
 		mean_life_time, desv_life_time,
 		random_pos_max, random_pos_min,
-		random_vel_max, random_vel_min;
+		random_vel_max, random_vel_min,
+		mean_mass, desv_mass ;
 
 	std::uniform_real_distribution<double> distrib; //distribucion uniforme para la probabilidad de generacion de particulas
 

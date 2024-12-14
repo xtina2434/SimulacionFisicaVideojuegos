@@ -71,6 +71,9 @@ void RigidSolidSystem::addSolids(int num)
 			//crear solido
 			RigidSolid* new_solid = new RigidSolid(gPhysics, scene,material, pos, lineal_vel, angular_vel, size, color, density, life_time, shape, "solid");
 
+			if (!has_gravity) {
+				new_solid->quitGravity();
+			}
 			//configurar tensor de inercia personalizado
 			float inertia_x = size.y * size.z * distrib(mt) * 0.1f;
 			float inertia_y = size.x * size.z * distrib(mt) * 0.1f;

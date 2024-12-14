@@ -101,6 +101,11 @@ ParticlesSystem::addParticles(int num) {
 		if (has_whirlwindForce)
 			new_particle->addForceGenerator(whirlwind_generator);
 
+		if (random_mass) 
+			new_particle->setRandomMass(mean_mass, desv_mass);
+		if (has_acel)
+			new_particle->setAcel(acel);
+		
 		particles.push_back(new_particle);
 	}
 }

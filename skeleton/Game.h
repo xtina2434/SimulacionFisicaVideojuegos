@@ -14,6 +14,7 @@
 #include "Diana.h"
 #include "RigidSolid.h"
 #include "RigidStatic.h"
+#include "RigidSolidSystem.h"
 using namespace physx;
 
 extern std::string title_text;
@@ -32,6 +33,7 @@ constexpr double MAX_Y = 100.0;
 constexpr double MIN_Y = 10.0;
 
 constexpr double COOLDOWN = 0.5;
+constexpr double RESPAWN = 3.0;
 
 constexpr int DIANA_POINTS = 5;
 constexpr int TOTAL_DIANAS = 1;
@@ -49,14 +51,18 @@ private:
 		SNOW,
 		INTRO2,
 		LEVEL1,
+		LEVEL2,
+		RESPAWN,
+		LOST,
 		TOTAL
 	};
 	Scenes current;
-
+	Scenes last_scene;
 	std::list<Particle*> particles;
 	std::list<ParticlesSystem*> systems;
 	std::list<RigidSolid*> rigid_solids;
 	std::list<RigidStatic*> rigid_statics;
+	std::list<RigidSolidSystem*> rigid_systems;
 
 	double elapsedTime;
 
@@ -70,6 +76,11 @@ private:
 
 	double cooldownTime;
 	bool can_shoot = true;
+
+	double respawnTime;
+	bool dying = false;
+
+	bool next_level = false;
 
 	int cont_dianas = 0;
 	int points = 0;
@@ -88,6 +99,11 @@ private:
 	void snowScene();
 	void intro2Scene();
 	void level1();
+	void level2();
+	void level3();
+	void respawn();
+	void lost();
+	void win();
 
 	void changeScene();
 	void clearScene();

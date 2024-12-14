@@ -7,7 +7,7 @@ Game::Game(PxPhysics* _gPhysics, PxMaterial* _gMaterial, PxScene* _gScene) :
 	elapsedTime = 0;
 
 
-	level1();
+	titleScene();
 }
 
 Game::~Game()
@@ -39,7 +39,20 @@ void Game::update(double t)
 			can_shoot = true;
 		}
 	}
+	if (dying) {
+		respawnTime += t;
+		if (respawnTime >= RESPAWN) {
+			dying = false;
+			changeScene();
+		}
+
+	}
 	for (auto it = systems.begin(); it != systems.end(); ++it) {
+		if (*it != nullptr) {
+			(*it)->update(t);
+		}
+	}
+	for (auto it = rigid_systems.begin(); it != rigid_systems.end(); ++it) {
 		if (*it != nullptr) {
 			(*it)->update(t);
 		}
@@ -112,6 +125,7 @@ void Game::intro2Scene()
 }
 void Game::level1()
 {
+	lives = 10;
 	lives_text = "Vidas: " + to_string(lives);
 
 	if (cam != nullptr) {
@@ -122,11 +136,57 @@ void Game::level1()
 	rigid_statics.push_back(lava);
 
 	createPlayer();
-	RigidStatic* plataforma = new RigidStatic(gPhysics, gScene, Vector3(0, 30, 20), Vector3(100, 10, 4), Vector4(0.8, 0.8, 0.8, 1), "BOX", "plataforma");
+	RigidStatic* plataforma = new RigidStatic(gPhysics, gScene, Vector3(0, 30, 0), Vector3(100, 10, 4), Vector4(0.8, 0.8, 0.8, 1), "BOX", "plataforma");
 	rigid_statics.push_back(plataforma);
 	RigidStatic* plataforma2 = new RigidStatic(gPhysics, gScene, Vector3(0, 30, -50), Vector3(100, 10, 4), Vector4(0.0, 0.0, 0.0, 1), "BOX", "plataforma");
-	rigid_statics.push_back(plataforma);
-	
+	rigid_statics.push_back(plataforma2);
+
+	//canion 1
+	RigidSolidSystem* s1 = new RigidSolidSystem(gPhysics, gScene, Vector3(-60, 42, -50), Vector3(0, 0, 50), Vector3(0, 0, 0),
+		Vector3(1, 1, 1), Vector4(1.0f, 0.0f, 0.0f, 1.0f), 1, 0.01, 5.0f, "SPHERE");
+	s1->quitGravity();
+	s1->set_u_Distribution(false);
+	s1->setNormalDistribPos(0.01, 0.01);
+	s1->setNormalDistribAngularVel(0.01, 0.01);
+	s1->setNormalDistribLinealVel(0.01, 0.01);
+	s1->setNormalDistribLifeTime(2.0, 0.1);
+	rigid_systems.push_back(s1);
+
+	RigidSolidSystem* s2 = new RigidSolidSystem(gPhysics, gScene, Vector3(-30, 42, -50), Vector3(0, 0, 75), Vector3(0, 0, 0),
+		Vector3(1, 1, 1), Vector4(0.0f, 1.0f, 0.0f, 1.0f), 1, 0.01, 5.0f, "SPHERE");
+	s2->quitGravity();
+	s2->set_u_Distribution(false);
+	s2->setNormalDistribPos(0.01, 0.01);
+	s2->setNormalDistribAngularVel(0.01, 0.01);
+	s2->setNormalDistribLinealVel(0.01, 0.01);
+	s2->setNormalDistribLifeTime(2.0, 0.1);
+	rigid_systems.push_back(s2);
+
+	RigidSolidSystem* s3 = new RigidSolidSystem(gPhysics, gScene, Vector3(0, 42, -50), Vector3(0, 0, 100), Vector3(0, 0, 0),
+		Vector3(1, 1, 1), Vector4(0.0f, 0.0f, 1.0f, 1.0f), 1, 0.01, 5.0f, "SPHERE");
+	s3->quitGravity();
+	s3->set_u_Distribution(false);
+	s3->setNormalDistribPos(0.01, 0.01);
+	s3->setNormalDistribAngularVel(0.01, 0.01);
+	s3->setNormalDistribLinealVel(0.01, 0.01);
+	s3->setNormalDistribLifeTime(2.0, 0.1);
+	rigid_systems.push_back(s3);
+}
+void Game::level2()
+{
+}
+void Game::level3()
+{
+}
+void Game::respawn()
+{
+
+}
+void Game::lost()
+{
+}
+void Game::win()
+{
 }
 void Game::clearScene()
 {
@@ -136,6 +196,12 @@ void Game::clearScene()
 		}
 	}
 	systems.clear();
+	for (auto it = rigid_systems.begin(); it != rigid_systems.end(); ++it) {
+		if (*it != nullptr) {
+			delete* it;
+		}
+	}
+	rigid_systems.clear();
 	for (auto it = particles.begin(); it != particles.end(); ++it) {
 		if (*it != nullptr) {
 			delete* it;
@@ -197,6 +263,31 @@ void Game::changeScene()
 		level1();
 		break;
 	}
+	case LEVEL1:
+	{
+		if (lives <= 0) {
+			current = LOST;
+			lost();
+		}
+		else if (next_level) {
+			current = LEVEL2;
+			level2();
+		}
+		else {
+			last_scene = LEVEL1;
+			current = RESPAWN;
+			respawn();
+		}
+		break;
+	}
+	case RESPAWN:
+	{
+		current = last_scene;
+		if (current == LEVEL1) {
+			level1();
+		}
+		break;
+	}
 	default:
 		break;
 	}
@@ -226,17 +317,16 @@ void Game::setDiana()
 }
 void Game::createPlayer()
 {
-	player = new RigidSolid(gPhysics, gScene, gMaterial,
-		Vector3(-80, 50, 20), Vector3(0, -1.0, 0), Vector3(0, 0, 0), Vector3(2, 2, 2), Vector4(1.0, 0.0, 1.0, 1),
-		2.0, 500, "BOX", "player");
+	if (player == nullptr) {
+		player = new RigidSolid(gPhysics, gScene, gMaterial,
+			Vector3(-80, 50, 0), Vector3(0, -1.0, 0), Vector3(0, 0, 0), Vector3(2, 2, 2), Vector4(1.0, 0.0, 1.0, 1),
+			2.0, 500, "BOX", "player");
 
-	player->setMaterialProperties(0.0f, 0.6f, 0.5f);
-
-	/*player->getSolid()->setRigidDynamicLockFlags(
-		PxRigidDynamicLockFlag::eLOCK_ANGULAR_X |
-		PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y |
-		PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z 
-	);*/
+		player->setMaterialProperties(0.0f, 0.6f, 0.5f);
+	}
+	else {
+		player->setPosition(Vector3(-80, 50, 0));
+	}
 
 	rigid_solids.push_back(player);
 }
@@ -273,7 +363,7 @@ void Game::keyPress(unsigned char key)
 	}
 	case 'D':
 	{
-		if (player) {
+		if (player && !dying) {
 			Vector3 pos = player->getPosition();
 			pos.x += 1.0f;
 			player->setPosition(pos);
@@ -282,7 +372,7 @@ void Game::keyPress(unsigned char key)
 	}
 	case 'A':
 	{
-		if (player) {
+		if (player && !dying) {
 			Vector3 pos = player->getPosition();
 			pos.x -= 1.0f;
 			player->setPosition(pos);
@@ -291,7 +381,7 @@ void Game::keyPress(unsigned char key)
 	}
 	case 'W':
 	{
-		if (player && canJump) {
+		if (player && canJump && !dying) {
 			Vector3 pos = player->getPosition();
 			pos.y += 10.0f;
 			player->setPosition(pos);
@@ -345,5 +435,27 @@ void Game::onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 		(name1 && strcmp(name1, "plataforma") == 0 && name2 && strcmp(name2, "player") == 0)) {
 		
 		canJump = true;
+	}
+
+	if (!dying && (name1 && strcmp(name1, "player") == 0 && name2 && strcmp(name2, "lava") == 0) ||
+		(name1 && strcmp(name1, "lava") == 0 && name2 && strcmp(name2, "player") == 0)) {
+		
+		respawnTime = 0;
+		dying = true;
+		lives--;
+		next_level = false;
+
+		ParticlesSystem* fire_system = new ParticlesSystem(Vector4(1.0, 0.5, 0.0, 1.0), player->getPosition(), Vector3(0, 0, 0), 20, 1.5f, 0.8f, 0.0f, 0.0f);
+
+		fire_system->set_u_Distribution(false);
+		fire_system->setNormalDistribPos(1.0, 0.5);
+		fire_system->setNormalDistribVel(1.0, 0.5);
+		fire_system->setNormalDistribLifeTime(1.0, 0.5);
+
+		systems.push_back(fire_system);
+		
+		
+		player->invisible();
+		player->die();
 	}
 }

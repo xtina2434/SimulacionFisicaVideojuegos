@@ -2,7 +2,7 @@
 #include <cmath>
 #include "ForceGenerator.h"
 Particle::Particle(Vector3 Pos, Vector3 Vel,/* Vector3 Acel,*/ float Size, Vector3 Vol, Vector4 Color, double LifeTime, float Mass, std::string SHAPE) : 
-	pose(Pos), vel(Vel),/* acel(Acel),*/ size(Size),vol(Vol),color(Color), life_time(LifeTime),mass(Mass) {
+	pose(Pos), vel(Vel),/* acel(Acel),*/ size(Size),vol(Vol),color(Color), life_time(LifeTime),mass(Mass), mt(rd()) {
 	acel = Vector3(0.0f, 0.0f, 0.0f);
 	accF = Vector3(0.0f, 0.0f, 0.f);
 
@@ -16,6 +16,17 @@ Particle::Particle(Vector3 Pos, Vector3 Vel,/* Vector3 Acel,*/ float Size, Vecto
 Particle::~Particle() {
 	DeregisterRenderItem(renderItem);
 }
+void Particle::setRandomMass(double mean, double desv)
+{
+	std::normal_distribution<double> normal_dist(mean, desv);
+
+	double new_mass = normal_dist(mt);
+
+	if (new_mass < 0)
+		new_mass = 1.0f;
+
+	mass = new_mass;
+}
 void Particle::addForce(Vector3 f) {
 	accF += f;
 }
@@ -27,9 +38,7 @@ void Particle::clearForces() {
 }
 void Particle::integrate(double t) {
 	
-	
-
-	if(mass > 0.0f)
+	if(mass > 0.0f && accF != Vector3(0,0,0))
 		acel = accF / mass;
 
 	//Euler

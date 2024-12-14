@@ -66,8 +66,16 @@ public:
 	void addForceGenerator(ForceGenerator* fg);
 	void integrate(double t);
 	void update(double t);
-	void die() { alive = false; }
-	
+	void die() { alive = false;}
+	void quitGravity() {
+		solid->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+	}
+	void invisible() {
+
+		if (item) {
+			DeregisterRenderItem(item);
+		}
+	}
 protected:
 	PxRigidDynamic* solid = nullptr;
 	RenderItem*		item  = nullptr;

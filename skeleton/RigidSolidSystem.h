@@ -65,9 +65,9 @@ public:
 		has_gravityForce = true;
 	}
 	void setWindForce(Vector3& vel, float k1);
-
 	void setWhirlWindForce(float k, float k1);
 	void addForceGenerator(ForceGenerator* fg);
+	void quitGravity() { has_gravity = false; }
 protected:
 	list<RigidSolid*> solids;				//coleccion de solidos rigidos
 	PxPhysics* gPhysics = nullptr;
@@ -107,6 +107,8 @@ protected:
 
 	WhirlwindForceGenerator* whirlwind_generator = nullptr;
 	bool has_whirlwindForce = false;
+
+	bool has_gravity = true;
 };
 
 #endif

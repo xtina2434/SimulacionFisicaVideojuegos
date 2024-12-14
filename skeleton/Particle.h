@@ -5,6 +5,7 @@
 #include "RenderUtils.hpp"
 #include <vector>
 #include <string>
+#include <random>
 class ForceGenerator;
 //Clase particula
 constexpr double doumping = 0.98;
@@ -27,8 +28,11 @@ class Particle {
 		Vector3 getVel() const { return vel; }
 		Vector3 getPos() const { return pose.p; }
 		//setters
-		void setAcel(const Vector3& a) { acel = a; }
-		
+		void setAcel(const Vector3& a) 
+		{ 
+			acel = a * mass; 
+		}
+		void setRandomMass(double mean, double desv);
 	protected:
 		Vector3 vel;			 //velocidad inicial
 		Vector3 acel;			 //aceleracion/gravedad
@@ -41,6 +45,8 @@ class Particle {
 		float size;				//tamaño inicial
 		float mass;
 		std::vector<ForceGenerator*> generators;
+		std::random_device rd;
+		std::mt19937 mt;
 		void clearForces();
 };
 

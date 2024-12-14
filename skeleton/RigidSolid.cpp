@@ -54,7 +54,7 @@ RigidSolid::RigidSolid(PxPhysics* _gPhysics, PxScene* _scene, PxMaterial* _mater
 
 RigidSolid::~RigidSolid()
 {
-	if (item) {
+	if (item && alive) {
 		DeregisterRenderItem(item);
 	}
 	if (solid) {
