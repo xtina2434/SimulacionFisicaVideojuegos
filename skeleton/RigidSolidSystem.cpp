@@ -135,9 +135,9 @@ RigidSolidSystem::setWindForce(Vector3& vel, float k1) {
 	wind_generator = new WindForceGenerator(vel, k1, 0.0f);
 }
 void
-RigidSolidSystem::setWhirlWindForce(float k, float k1) {
+RigidSolidSystem::setWhirlWindForce(float k, float k1, float r) {
 	has_whirlwindForce = true;
-	whirlwind_generator = new WhirlwindForceGenerator(Vector3(0.0f, 0.0f, 0.0f), 20.0f, k, k1);
+	whirlwind_generator = new WhirlwindForceGenerator(ini_pos, r, k, k1);
 }
 void RigidSolidSystem::addForceGenerator(ForceGenerator* fg)
 {

@@ -69,17 +69,9 @@ void RigidSolid::addForceGenerator(ForceGenerator* fg)
 
 void RigidSolid::integrate(double t)
 {
-	/*for (auto fg : generators) {
-		if (fg != nullptr) {
-			fg->updateForce(this, t);
-		}
-	}
-	life_time -= t;*/
-
 	if (solid) {
 		solid->clearForce();
 	}
-	
 }
 
 void RigidSolid::update(double t)

@@ -6,7 +6,7 @@ Game::Game(PxPhysics* _gPhysics, PxMaterial* _gMaterial, PxScene* _gScene) :
 	current = START;
 	
 
-	titleScene();
+	level2();
 }
 
 Game::~Game()
@@ -194,6 +194,51 @@ void Game::level1()
 void Game::level2()
 {
 	lives_text = "Vidas: " + to_string(lives);
+
+	RigidStatic* lava = new RigidStatic(gPhysics, gScene, Vector3(0, 0, 0), Vector3(200, 0.1, 200), Vector4(1.0, 0.1, 0.0, 1.0), "BOX", "lava");
+	rigid_statics.push_back(lava);
+
+	createPlayer();
+	player->getSolid()->setRigidDynamicLockFlags(
+		PxRigidDynamicLockFlag::eLOCK_ANGULAR_X | 
+		PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y | 
+		PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z 
+	);
+
+	RigidStatic* plataforma = new RigidStatic(gPhysics, gScene, Vector3(-80, 28, 0), Vector3(10, 5, 5), Vector4(1.0, 0.0, 0.0, 1), "SPHERE", "plataforma");
+	rigid_statics.push_back(plataforma);
+	RigidStatic* plataforma2 = new RigidStatic(gPhysics, gScene, Vector3(-30, 28, 0), Vector3(10, 5, 5), Vector4(1.0, 0.0, 0.0, 1), "SPHERE", "plataforma");
+	rigid_statics.push_back(plataforma2);
+	RigidStatic* plataforma3 = new RigidStatic(gPhysics, gScene, Vector3(20, 28, 0), Vector3(10, 5, 5), Vector4(1.0, 0.0, 0.0, 1), "SPHERE", "plataforma");
+	rigid_statics.push_back(plataforma3);
+	RigidStatic* flag = new RigidStatic(gPhysics, gScene, Vector3(20, 38, -0), Vector3(4, 0.1, 4), Vector4(0.0, 1.0, 0.0, 1), "BOX", "flag"); 
+	rigid_statics.push_back(flag); 
+
+
+	RigidSolidSystem* whirlwind_solid_system = new RigidSolidSystem(gPhysics, gScene, 
+		Vector3(-50, 30, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0.5, 1, 1), Vector4(1, 1, 0, 1), 
+		1, 0.1f, 5.0f, "SPHERE"); 
+	whirlwind_solid_system->set_u_Distribution(false); 
+	whirlwind_solid_system->quitGravity(); 
+	whirlwind_solid_system->setNormalDistribPos(3.0, 1.0); 
+	whirlwind_solid_system->setNormalDistribLinealVel(5.0, 3.0); 
+	whirlwind_solid_system->setNormalDistribAngularVel(0.0, 0.01); 
+	whirlwind_solid_system->setNormalDistribLifeTime(3.0, 2.0); 
+	whirlwind_solid_system->setWhirlWindForce(10.0f, 0.5f, 1.0f); 
+	rigid_systems.push_back(whirlwind_solid_system); 
+
+
+	RigidSolidSystem* whirlwind_solid_system2 = new RigidSolidSystem(gPhysics, gScene,
+		Vector3(0, 30, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0.5, 0.5, 0.5), Vector4(0, 0, 1, 1),
+		1, 0.1f, 5.0f, "BOX");
+	whirlwind_solid_system2->set_u_Distribution(false);
+	whirlwind_solid_system2->quitGravity();
+	whirlwind_solid_system2->setNormalDistribPos(3.0, 1.0);
+	whirlwind_solid_system2->setNormalDistribLinealVel(8.0, 3.0);
+	whirlwind_solid_system2->setNormalDistribAngularVel(0.0, 0.01);
+	whirlwind_solid_system2->setNormalDistribLifeTime(3.0, 2.0);
+	whirlwind_solid_system2->setWhirlWindForce(20.0f, 0.5f, 1.0f);
+	rigid_systems.push_back(whirlwind_solid_system2);
 }
 void Game::level3()
 {
@@ -357,7 +402,7 @@ void Game::setDiana()
 void Game::createPlayer()
 {
 	player = new RigidSolid(gPhysics, gScene, gMaterial,
-		Vector3(-80, 43, 0), Vector3(0, -1.0, 0), Vector3(0, 0, 0), Vector3(2, 2, 2), Vector4(1.0, 0.0, 1.0, 1),
+		Vector3(-80, 43, 0), Vector3(0.0, -1.0, 0), Vector3(0, 0, 0), Vector3(2, 2, 2), Vector4(1.0, 0.0, 1.0, 1),
 		2.0, 500, "BOX", "player");
 
 	player->setMaterialProperties(0.0f, 0.6f, 0.5f);
@@ -419,9 +464,15 @@ void Game::keyPress(unsigned char key)
 	case 'W':
 	{
 		if (player && canJump && !dying) {
-			Vector3 pos = player->getPosition();
-			pos.y += 10.0f;
-			player->setPosition(pos);
+			Vector3 vel = player->getLinealVel();
+			vel.y = 14.0f;
+			if (GetAsyncKeyState('D')) {
+				vel.x += 5.0f;
+			}
+			else if (GetAsyncKeyState('A')) {
+				vel.x -= 5.0f;
+			}
+			player->setLinearVel(vel);
 			canJump = false;
 		}
 		break;

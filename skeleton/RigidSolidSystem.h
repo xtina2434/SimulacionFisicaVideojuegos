@@ -65,7 +65,7 @@ public:
 		has_gravityForce = true;
 	}
 	void setWindForce(Vector3& vel, float k1);
-	void setWhirlWindForce(float k, float k1);
+	void setWhirlWindForce(float k, float k1, float r);
 	void addForceGenerator(ForceGenerator* fg);
 	void quitGravity() { has_gravity = false; }
 protected:
