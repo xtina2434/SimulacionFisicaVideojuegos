@@ -290,11 +290,11 @@ void startRender(const PxVec3& cameraEye, const PxVec3& cameraDir, PxReal clipNe
 
 	//Title text
 	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-	drawText(title_text, 230, 250);
+	drawText(title_text, 225, 250);
 
 	//Next text
 	glColor4f(1.0f, 0.3f, 0.0f, 1.0f);
-	drawText(next_text, 220, 200);
+	drawText(next_text, 215, 200);
 
 	//Intro text
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
@@ -319,7 +319,7 @@ void startRender(const PxVec3& cameraEye, const PxVec3& cameraDir, PxReal clipNe
 	drawText(input_text, 170, 230);
 
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
-	drawText(respawn_text, 200, 260);
+	drawText(respawn_text, 160, 260);
 
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
 	drawText(lost_text, 100, 260);
@@ -328,7 +328,7 @@ void startRender(const PxVec3& cameraEye, const PxVec3& cameraDir, PxReal clipNe
 	drawText(win_text, 170, 260);
 
 	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-	drawText(exit_text, 230, 180);
+	drawText(exit_text, 220, 160);
 
 	
 	// Setup camera

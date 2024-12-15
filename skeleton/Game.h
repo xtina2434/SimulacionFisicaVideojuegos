@@ -16,6 +16,7 @@
 #include "RigidStatic.h"
 #include "RigidSolidSystem.h"
 #include "SpringForceGenerator.h"
+#include "ExplosionForceGenerator.h"
 using namespace physx;
 
 extern std::string title_text;

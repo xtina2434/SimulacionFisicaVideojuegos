@@ -9,6 +9,7 @@
 #include "GravityForceGenerator.h"
 #include "WindForceGenerator.h"
 #include "WhirlwindForceGenerator.h"
+#include "ExplosionForceGenerator.h"
 using namespace std;
 class ParticlesSystem {
 
@@ -64,6 +65,12 @@ public:
 
 	void setWhirlWindForce(float k, float k1);
 
+	void setExplosionForce(float _R, double _k, float _t) {
+
+		has_explosionForce = true;
+		explosion_generator = new ExplosionForceGenerator(_R, _k, _t, ini_pos);
+	}
+
 	void addForceGenerator(ForceGenerator* fg);
 
 protected:
@@ -101,6 +108,9 @@ protected:
 
 	WhirlwindForceGenerator* whirlwind_generator = nullptr;
 	bool has_whirlwindForce = false;
+
+	ExplosionForceGenerator* explosion_generator = nullptr;
+	bool has_explosionForce = false;
 
 	void addParticles(int num); //metodo para agregar particulas nuevas
 };
