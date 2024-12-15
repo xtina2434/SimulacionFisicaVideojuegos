@@ -4,8 +4,7 @@ Game::Game(PxPhysics* _gPhysics, PxMaterial* _gMaterial, PxScene* _gScene) :
 	gPhysics(_gPhysics), gMaterial(_gMaterial), gScene(_gScene), mt(rd())
 {
 	current = START;
-	elapsedTime = 0;
-
+	
 
 	titleScene();
 }
@@ -28,10 +27,13 @@ Game::~Game()
 
 void Game::update(double t)
 {
-	elapsedTime += t;
-	if (current == SNOW && elapsedTime >= SPAWN_DIANA) {
-		setDiana();
-		elapsedTime = 0;
+	
+	if (current == SNOW) {
+		elapsedTime += t;
+		if (elapsedTime >= SPAWN_DIANA) {
+			setDiana();
+			elapsedTime = 0;
+		}
 	}
 	if (!can_shoot) {
 		cooldownTime += t;
@@ -41,7 +43,7 @@ void Game::update(double t)
 	}
 	if (dying) {
 		respawnTime += t;
-		if (respawnTime >= RESPAWN) {
+		if (respawnTime >= RESPAWN_TIME) {
 			dying = false;
 			changeScene();
 		}
@@ -49,7 +51,7 @@ void Game::update(double t)
 	}
 	if (wait_restart) {
 		respawnTime += t;
-		if (respawnTime >= RESPAWN) {
+		if (respawnTime >= RESPAWN_TIME) {
 			wait_restart = false;
 			changeScene();
 		}
@@ -104,7 +106,8 @@ void Game::introScene()
 void Game::snowScene() {
 
 	points_text = "Puntos: " + to_string(points);
-	
+	cont_dianas = 0;
+	elapsedTime = 0;
 	if (cam != nullptr) {
 		cam->setTransform(PxTransform({ 100, 54, 2 }), PxVec3(-1, 0, 0));
 	}
@@ -127,9 +130,9 @@ void Game::intro2Scene()
 	lives = points / 10;
 	if (lives == 0) lives = 1;
 	next_text = "Pulse c para continuar";
-	intro_text3 = "Lo has hecho genial, por hacer " + to_string(points) + " puntos tienes " + to_string(lives) + " vidas";
-	intro_text4 = "Ahora tienes que superar los 3 niveles finales. Esquiva los obstaculos y evita caer a la lava";
-	
+	intro_text3 = "Lo has hecho genial, por hacer " + to_string(points) + " puntos tienes " + to_string(lives) + " vidas.";
+	intro_text4 = "Ahora tienes que superar los 3 niveles finales. Esquiva los obstaculos y evita caer a la lava.";
+	input_text = "Con 'W' saltas, con 'D' avanzas y con 'A' retrocedes.";
 }
 void Game::level1()
 {
@@ -148,9 +151,17 @@ void Game::level1()
 	rigid_statics.push_back(plataforma);
 	RigidStatic* plataforma2 = new RigidStatic(gPhysics, gScene, Vector3(0, 30, -50), Vector3(100, 10, 4), Vector4(0.0, 0.0, 0.0, 1), "BOX", "plataforma");
 	rigid_statics.push_back(plataforma2);
+	RigidStatic* flag = new RigidStatic(gPhysics, gScene, Vector3(40, 40, -0), Vector3(3, 0.1, 3), Vector4(0.0, 1.0, 0.0, 1), "BOX", "flag");
+	rigid_statics.push_back(flag);
 
-	//canion 1
-	RigidSolidSystem* s1 = new RigidSolidSystem(gPhysics, gScene, Vector3(-60, 42, -50), Vector3(0, 0, 50), Vector3(0, 0, 0),
+	RigidStatic* canion1 = new RigidStatic(gPhysics, gScene, Vector3(-60, 43, -50), Vector3(3, 3, 3), Vector4(0.4, 0.4, 0.4, 1), "BOX", "objeto");
+	rigid_statics.push_back(canion1);
+	RigidStatic* canion2 = new RigidStatic(gPhysics, gScene, Vector3(-30, 43, -50), Vector3(3, 3, 3), Vector4(0.4, 0.4, 0.4, 1), "BOX", "objeto");
+	rigid_statics.push_back(canion2);
+	RigidStatic* canion3 = new RigidStatic(gPhysics, gScene, Vector3(0, 43, -50), Vector3(3, 3, 3), Vector4(0.4, 0.4, 0.4, 1), "BOX", "objeto");
+	rigid_statics.push_back(canion3);
+
+	RigidSolidSystem* s1 = new RigidSolidSystem(gPhysics, gScene, Vector3(-60, 42, -45), Vector3(0, 0, 50), Vector3(0, 0, 0),
 		Vector3(1, 1, 1), Vector4(1.0f, 0.0f, 0.0f, 1.0f), 1, 0.01, 5.0f, "SPHERE");
 	s1->quitGravity();
 	s1->set_u_Distribution(false);
@@ -160,7 +171,7 @@ void Game::level1()
 	s1->setNormalDistribLifeTime(2.0, 0.1);
 	rigid_systems.push_back(s1);
 
-	RigidSolidSystem* s2 = new RigidSolidSystem(gPhysics, gScene, Vector3(-30, 42, -50), Vector3(0, 0, 75), Vector3(0, 0, 0),
+	RigidSolidSystem* s2 = new RigidSolidSystem(gPhysics, gScene, Vector3(-30, 42, -45), Vector3(0, 0, 75), Vector3(0, 0, 0),
 		Vector3(1, 1, 1), Vector4(0.0f, 1.0f, 0.0f, 1.0f), 1, 0.01, 5.0f, "SPHERE");
 	s2->quitGravity();
 	s2->set_u_Distribution(false);
@@ -170,7 +181,7 @@ void Game::level1()
 	s2->setNormalDistribLifeTime(2.0, 0.1);
 	rigid_systems.push_back(s2);
 
-	RigidSolidSystem* s3 = new RigidSolidSystem(gPhysics, gScene, Vector3(0, 42, -50), Vector3(0, 0, 100), Vector3(0, 0, 0),
+	RigidSolidSystem* s3 = new RigidSolidSystem(gPhysics, gScene, Vector3(0, 42, -45), Vector3(0, 0, 100), Vector3(0, 0, 0),
 		Vector3(1, 1, 1), Vector4(0.0f, 0.0f, 1.0f, 1.0f), 1, 0.01, 5.0f, "SPHERE");
 	s3->quitGravity();
 	s3->set_u_Distribution(false);
@@ -182,20 +193,21 @@ void Game::level1()
 }
 void Game::level2()
 {
+	lives_text = "Vidas: " + to_string(lives);
 }
 void Game::level3()
 {
 }
 void Game::respawn()
 {
-	respawn_text = "Eso ha quemado. No te preocupes, aun te queda(n) " + to_string(lives) + " vida(s)";
+	respawn_text = "Eso ha quemado. No te preocupes, aun te queda(n) " + to_string(lives) + " vida(s).";
 
 	wait_restart = true;
 	respawnTime = 0;
 }
 void Game::lost()
 {
-	lost_text = "Has perdido todas tus vidas :(. No te rindas, seguro que completas la carrera en otra convocatoria";
+	lost_text = "Has perdido todas tus vidas :(. No te rindas, seguro que completas la carrera en otra convocatoria.";
 	next_text = "Pulse c para continuar";
 }
 void Game::win()
@@ -273,6 +285,7 @@ void Game::changeScene()
 		next_text = "";
 		intro_text3 = "";
 		intro_text4 = "";
+		input_text = "";
 		current = LEVEL1;
 		level1();
 		break;
@@ -285,6 +298,7 @@ void Game::changeScene()
 			lost();
 		}
 		else if (next_level) {
+			next_level = false;
 			current = LEVEL2;
 			level2();
 		}
@@ -334,21 +348,20 @@ void Game::setDiana()
 		cont_dianas++;
 	}
 	else {
+		
+		elapsedTime = 0;
 		changeScene();
 	}
 	
 }
 void Game::createPlayer()
 {
-	
-		player = new RigidSolid(gPhysics, gScene, gMaterial,
-			Vector3(-80, 50, 0), Vector3(0, -1.0, 0), Vector3(0, 0, 0), Vector3(2, 2, 2), Vector4(1.0, 0.0, 1.0, 1),
-			2.0, 500, "BOX", "player");
+	player = new RigidSolid(gPhysics, gScene, gMaterial,
+		Vector3(-80, 43, 0), Vector3(0, -1.0, 0), Vector3(0, 0, 0), Vector3(2, 2, 2), Vector4(1.0, 0.0, 1.0, 1),
+		2.0, 500, "BOX", "player");
 
-		player->setMaterialProperties(0.0f, 0.6f, 0.5f);
+	player->setMaterialProperties(0.0f, 0.6f, 0.5f);
 	
-	
-
 	rigid_solids.push_back(player);
 }
 void Game::handleMouse(int button, int state, int x, int y)
@@ -379,7 +392,10 @@ void Game::keyPress(unsigned char key)
 		
 	case 'C':
 	{
-		changeScene();
+		if (current != SNOW && current != LEVEL1 && current != LEVEL2 && current != LEVEL3) {
+			changeScene();
+		}
+		
 		break;
 	}
 	case 'D':
@@ -475,8 +491,16 @@ void Game::onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 
 		systems.push_back(fire_system);
 		
-		
 		player->setInvisible();
 		player->die();
+	}
+
+	if ( !next_level && (name1 && strcmp(name1, "player") == 0 && name2 && strcmp(name2, "flag") == 0) ||
+		(name1 && strcmp(name1, "flag") == 0 && name2 && strcmp(name2, "player") == 0)) {
+
+		std::cout << "ole";
+		respawnTime = 0;
+		next_level = true;
+		wait_restart = true;
 	}
 }

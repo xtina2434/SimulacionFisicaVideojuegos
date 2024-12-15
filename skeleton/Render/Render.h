@@ -51,6 +51,7 @@ extern std::string title_text;
 extern std::string next_text;
 extern std::string intro_text;
 extern std::string intro_text2;
+extern std::string input_text;
 extern std::string points_text;
 extern std::string lives_text;
 extern std::string intro_text3;

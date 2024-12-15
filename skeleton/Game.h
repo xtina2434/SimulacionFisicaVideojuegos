@@ -21,6 +21,7 @@ extern std::string title_text;
 extern std::string next_text;
 extern std::string intro_text;
 extern std::string intro_text2;
+extern std::string input_text;
 extern std::string points_text;
 extern std::string lives_text;
 extern std::string intro_text3;
@@ -35,10 +36,10 @@ constexpr double MAX_Y = 100.0;
 constexpr double MIN_Y = 10.0;
 
 constexpr double COOLDOWN = 0.5;
-constexpr double RESPAWN = 3.0;
+constexpr double RESPAWN_TIME = 3.0;
 
 constexpr int DIANA_POINTS = 5;
-constexpr int TOTAL_DIANAS = 1;
+constexpr int TOTAL_DIANAS = 10;
 class Game {
 private:
 	Camera* cam = GetCamera();
@@ -54,7 +55,9 @@ private:
 		INTRO2,
 		LEVEL1,
 		LEVEL2,
+		LEVEL3,
 		RESPAWN,
+		WIN,
 		LOST,
 		TOTAL
 	};

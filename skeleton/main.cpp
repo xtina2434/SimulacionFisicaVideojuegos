@@ -16,6 +16,7 @@ std::string title_text = " ";
 std::string next_text = " ";
 std::string intro_text = " ";
 std::string intro_text2 = " ";
+std::string input_text = " ";
 std::string points_text = " ";
 std::string lives_text = " ";
 std::string intro_text3 = " ";
