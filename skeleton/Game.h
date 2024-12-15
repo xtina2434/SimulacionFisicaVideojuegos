@@ -15,6 +15,7 @@
 #include "RigidSolid.h"
 #include "RigidStatic.h"
 #include "RigidSolidSystem.h"
+#include "SpringForceGenerator.h"
 using namespace physx;
 
 extern std::string title_text;
@@ -28,6 +29,8 @@ extern std::string intro_text3;
 extern std::string intro_text4;
 extern std::string respawn_text;
 extern std::string lost_text;
+extern std::string win_text;
+extern std::string exit_text;
 
 constexpr double SPAWN_DIANA = 1.5;
 constexpr double MAX_Z = 100.0;
@@ -63,6 +66,7 @@ private:
 	};
 	Scenes current;
 	Scenes last_scene;
+	std::list<RenderItem*> items;
 	std::list<Particle*> particles;
 	std::list<ParticlesSystem*> systems;
 	std::list<RigidSolid*> rigid_solids;
@@ -104,19 +108,19 @@ private:
 	void introScene();
 	void snowScene();
 	void intro2Scene();
-	void level1();
-	void level2();
-	void level3();
-	void respawn();
-	void lost();
-	void win();
+	void level1Scene();
+	void level2Scene();
+	void level3Scene();
+	void respawnScene();
+	void lostScene();
+	void winScene();
 
 	void changeScene();
 	void clearScene();
 
-
 	void setDiana();
 	void createPlayer();
+	void createDock(const Vector3& pos, double k, const Vector4& color4);
 };
 
 #endif

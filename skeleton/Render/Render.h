@@ -58,6 +58,8 @@ extern std::string intro_text3;
 extern std::string intro_text4;
 extern std::string respawn_text;
 extern std::string lost_text;
+extern std::string win_text;
+extern std::string exit_text;
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
  

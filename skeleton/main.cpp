@@ -23,6 +23,8 @@ std::string intro_text3 = " ";
 std::string intro_text4 = " ";
 std::string respawn_text = " ";
 std::string lost_text = " ";
+std::string win_text = " ";
+std::string exit_text = " ";
 
 int SCREEN_WIDTH = 0;
 int SCREEN_HEIGHT = 0;
@@ -97,15 +99,34 @@ void cleanupPhysics(bool interactive)
 		game = nullptr;
 	}
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
-	gScene->release();
-	gDispatcher->release();
+	if (gScene) {
+		gScene->release();
+		gScene = nullptr;
+	}
+	
+	if (gDispatcher) {
+		gDispatcher->release();
+		gDispatcher = nullptr;
+	}
+	
 	// -----------------------------------------------------
-	gPhysics->release();
-	PxPvdTransport* transport = gPvd->getTransport();
-	gPvd->release();
-	transport->release();
-
-	gFoundation->release();
+	if (gPhysics) {
+		gPhysics->release();
+		gPhysics = nullptr;
+	}
+	
+	if (gPvd) {
+		PxPvdTransport* transport = gPvd->getTransport();
+		gPvd->release();
+		if (transport) {
+			transport->release();
+		}
+		gPvd = nullptr;
+	}
+	if (gFoundation) {
+		gFoundation->release();
+		gFoundation = nullptr;
+	}
 }
 
 // Function called when a key is pressed
@@ -118,8 +139,10 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	{
 		//case 'B': break;
 		//case ' ':	break;
-	case ' ':
+	case 'Q':
 	{
+		cleanupPhysics(false);
+		exit(EXIT_SUCCESS);
 		break;
 	}
 	default:

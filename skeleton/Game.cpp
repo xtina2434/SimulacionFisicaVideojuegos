@@ -4,9 +4,7 @@ Game::Game(PxPhysics* _gPhysics, PxMaterial* _gMaterial, PxScene* _gScene) :
 	gPhysics(_gPhysics), gMaterial(_gMaterial), gScene(_gScene), mt(rd())
 {
 	current = START;
-	
-
-	level2();
+	titleScene();
 }
 
 Game::~Game()
@@ -147,7 +145,7 @@ void Game::level1()
 	rigid_statics.push_back(lava);
 
 	createPlayer();
-	RigidStatic* plataforma = new RigidStatic(gPhysics, gScene, Vector3(0, 30, 0), Vector3(100, 10, 4), Vector4(0.8, 0.8, 0.8, 1), "BOX", "plataforma");
+	RigidStatic* plataforma = new RigidStatic(gPhysics, gScene, Vector3(0, 30, 0), Vector3(100, 10, 4), Vector4(0.0, 0.6, 0.8, 1), "BOX", "plataforma");
 	rigid_statics.push_back(plataforma);
 	RigidStatic* plataforma2 = new RigidStatic(gPhysics, gScene, Vector3(0, 30, -50), Vector3(100, 10, 4), Vector4(0.0, 0.0, 0.0, 1), "BOX", "plataforma");
 	rigid_statics.push_back(plataforma2);
@@ -199,11 +197,6 @@ void Game::level2()
 	rigid_statics.push_back(lava);
 
 	createPlayer();
-	player->getSolid()->setRigidDynamicLockFlags(
-		PxRigidDynamicLockFlag::eLOCK_ANGULAR_X | 
-		PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y | 
-		PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z 
-	);
 
 	RigidStatic* plataforma = new RigidStatic(gPhysics, gScene, Vector3(-80, 28, 0), Vector3(10, 5, 5), Vector4(1.0, 0.0, 0.0, 1), "SPHERE", "plataforma");
 	rigid_statics.push_back(plataforma);
@@ -242,6 +235,47 @@ void Game::level2()
 }
 void Game::level3()
 {
+	lives_text = "Vidas: " + to_string(lives);
+
+	RigidStatic* lava = new RigidStatic(gPhysics, gScene, Vector3(0, 0, 0), Vector3(200, 0.1, 200), Vector4(1.0, 0.1, 0.0, 1.0), "BOX", "lava");
+	rigid_statics.push_back(lava);
+	RigidStatic* plataforma = new RigidStatic(gPhysics, gScene, Vector3(0, 30, 0), Vector3(100, 10, 6), Vector4(0.0, 0.6, 0.8, 1), "BOX", "plataforma");
+	rigid_statics.push_back(plataforma);
+	RenderItem* pared = new RenderItem(CreateShape(physx::PxBoxGeometry(200, 50, 0.1)),
+		new physx::PxTransform(0, 30, -12), Vector4(0.0, 0.0, 0.0, 1));
+	items.push_back(pared);
+	RigidStatic* flag = new RigidStatic(gPhysics, gScene, Vector3(40, 40, -0), Vector3(3, 0.1, 3), Vector4(0.0, 1.0, 0.0, 1), "BOX", "flag");
+	rigid_statics.push_back(flag);
+	createPlayer();
+
+	createDock(Vector3(-64.0, 44.0, -10.0), 300.0, Vector4(1.0, 0.0, 0.0, 1));
+	createDock(Vector3(-44.0, 52.0, -10.0), 350.0, Vector4(1.0, 0.5, 0.0, 1));
+	createDock(Vector3(-34.0, 44.0, -10.0), 400.0, Vector4(0.0, 1.0, 0.0, 1));
+	createDock(Vector3(-14.0, 52.0, -10.0), 450.0, Vector4(0.0, 1.0, 0.5, 1));
+	createDock(Vector3(4.0, 44.0, -10.0), 500.0, Vector4(0.0, 0.0, 1.0, 1));
+}
+void Game::createDock(const Vector3& pos, double k, const Vector4& color)
+{
+	//const Vector3 anchorPoint(0.0, 30.0, 0.0);
+	RenderItem* cube = new RenderItem(CreateShape(physx::PxBoxGeometry(2, 2, 2)),
+		new physx::PxTransform(pos), color);
+	items.push_back(cube);
+
+	Vector3 pos2 = pos;
+	pos2.z += 10;
+	RigidSolid* s = new RigidSolid(gPhysics, gScene, gMaterial,
+		pos2, Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(1, 1, 1), color,
+		1.0, 500, "SPHERE", "muelle");
+
+	rigid_solids.push_back(s);
+	SpringForceGenerator* spring_generator = new SpringForceGenerator(k, 1.0, pos);
+
+	s->addForceGenerator(spring_generator);
+	//s->setInertia(Vector3(5, 5, 5));
+	s->getSolid()->setRigidDynamicLockFlags(
+		PxRigidDynamicLockFlag::eLOCK_LINEAR_X |
+		PxRigidDynamicLockFlag::eLOCK_LINEAR_Y
+	);
 }
 void Game::respawn()
 {
@@ -252,12 +286,14 @@ void Game::respawn()
 }
 void Game::lost()
 {
-	lost_text = "Has perdido todas tus vidas :(. No te rindas, seguro que completas la carrera en otra convocatoria.";
-	next_text = "Pulse c para continuar";
+	lost_text = "Has perdido todas tus vidas :( No te rindas, seguro que completas la carrera en otra convocatoria.";
+	next_text = "Pulse c para repetir";
+	exit_text = "Pulse q para salir";
 }
 void Game::win()
 {
-
+	win_text = "Enhorabuena, has completado CHAOS RUN con exito.";
+	exit_text = "Pulse q para salir";
 }
 void Game::clearScene()
 {
@@ -291,13 +327,18 @@ void Game::clearScene()
 		}
 	}
 	rigid_statics.clear();
+	for (auto it = items.begin(); it != items.end(); ++it) {
+		if (*it != nullptr) {
+			DeregisterRenderItem(*it);
+		}
+	}
+	items.clear();
 }
 void Game::changeScene()
 {
 	clearScene();
 	switch (current)
 	{
-
 	case START:
 	{
 		title_text = "";
@@ -354,6 +395,44 @@ void Game::changeScene()
 		}
 		break;
 	}
+	case LEVEL2:
+	{
+		lives_text = "";
+		if (lives <= 0) {
+			current = LOST;
+			lost();
+		}
+		else if (next_level) {
+			next_level = false;
+			current = LEVEL3;
+			level3();
+		}
+		else {
+			last_scene = LEVEL2;
+			current = RESPAWN;
+			respawn();
+		}
+		break;
+	}
+	case LEVEL3:
+	{
+		lives_text = "";
+		if (lives <= 0) {
+			current = LOST;
+			lost();
+		}
+		else if (next_level) {
+			next_level = false;
+			current = WIN;
+			win();
+		}
+		else {
+			last_scene = LEVEL3;
+			current = RESPAWN;
+			respawn();
+		}
+		break;
+	}
 	case RESPAWN:
 	{
 		respawn_text = "";
@@ -361,11 +440,18 @@ void Game::changeScene()
 		if (current == LEVEL1) {
 			level1();
 		}
+		if (current == LEVEL2) {
+			level2();
+		}
+		if (current == LEVEL3) {
+			level3();
+		}
 		break;
 	}
 	case LOST:
 	{
 		lost_text = "";
+		exit_text = "";
 		current = START;
 		titleScene();
 		break;
@@ -402,13 +488,14 @@ void Game::setDiana()
 void Game::createPlayer()
 {
 	player = new RigidSolid(gPhysics, gScene, gMaterial,
-		Vector3(-80, 43, 0), Vector3(0.0, -1.0, 0), Vector3(0, 0, 0), Vector3(2, 2, 2), Vector4(1.0, 0.0, 1.0, 1),
+		Vector3(-80, 45, 0), Vector3(0.0, -1.0, 0), Vector3(0, 0, 0), Vector3(2, 2, 2), Vector4(1.0, 0.0, 1.0, 1),
 		2.0, 500, "BOX", "player");
 
 	player->setMaterialProperties(0.0f, 0.6f, 0.5f);
 	
 	rigid_solids.push_back(player);
 }
+
 void Game::handleMouse(int button, int state, int x, int y)
 {
 	if (can_shoot && current == SNOW && button == 0) {
