@@ -287,46 +287,45 @@ void setupDefaultRenderState()
 void startRender(const PxVec3& cameraEye, const PxVec3& cameraDir, PxReal clipNear, PxReal clipFar)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	//Title text
+	//color inicial
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	//Titulo azul
 	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
 	drawText(title_text, 225, 250);
-
-	//Next text
+	//Continuar naranja
 	glColor4f(1.0f, 0.3f, 0.0f, 1.0f);
 	drawText(next_text, 215, 200);
-
-	//Intro text
+	//Intro negro
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
 	drawText(intro_text, 50, 300);
-
+	//Intro2 negro
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
 	drawText(intro_text2,40, 260);
-
+	//Puntos negro
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
 	drawText(points_text, 10, 10);
-
+	//Vidas negro
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
 	drawText(lives_text, 10, 10);
-
+	//Intro3 negro
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
 	drawText(intro_text3, 170, 310);
-
+	//Intro4 negro
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
 	drawText(intro_text4, 100, 270);
-
+	//Input negro
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
 	drawText(input_text, 170, 230);
-
+	//Respawn negro
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
 	drawText(respawn_text, 160, 260);
-
+	//Derrota negro
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
 	drawText(lost_text, 100, 260);
-
+	//Victoria negro
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
 	drawText(win_text, 170, 260);
-
+	//Salir rojo
 	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
 	drawText(exit_text, 220, 160);
 
@@ -340,7 +339,7 @@ void startRender(const PxVec3& cameraEye, const PxVec3& cameraDir, PxReal clipNe
 	glLoadIdentity();
 	gluLookAt(GLdouble(cameraEye.x), GLdouble(cameraEye.y), GLdouble(cameraEye.z), GLdouble(cameraEye.x + cameraDir.x), GLdouble(cameraEye.y + cameraDir.y), GLdouble(cameraEye.z + cameraDir.z), 0.0, 1.0, 0.0);
 
-	glColor4f(0.4f, 0.4f, 0.4f, 1.0f);
+	glColor4f(1.0f,1.0f,1.0f, 1.0f);
 
 	assert(glGetError() == GL_NO_ERROR);
 }
