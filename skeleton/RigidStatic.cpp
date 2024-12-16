@@ -5,6 +5,7 @@ RigidStatic::RigidStatic(PxPhysics* _gPhysics, PxScene* _scene, Vector3 _pose, V
 {
 	solid = _gPhysics->createRigidStatic(pose);
 
+	//se puede crear con diferentes figuras
 	PxShape* shape = nullptr;
 	if (SHAPE == "BOX") {
 		shape = CreateShape(PxBoxGeometry(_size));
@@ -17,6 +18,7 @@ RigidStatic::RigidStatic(PxPhysics* _gPhysics, PxScene* _scene, Vector3 _pose, V
 	_scene->addActor(*solid);
 	item = new RenderItem(shape, solid, _color);
 
+	//se agrega el nombre al actor
 	solid->setName(name);
 	solid->userData = this;
 }

@@ -59,7 +59,7 @@ private:
 	int				mMouseX;
 	int				mMouseY;
 
-	physx::PxTransform mIniTransform;
+	physx::PxTransform mIniTransform;	//guarda el transform inicial
 };
 
 

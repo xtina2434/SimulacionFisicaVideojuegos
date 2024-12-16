@@ -5,6 +5,7 @@
 #include "RenderUtils.hpp"
 #include <string>
 
+//esta clase crea solidos rigidos dinamicos
 using namespace physx;
 class ForceGenerator;
 class RigidSolid {
@@ -33,7 +34,6 @@ public:
 	void setInertia(Vector3 inertia) {
 		solid->setMassSpaceInertiaTensor(inertia);
 	}
-	
 	void setPosition(Vector3 pos) { 
 		pose.p = pos; 
 		solid->setGlobalPose(pose);
@@ -67,11 +67,12 @@ public:
 	void integrate(double t);
 	void update(double t);
 	void die() { alive = false;}
+	//deshabilita la gravedad al solido
 	void quitGravity() {
 		solid->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
 	}
+	//desregistra al renderitem 
 	void setInvisible() {
-
 		if (item) {
 			DeregisterRenderItem(item);
 			invisble = true;
@@ -82,6 +83,7 @@ protected:
 	RenderItem*		item  = nullptr;
 	PxMaterial* material = nullptr;
 
+	//propiedades del solido
 	PxTransform		pose;
 	Vector3			lineal_vel;
 	Vector3			angular_vel;
@@ -93,9 +95,7 @@ protected:
 	float			life_time;
 	bool			alive = true;
 	bool			invisble = false;
-	std::vector<ForceGenerator*> generators;
-
-
+	std::vector<ForceGenerator*> generators;	//generadores de fuerzas
 };
 
 #endif

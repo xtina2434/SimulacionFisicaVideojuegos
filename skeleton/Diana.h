@@ -4,7 +4,8 @@
 #include "core.hpp"
 #include "RenderUtils.hpp"
 
-
+//clase para crear la diana con dos solidos rigidos estaticos con forma de esfera, 
+// una mas pequenia que simula el centro de la diana
 using namespace physx;
 
 class Diana {

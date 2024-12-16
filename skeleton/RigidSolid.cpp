@@ -14,6 +14,7 @@ RigidSolid::RigidSolid(PxPhysics* _gPhysics, PxScene* _scene, PxMaterial* _mater
 	solid->setLinearVelocity(lineal_vel);
 	solid->setAngularVelocity(angular_vel);
 
+	//se pueden crear con diferentes figuras
 	PxShape* shape = nullptr;
 	if (SHAPE == "BOX") {
 		shape = CreateShape(PxBoxGeometry(size));
@@ -27,12 +28,11 @@ RigidSolid::RigidSolid(PxPhysics* _gPhysics, PxScene* _scene, PxMaterial* _mater
 	if (shape != nullptr) {
 		solid->attachShape(*shape);
 	}
-	
-
 	shape->setMaterials(&material, 1);	//asignar material al shape
 	
 	PxRigidBodyExt::updateMassAndInertia(*solid,density);
 	mass = solid->getMass();
+
 	//calcular a mano los momentos de inercia para un cilindro solido
 	if (SHAPE == "CYLINDER") {
 		
@@ -48,6 +48,7 @@ RigidSolid::RigidSolid(PxPhysics* _gPhysics, PxScene* _scene, PxMaterial* _mater
 	_scene->addActor(*solid);
 
 	item = new RenderItem(shape, solid, color);
+	//se agrega el nombre al actor
 	solid->setName(name);
 	solid->userData = this;
 }

@@ -30,13 +30,11 @@ ParticlesSystem::~ParticlesSystem() {
 void 
 ParticlesSystem::setWindForce(Vector3& vel, float k1 /*d*/) {
 	has_windForce = true;
-	//wind_generator = new WindForceGenerator(d,0.5f,vel, Vector3(0.0f, 50.0f, 0.0f), 15.0f);
 	wind_generator = new WindForceGenerator(vel, k1, 0.0f);
 }
 void
 ParticlesSystem::setWhirlWindForce(float k, float k1) {
 	has_whirlwindForce = true;
-
 	whirlwind_generator = new WhirlwindForceGenerator(Vector3(0.0f,0.0f,0.0f), 20.0f, k, k1);
 }
 void
@@ -45,7 +43,6 @@ ParticlesSystem::addForceGenerator(ForceGenerator* fg) {
 		p->addForceGenerator(fg);
 	}
 }
-
 void
 ParticlesSystem::addParticles(int num) {
 
@@ -92,6 +89,7 @@ ParticlesSystem::addParticles(int num) {
 		Particle* new_particle = new Particle( pos, vel, size, Vector3(0.0, 0.0, 0.0), color, life_time, mass, "SPHERE");
 		new_particle->setAcel(Vector3(0.0f, gravity, 0.0f));
 
+		//se agregan los generadores de fuerzas correspondientes
 		if (has_gravityForce) 
 			new_particle->addForceGenerator(gravity_generator);
 
@@ -103,7 +101,7 @@ ParticlesSystem::addParticles(int num) {
 
 		if (has_explosionForce)
 			new_particle->addForceGenerator(explosion_generator);
-
+		//si se quiere con masa aleatoria
 		if (random_mass) 
 			new_particle->setRandomMass(mean_mass, desv_mass);
 		if (has_acel)

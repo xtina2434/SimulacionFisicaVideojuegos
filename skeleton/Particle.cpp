@@ -6,6 +6,7 @@ Particle::Particle(Vector3 Pos, Vector3 Vel,/* Vector3 Acel,*/ float Size, Vecto
 	acel = Vector3(0.0f, 0.0f, 0.0f);
 	accF = Vector3(0.0f, 0.0f, 0.f);
 
+	//se pueden crear de diferente figura
 	if(SHAPE == "SPHERE")
 	renderItem = new RenderItem(CreateShape(physx::PxSphereGeometry(size)), &pose, color);
 
@@ -18,6 +19,7 @@ Particle::~Particle() {
 }
 void Particle::setRandomMass(double mean, double desv)
 {
+	//gracias a una distribucion normal genera masa aleatoria
 	std::normal_distribution<double> normal_dist(mean, desv);
 
 	double new_mass = normal_dist(mt);

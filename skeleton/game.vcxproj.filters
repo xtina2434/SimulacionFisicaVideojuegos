@@ -52,7 +52,6 @@
     <ClInclude Include="RigidSolidSystem.h" />
     <ClInclude Include="Diana.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="ContactCallback.h" />
     <ClInclude Include="RigidStatic.h" />
   </ItemGroup>
   <ItemGroup>

@@ -277,7 +277,6 @@
   <ItemGroup>
     <ClInclude Include="BuoyancyForceGenerator.h" />
     <ClInclude Include="callbacks.hpp" />
-    <ClInclude Include="ContactCallback.h" />
     <ClInclude Include="core.hpp" />
     <ClInclude Include="Diana.h" />
     <ClInclude Include="ElasticBandForceGenerator.h" />

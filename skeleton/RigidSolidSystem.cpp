@@ -81,6 +81,7 @@ void RigidSolidSystem::addSolids(int num)
 			Vector3 inertia = Vector3(inertia_x, inertia_y, inertia_z);
 			new_solid->setInertia(inertia);
 
+			//se agregan los generadores de fuerzas correspondientes
 			if (has_gravityForce)
 				new_solid->addForceGenerator(gravity_generator);
 

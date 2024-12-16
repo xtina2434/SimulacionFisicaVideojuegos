@@ -13,7 +13,7 @@ constexpr double doumping = 0.98;
 class Particle {
 	public:
 		Particle();
-		Particle(Vector3 Pos, Vector3 Vel, /*Vector3 Acel,*/ float Size, Vector3 Vol, Vector4 Color, double LifeTime, float mass, std::string shape);
+		Particle(Vector3 Pos, Vector3 Vel, float Size, Vector3 Vol, Vector4 Color, double LifeTime, float mass, std::string shape);
 		~Particle();
 
 		virtual void integrate(double t);
@@ -36,15 +36,15 @@ class Particle {
 	protected:
 		Vector3 vel;			 //velocidad inicial
 		Vector3 acel;			 //aceleracion/gravedad
-		Vector3 accF;
-		Vector3 vol;
+		Vector3 accF;			//acumulador de fuerzas
+		Vector3 vol;			//volumen
 		Vector4 color;			//color inicial
 		physx::PxTransform pose; //A render item le pasaremos la direccion de este pose, para que se actualice automaticamente
 		RenderItem* renderItem;
 		double life_time;			//tiempo de vida
 		float size;				//tamaño inicial
-		float mass;
-		std::vector<ForceGenerator*> generators;
+		float mass;				//masa
+		std::vector<ForceGenerator*> generators; //generadores de fuerzas
 		std::random_device rd;
 		std::mt19937 mt;
 		void clearForces();

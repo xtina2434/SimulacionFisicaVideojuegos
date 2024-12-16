@@ -115,7 +115,6 @@ physx::PxVec3 Camera::getMousePos(int x, int y)
 	float fovY = 60.0f;
 
 	//convertir coordenadas del raton a NDC (-1 a 1)
-	
 	float ndcY = 1.0f - (2.0f * y / SCREEN_HEIGHT);
 	float ndcZ = (2.0f * x / SCREEN_WIDTH) - 1.0f;
 
@@ -129,7 +128,6 @@ physx::PxVec3 Camera::getMousePos(int x, int y)
 	PxVec3 rayDirCamera(-1.0f, projY, projZ);
 
 	return rayDirCamera.getNormalized();
-
 }
 
 void Camera::setTransform(const physx::PxTransform& transform, const physx::PxVec3& forward)
@@ -139,6 +137,7 @@ void Camera::setTransform(const physx::PxTransform& transform, const physx::PxVe
 	mDir = transform.q.rotate(forward).getNormalized();
 }
 
+//reinicia el transform al inicial
 void Camera::resetInitialTransform()
 {
 	setTransform(mIniTransform, mIniDir);
