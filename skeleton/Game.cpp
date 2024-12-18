@@ -278,12 +278,12 @@ void Game::level3Scene()
 	RigidStatic* lava = new RigidStatic(gPhysics, gScene, Vector3(0, 0, 0), Vector3(200, 0.1, 200), Vector4(1.0, 0.1, 0.0, 1.0), "BOX", "lava");
 	rigid_statics.push_back(lava);
 	//se crea el escenario con solidos rigidos estaticos
-	RigidStatic* plataforma = new RigidStatic(gPhysics, gScene, Vector3(0, 30, 0), Vector3(100, 10, 6), Vector4(0.0, 0.6, 0.8, 1), "BOX", "plataforma");
+	RigidStatic* plataforma = new RigidStatic(gPhysics, gScene, Vector3(0, 30, -3), Vector3(100, 10, 6), Vector4(0.0, 0.6, 0.8, 1), "BOX", "plataforma");
 	rigid_statics.push_back(plataforma);
 	RenderItem* pared = new RenderItem(CreateShape(physx::PxBoxGeometry(200, 50, 0.1)),
 		new physx::PxTransform(0, 30, -12), Vector4(0.0, 0.0, 0.0, 1));
 	items.push_back(pared);
-	RigidStatic* flag = new RigidStatic(gPhysics, gScene, Vector3(40, 40, -0), Vector3(3, 0.1, 3), Vector4(0.0, 1.0, 0.0, 1), "BOX", "flag");
+	RigidStatic* flag = new RigidStatic(gPhysics, gScene, Vector3(40, 40, -3), Vector3(3, 0.1, 3), Vector4(0.0, 1.0, 0.0, 1), "BOX", "flag");
 	rigid_statics.push_back(flag);
 	//se crea el jugador
 	createPlayer();
@@ -304,6 +304,8 @@ void Game::respawnScene()
 }
 void Game::lostScene()
 {
+	lives = 0;
+	points = 0;
 	//inicializar los textos de la escena
 	lost_text = "Has perdido todas tus vidas :( No te rindas, seguro que completas la carrera en otra convocatoria.";
 	next_text = "Pulse c para repetir";
@@ -584,7 +586,6 @@ void Game::createDock(const Vector3& pos, double k, const Vector4& color, double
 	RigidSolid* s = new RigidSolid(gPhysics, gScene, gMaterial,
 		pos2, Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(1, 1, 1), color,
 		1.0, 500, "SPHERE", "muelle");
-
 	rigid_solids.push_back(s);
 	//generador de fuerza del muelle
 	SpringForceGenerator* spring_generator = new SpringForceGenerator(k, length, pos);
