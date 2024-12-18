@@ -288,11 +288,11 @@ void Game::level3Scene()
 	//se crea el jugador
 	createPlayer();
 	//se crean diferentes muelles
-	createDock(Vector3(-64.0, 44.0, -10.0), 300.0, Vector4(1.0, 0.0, 0.0, 1));
-	createDock(Vector3(-44.0, 52.0, -10.0), 350.0, Vector4(1.0, 0.5, 0.0, 1));
-	createDock(Vector3(-34.0, 44.0, -10.0), 400.0, Vector4(0.0, 1.0, 0.0, 1));
-	createDock(Vector3(-14.0, 52.0, -10.0), 450.0, Vector4(0.0, 1.0, 0.5, 1));
-	createDock(Vector3(4.0, 44.0, -10.0), 500.0, Vector4(0.0, 0.0, 1.0, 1));
+	createDock(Vector3(-64.0, 43.0, -10.0), 350.0, Vector4(1.0, 0.0, 0.0, 1), 0.8);
+	createDock(Vector3(-44.0, 52.0, -10.0), 400.0, Vector4(1.0, 0.5, 0.0, 1),0.7);
+	createDock(Vector3(-34.0, 43.0, -10.0), 450.0, Vector4(0.0, 1.0, 0.0, 1), 0.6);
+	createDock(Vector3(-14.0, 52.0, -10.0), 500.0, Vector4(0.0, 1.0, 0.5, 1), 0.5);
+	createDock(Vector3(4.0, 43.0, -10.0), 550.0, Vector4(0.0, 0.0, 1.0, 1), 0.5);
 }
 void Game::respawnScene()
 {
@@ -571,7 +571,7 @@ void Game::createPlayer()
 	
 	rigid_solids.push_back(player);
 }
-void Game::createDock(const Vector3& pos, double k, const Vector4& color)
+void Game::createDock(const Vector3& pos, double k, const Vector4& color, double length)
 {
 	//se crea el cubo de anclaje
 	RenderItem* cube = new RenderItem(CreateShape(physx::PxBoxGeometry(2, 2, 2)),
@@ -587,7 +587,7 @@ void Game::createDock(const Vector3& pos, double k, const Vector4& color)
 
 	rigid_solids.push_back(s);
 	//generador de fuerza del muelle
-	SpringForceGenerator* spring_generator = new SpringForceGenerator(k, 1.0, pos);
+	SpringForceGenerator* spring_generator = new SpringForceGenerator(k, length, pos);
 	s->addForceGenerator(spring_generator);
 	//bloquea el movimiento del solido los ejes x e y 
 	s->getSolid()->setRigidDynamicLockFlags(
@@ -655,6 +655,7 @@ void Game::keyPress(unsigned char key)
 	case 'W':
 	{
 		if (player && canJump && !dying) {
+			canJump = false;
 			Vector3 vel = player->getLinealVel();
 			vel.y = 14.0f;
 			//puede avanzar o retroceder a la vez que salta
@@ -665,7 +666,7 @@ void Game::keyPress(unsigned char key)
 				vel.x -= 5.0f;
 			}
 			player->setLinearVel(vel);
-			canJump = false;
+			
 		}
 		break;
 	}

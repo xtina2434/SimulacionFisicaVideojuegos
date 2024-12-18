@@ -132,7 +132,7 @@ private:
 	//crea el jugador
 	void createPlayer();
 	//crea muelles
-	void createDock(const Vector3& pos, double k, const Vector4& color4);
+	void createDock(const Vector3& pos, double k, const Vector4& color4, double length);
 };
 
 #endif
