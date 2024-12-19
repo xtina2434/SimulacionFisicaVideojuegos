@@ -40,8 +40,8 @@ void WhirlwindForceGenerator::updateForce(RigidSolid* s, double t)
 		const Vector3 solid_pos = s->getPosition();
 		const Vector3 solid_to_center = solid_pos - center;
 
+		//distancia del solido al centro del torbellino
 		float distance = solid_to_center.magnitude();
-
 
 		//velocidad tangencial perpendicular al vector de la diferencia en 2D
 		const Vector3 tangential_vel = Vector3(-solid_to_center.z, 0, solid_to_center.x);  //gira 90º en 2D (X-Z)

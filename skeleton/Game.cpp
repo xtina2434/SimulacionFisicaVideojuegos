@@ -145,7 +145,7 @@ void Game::snowScene() {
 	RigidStatic* suelo = new RigidStatic(gPhysics, gScene, Vector3(0, 0, 0), Vector3(200, 0.1, 200), Vector4(1.0, 1.0, 1.0, 1.0), "BOX", "suelo");
 	rigid_statics.push_back(suelo);
 	//sistema de particulas con distribuciones uniformes, con gravedad, que simula nieve
-	ParticlesSystem* snow_system = new ParticlesSystem(Vector4(1.0, 1.0, 1.0, 1.0), Vector3(0.0, 80.0, 0), Vector3(0.0, -2.0, 0.0), 1, 1.0f, 0.5f, 0.0f, 1.0f);
+	ParticlesSystem* snow_system = new ParticlesSystem(Vector4(1.0, 1.0, 1.0, 1.0), Vector3(0.0, 80.0, 0), Vector3(0.0, -2.0, 0.0), 1, 0.5f, 0.5f, 0.0f, 0.0001f);
 	snow_system->set_u_Distribution(true);
 	snow_system->setUniformDistribPos(-100.0, 100.0);
 	snow_system->setUniformDistribVel(1.0, 3.0);
@@ -194,8 +194,8 @@ void Game::level1Scene()
 
 	//sistemas de solidos rigidos dinamicos con distribuciones normales, 
 	//sin gravedad, con diferentes velocidades lineales en el eje z
-	RigidSolidSystem* s1 = new RigidSolidSystem(gPhysics, gScene, Vector3(-60, 42, -45), Vector3(0, 0, 50), Vector3(0, 0, 0),
-		Vector3(1, 1, 1), Vector4(1.0f, 0.0f, 0.0f, 1.0f), 1, 0.01, 5.0f, "SPHERE");
+	RigidSolidSystem* s1 = new RigidSolidSystem(gPhysics, gScene, Vector3(-60, 42, -45), Vector3(0, 0, 100), Vector3(0, 0, 0),
+		Vector3(1, 1, 1), Vector4(1.0f, 0.0f, 0.0f, 1.0f), 1, 0.01, 2000.0f, "SPHERE");
 	s1->quitGravity();
 	s1->set_u_Distribution(false);
 	s1->setNormalDistribPos(0.01, 0.01);
@@ -204,8 +204,8 @@ void Game::level1Scene()
 	s1->setNormalDistribLifeTime(2.0, 0.1);
 	rigid_systems.push_back(s1);
 
-	RigidSolidSystem* s2 = new RigidSolidSystem(gPhysics, gScene, Vector3(-30, 42, -45), Vector3(0, 0, 75), Vector3(0, 0, 0),
-		Vector3(1, 1, 1), Vector4(0.0f, 1.0f, 0.0f, 1.0f), 1, 0.01, 5.0f, "SPHERE");
+	RigidSolidSystem* s2 = new RigidSolidSystem(gPhysics, gScene, Vector3(-30, 42, -45), Vector3(0, 0, 150), Vector3(0, 0, 0),
+		Vector3(1, 1, 1), Vector4(0.0f, 1.0f, 0.0f, 1.0f), 1, 0.01, 2000.0f, "SPHERE");
 	s2->quitGravity();
 	s2->set_u_Distribution(false);
 	s2->setNormalDistribPos(0.01, 0.01);
@@ -214,8 +214,8 @@ void Game::level1Scene()
 	s2->setNormalDistribLifeTime(2.0, 0.1);
 	rigid_systems.push_back(s2);
 
-	RigidSolidSystem* s3 = new RigidSolidSystem(gPhysics, gScene, Vector3(0, 42, -45), Vector3(0, 0, 100), Vector3(0, 0, 0),
-		Vector3(1, 1, 1), Vector4(0.0f, 0.0f, 1.0f, 1.0f), 1, 0.01, 5.0f, "SPHERE");
+	RigidSolidSystem* s3 = new RigidSolidSystem(gPhysics, gScene, Vector3(0, 42, -45), Vector3(0, 0, 200), Vector3(0, 0, 0),
+		Vector3(1, 1, 1), Vector4(0.0f, 0.0f, 1.0f, 1.0f), 1, 0.01, 2000.0f, "SPHERE");
 	s3->quitGravity();
 	s3->set_u_Distribution(false);
 	s3->setNormalDistribPos(0.01, 0.01);
@@ -255,7 +255,7 @@ void Game::level2Scene()
 	whirlwind_solid_system->setNormalDistribLinealVel(5.0, 3.0); 
 	whirlwind_solid_system->setNormalDistribAngularVel(0.0, 0.01); 
 	whirlwind_solid_system->setNormalDistribLifeTime(3.0, 2.0); 
-	whirlwind_solid_system->setWhirlWindForce(10.0f, 0.5f, 1.0f); 
+	whirlwind_solid_system->setWhirlWindForce(50.0f, 1.0f, 1.0f);
 	rigid_systems.push_back(whirlwind_solid_system); 
 
 	RigidSolidSystem* whirlwind_solid_system2 = new RigidSolidSystem(gPhysics, gScene,
@@ -267,7 +267,7 @@ void Game::level2Scene()
 	whirlwind_solid_system2->setNormalDistribLinealVel(8.0, 3.0);
 	whirlwind_solid_system2->setNormalDistribAngularVel(0.0, 0.01);
 	whirlwind_solid_system2->setNormalDistribLifeTime(3.0, 2.0);
-	whirlwind_solid_system2->setWhirlWindForce(20.0f, 0.5f, 1.0f);
+	whirlwind_solid_system2->setWhirlWindForce(50.0f, 1.0f, 1.0f);
 	rigid_systems.push_back(whirlwind_solid_system2);
 }
 void Game::level3Scene()
@@ -280,7 +280,7 @@ void Game::level3Scene()
 	//se crea el escenario con solidos rigidos estaticos
 	RigidStatic* plataforma = new RigidStatic(gPhysics, gScene, Vector3(0, 30, -3), Vector3(100, 10, 6), Vector4(0.0, 0.6, 0.8, 1), "BOX", "plataforma");
 	rigid_statics.push_back(plataforma);
-	RenderItem* pared = new RenderItem(CreateShape(physx::PxBoxGeometry(200, 50, 0.1)),
+	RenderItem* pared = new RenderItem(CreateShape(physx::PxBoxGeometry(200, 50, 5)),
 		new physx::PxTransform(0, 30, -12), Vector4(0.0, 0.0, 0.0, 1));
 	items.push_back(pared);
 	RigidStatic* flag = new RigidStatic(gPhysics, gScene, Vector3(40, 40, -3), Vector3(3, 0.1, 3), Vector4(0.0, 1.0, 0.0, 1), "BOX", "flag");
@@ -288,11 +288,11 @@ void Game::level3Scene()
 	//se crea el jugador
 	createPlayer();
 	//se crean diferentes muelles
-	createDock(Vector3(-64.0, 43.0, -10.0), 350.0, Vector4(1.0, 0.0, 0.0, 1), 0.8);
-	createDock(Vector3(-44.0, 52.0, -10.0), 400.0, Vector4(1.0, 0.5, 0.0, 1),0.7);
-	createDock(Vector3(-34.0, 43.0, -10.0), 450.0, Vector4(0.0, 1.0, 0.0, 1), 0.6);
-	createDock(Vector3(-14.0, 52.0, -10.0), 500.0, Vector4(0.0, 1.0, 0.5, 1), 0.5);
-	createDock(Vector3(4.0, 43.0, -10.0), 550.0, Vector4(0.0, 0.0, 1.0, 1), 0.5);
+	createDock(Vector3(-64.0, 43.0, -5.0), 2500.0, Vector4(1.0, 0.0, 0.0, 1), 0.5);
+	createDock(Vector3(-44.0, 52.0, -5.0), 2750.0, Vector4(1.0, 0.5, 0.0, 1),0.5);
+	createDock(Vector3(-34.0, 43.0, -5.0), 3000.0, Vector4(0.0, 1.0, 0.0, 1), 0.5);
+	createDock(Vector3(-14.0, 52.0, -5.0), 3250.0, Vector4(0.0, 1.0, 0.5, 1), 0.5);
+	createDock(Vector3(4.0, 43.0, -5.0), 3500.0, Vector4(0.0, 0.0, 1.0, 1), 0.5);
 }
 void Game::respawnScene()
 {
@@ -316,7 +316,7 @@ void Game::winScene()
 	//inicializar los textos de la escena
 	win_text = "Enhorabuena, has completado CHAOS RUN con exito.";
 	exit_text = "Pulse q para salir";
-	//sistemas de particulas con distribuciones uniformes que tienen integrada la fuerza de la explosion
+	// 
 	//los dos primeros la fuerza de explosion tienen la misma k pero diferente masa 
 	//todo el sistema con masa 1
 	ParticlesSystem* system1 = new ParticlesSystem(Vector4(1.0, 0.0, 0.0, 1.0), Vector3(-70.0f, 30.0f, 30.0f), Vector3(0.0, 0.0, 0.0), 1, 0.2f, 0.2f, 0.0f, 1.0f);
@@ -565,12 +565,13 @@ void Game::createPlayer()
 {
 	//crea el jugador como un solido rigido dinamico
 	player = new RigidSolid(gPhysics, gScene, gMaterial,
-		Vector3(-80, 45, 0), Vector3(0.0, -1.0, 0), Vector3(0, 0, 0), Vector3(2, 2, 2), Vector4(1.0, 0.0, 1.0, 1),
-		2.0, 500, "BOX", "player");
+		Vector3(-80, 45, 0), Vector3(0.0, 0.0, 0), Vector3(0, 0, 0), Vector3(2, 2, 2), Vector4(1.0, 0.0, 1.0, 1),
+		10.0, 500, "BOX", "player");
 
 	//se ajustan las propiedades del material
-	player->setMaterialProperties(0.0f, 0.6f, 0.5f);
-	
+	player->setMaterialProperties(0.0f, 0.2f, 0.3f);
+	GravityForceGenerator* g = new GravityForceGenerator(Vector3(0, -9.8, 0));
+	player->addForceGenerator(g);
 	rigid_solids.push_back(player);
 }
 void Game::createDock(const Vector3& pos, double k, const Vector4& color, double length)
@@ -584,8 +585,8 @@ void Game::createDock(const Vector3& pos, double k, const Vector4& color, double
 	pos2.z += 10;
 	//se crea el solido rigido al que le va a afectar la fuerza del muelle
 	RigidSolid* s = new RigidSolid(gPhysics, gScene, gMaterial,
-		pos2, Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(1, 1, 1), color,
-		1.0, 500, "SPHERE", "muelle");
+		pos2, Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(1.5, 1, 1), color,
+		7, 500, "SPHERE", "muelle");
 	rigid_solids.push_back(s);
 	//generador de fuerza del muelle
 	SpringForceGenerator* spring_generator = new SpringForceGenerator(k, length, pos);
@@ -611,7 +612,7 @@ void Game::handleMouse(int button, int state, int x, int y)
 			//se crea un solido rigido dinamico que va a ser la bala/laser que se dispara desde la camara hacia donde ha clickado el raton
 			RigidSolid* s = new RigidSolid(
 				gPhysics, gScene, gMaterial,
-				pos, vel, Vector3(0, 0, 0), Vector3(1, 1, 1), Vector4(0.0f, 0.0f, 0.0f, 1.0f), 1.0f, 1.0f, "SPHERE", "laser");
+				pos, vel, Vector3(0, 0, 0), Vector3(1, 1, 1), Vector4(0.0f, 0.0f, 0.0f, 1.0f), 2500.0f, 1.0f, "SPHERE", "laser");
 			rigid_solids.push_back(s);
 			//activa el cooldown 
 			can_shoot = false;
@@ -658,7 +659,7 @@ void Game::keyPress(unsigned char key)
 		if (player && canJump && !dying) {
 			canJump = false;
 			Vector3 vel = player->getLinealVel();
-			vel.y = 14.0f;
+			vel.y = 20.0f;
 			//puede avanzar o retroceder a la vez que salta
 			if (GetAsyncKeyState('D')) {
 				vel.x += 5.0f;
